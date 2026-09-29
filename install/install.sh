@@ -16,6 +16,13 @@ create_private_file() {
   printf 'Created %s (fill it in)\n' "$target"
 }
 
+# The defaults ship with the repo; a fixed link lets global.md import them without relying on how
+# a relative import resolves through the CLAUDE.md symlink.
+link_path_defaults() {
+  mkdir -p "$PRIVATE_DIR"
+  ln -sfn "$ROOT/claude-md/paths.md" "$PRIVATE_DIR/paths.default.md"
+}
+
 # An existing CLAUDE.md is kept as a dated backup, so its content can be moved to personal.md.
 link_global_instructions() {
   mkdir -p "$CLAUDE_DIR"
@@ -33,4 +40,5 @@ link_global_instructions() {
 
 create_private_file personal.md personal.example.md
 create_private_file paths.md paths.example.md
+link_path_defaults
 link_global_instructions

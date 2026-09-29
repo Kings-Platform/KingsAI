@@ -109,15 +109,16 @@ Move what's personal from the `.bak` into `personal.md` — the template says wh
 
 ### Named paths
 
-Skills cite a **name** instead of a path. `global.md` pre-maps every name to a default; a machine
-overrides only what differs, in `~/.kings-ai/paths.md`. Each value points to an **index**
-(`README.md` / `index.md`) that maps the pages behind it.
+Skills cite a **name** instead of a path. Each value points to an **index** (`README.md` /
+`index.md`) that maps the pages behind it.
 
-| Name | Default |
+| File | Role |
 |---|---|
-| `DOCUMENTATION_STANDARD` | `~/.claude/docs/padrao-documentacao.md` |
-| `SWIFT_STYLE_GUIDE` | `~/.claude/docs/KingsStyleGuide/Swift/README.md` |
-| `SWIFT_UNIT_TESTS` | `~/.claude/docs/KingsStyleGuide/Swift/UnitTests/README.md` |
+| [`claude-md/paths.md`](claude-md/paths.md) | **Defaults** — every name, pre-mapped to its original source. Ships with the repo |
+| `~/.kings-ai/paths.md` | **Overrides** — only the names that differ on this machine. Win name by name |
+
+`global.md` holds only the rule and imports both (the defaults through the link
+`~/.kings-ai/paths.default.md`, created by the install).
 
 A work machine pointing the Swift skills to the company's own guide:
 
@@ -128,8 +129,8 @@ A work machine pointing the Swift skills to the company's own guide:
 | `SWIFT_UNIT_TESTS` | `~/Repos/docs/Conventions/UnitTests/README.md` |
 ```
 
-A name that resolves to a missing file is asked for, never guessed. New name: add it to the table
-in `global.md` with its default.
+A name that resolves to a missing file is asked for, never guessed. New name: add it to
+`claude-md/paths.md` with its default.
 
 ## Project conventions
 

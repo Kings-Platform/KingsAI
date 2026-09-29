@@ -3,25 +3,17 @@
 Generic working rules, valid in any project. Two private files are imported, both created by the
 install step from a template — never delete them, an unresolved import leaves its literal text in
 the prompt: the **personal context** (who the user is, how they like to work and learn), right
-below, and this machine's **path overrides**, in "Named paths".
+below, and the **named paths** (defaults and this machine's overrides), in "Named paths".
 
 @~/.kings-ai/personal.md
 
 ## Named paths
 
-Skills and docs cite a **name**, never a machine path. Each name points to an **index** (a
-`README.md` or `index.md`) — start from it; it maps the pages behind it.
+Skills and docs cite a **name**, never a machine path; each name points to an **index** that maps
+the pages behind it. Resolve a name with **this machine's override first, the default otherwise**.
+The resolved file doesn't exist on this machine? Ask — never guess another location.
 
-To resolve a name: **this machine's override wins; without one, use the default**. The resolved
-file doesn't exist on this machine? Ask — never guess another location.
-
-| Name | Default | What it is |
-|---|---|---|
-| `DOCUMENTATION_STANDARD` | `~/.claude/docs/padrao-documentacao.md` | How docs are organized in a project: demands, decisions, studies |
-| `SWIFT_STYLE_GUIDE` | `~/.claude/docs/KingsStyleGuide/Swift/README.md` | Swift code style and how screens are structured |
-| `SWIFT_UNIT_TESTS` | `~/.claude/docs/KingsStyleGuide/Swift/UnitTests/README.md` | Swift unit test conventions: process, structure, mocks, triggers |
-
-This machine's overrides:
+@~/.kings-ai/paths.default.md
 
 @~/.kings-ai/paths.md
 
