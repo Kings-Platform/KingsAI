@@ -73,6 +73,10 @@ claude plugin update kings-core@kings-ai-platform
 claude plugin update kings-core@kings-ai-platform
 ```
 
+With [KingsScript](https://github.com/Kings-Platform/KingsScript), `kings ai-update` does all of it,
+and its daily checkup runs it by itself — skipping a local clone that isn't clean and on its
+default branch.
+
 > [!NOTE]
 > An update applies to new sessions — restart the running ones.
 
