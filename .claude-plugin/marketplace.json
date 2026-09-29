@@ -11,7 +11,7 @@
     {
       "name": "kings-core",
       "source": "./plugins/kings-core",
-      "description": "Agents and skills that work in any project: living docs sync, README style"
+      "description": "Agents and skills that work in any project: living docs, style review, code review rounds, new demands, README style, Figma files"
     }
   ]
 }
