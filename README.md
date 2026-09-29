@@ -28,6 +28,7 @@ layers, using Claude Code's own plugin system.
 | Plugin | Scope | Contents |
 |---|---|---|
 | [`kings-core`](plugins/kings-core/) | Any project | See below |
+| [`kings-swift`](plugins/kings-swift/) | Swift and iOS projects | See below |
 
 **`kings-core`:**
 
@@ -40,6 +41,14 @@ layers, using Claude Code's own plugin system.
 | [`new-demand`](plugins/kings-core/skills/new-demand/SKILL.md) | Skill | Opens a demand: inputs, context, doc with Timeline, plan |
 | [`readme-style`](plugins/kings-core/skills/readme-style/SKILL.md) | Skill | README standard |
 | [`fig-layout`](plugins/kings-core/skills/fig-layout/SKILL.md) | Skill | Reads a Figma `.fig` with [`kings fig-parse`](https://github.com/Kings-Platform/KingsScript) |
+
+**`kings-swift`** — reads the style guide named `SWIFT_STYLE_GUIDE` in the paths map, unless the
+project has its own:
+
+| Component | Type | What it does |
+|---|---|---|
+| [`unit-tests`](plugins/kings-swift/skills/unit-tests/SKILL.md) | Skill | Writes and reviews unit tests: map, three steps, double check, when to run |
+| [`swift-code-style`](plugins/kings-swift/skills/swift-code-style/SKILL.md) | Skill | Applies the code style and screen structure while writing Swift |
 
 Company-specific plugins live in their own private marketplaces, installed next to this one.
 
@@ -83,12 +92,16 @@ default branch.
 ## Global instructions
 
 Plugins can't carry always-on instructions, so [`claude-md/global.md`](claude-md/global.md) is
-linked as the user's `CLAUDE.md`. It imports `~/.kings-ai/personal.md`, a private file with
-personal context and machine-specific pointers, kept outside this repo.
+linked as the user's `CLAUDE.md`. It imports two private files, kept outside this repo:
+
+| File | What it holds |
+|---|---|
+| `~/.kings-ai/personal.md` | Personal context — who you are, how you like to work |
+| `~/.kings-ai/paths.md` | Where things live **on this machine**, by name — skills cite the name, each machine sets the path |
 
 ```bash
-# Links ~/.claude/CLAUDE.md to global.md (the previous one is kept as .bak) and creates
-# ~/.kings-ai/personal.md from the template, if missing
+# Links ~/.claude/CLAUDE.md to global.md (the previous one is kept as .bak) and creates the two
+# private files from their templates, if missing
 ./Kings-AI-Platform/install/install.sh
 ```
 
@@ -109,6 +122,7 @@ and fall back to a default when it's silent:
 | Who commits and opens PRs | The user; the AI drafts |
 | Building or running the app | Not allowed — static checks only |
 | Extra steps (ticket fields, notifications) | None |
+| A shared guide outside the repo | A **name** from the paths map (`SWIFT_STYLE_GUIDE`) — never a machine path |
 
 A company or project plugin adds its own specifics on top — never by editing `kings-core`.
 
