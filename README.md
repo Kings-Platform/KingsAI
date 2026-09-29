@@ -61,10 +61,20 @@ claude plugin install kings-core@kings-ai-platform --scope user
 
 Components are namespaced by plugin: the agent is `kings-core:docs-sync`.
 
+Installed plugins are **copied to a cache, pinned to a commit** — editing the source changes
+nothing until an update:
+
+```bash
+# From GitHub: fetch the marketplace, then update the plugin
+claude plugin marketplace update kings-ai-platform
+claude plugin update kings-core@kings-ai-platform
+
+# From a local clone: commit, then update — it takes the commit checked out, even on a branch
+claude plugin update kings-core@kings-ai-platform
+```
+
 > [!NOTE]
-> From a local clone (`claude plugin marketplace add ./Kings-AI-Platform`), edits take effect on
-> the next session or with `/reload-plugins` — no reinstall. From GitHub, updates arrive with
-> `claude plugin marketplace update kings-ai-platform`.
+> An update applies to new sessions — restart the running ones.
 
 ## Global instructions
 
