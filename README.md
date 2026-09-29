@@ -42,8 +42,9 @@ layers, using Claude Code's own plugin system.
 | [`readme-style`](plugins/kings-core/skills/readme-style/SKILL.md) | Skill | README standard |
 | [`fig-layout`](plugins/kings-core/skills/fig-layout/SKILL.md) | Skill | Reads a Figma `.fig` with [`kings fig-parse`](https://github.com/Kings-Platform/KingsScript) |
 
-**`kings-swift`** — reads the named paths `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS`, unless the
-project's `CLAUDE.md` points to its own:
+**`kings-swift`** — reads the named paths `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS`. For unit tests,
+`SWIFT_UNIT_TESTS` is the standard and always wins; conventions the project's `CLAUDE.md` points
+to only complement it where it's silent:
 
 | Component | Type | What it does |
 |---|---|---|
@@ -126,7 +127,7 @@ A work machine pointing the Swift skills to the company's own guide:
 | Name | Path |
 |---|---|
 | `SWIFT_STYLE_GUIDE` | `~/Repos/docs/StyleGuide/README.md` |
-| `SWIFT_UNIT_TESTS` | `~/Repos/docs/Conventions/UnitTests/README.md` |
+| `SWIFT_UNIT_TESTS` | `~/Repos/docs/StyleGuide/unit-tests/README.md` |
 ```
 
 A name that resolves to a missing file is asked for, never guessed. New name: add it to
