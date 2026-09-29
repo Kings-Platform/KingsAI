@@ -1,11 +1,14 @@
 # Global instructions
 
-Generic working rules, valid in any project. Personal context (who the user is, how they like to
-work and learn, machine-specific pointers) lives in a private file, imported below. The install
-step creates it from a template — never delete it, an unresolved import leaves its literal text
-in the prompt.
+Generic working rules, valid in any project. Two private files are imported below, both created
+by the install step from a template — never delete them, an unresolved import leaves its literal
+text in the prompt:
+
+- **Personal context** — who the user is, how they like to work and learn
+- **Paths map** — where things live on this machine, by name
 
 @~/.kings-ai/personal.md
+@~/.kings-ai/paths.md
 
 ## Before acting
 
@@ -19,6 +22,8 @@ in the prompt.
 - **Prefer the cheapest structured source.** Knowledge graph, index, processed doc, prototype —
   before raw code, images or PDFs
 - **A decision already closed and documented is not reopened** without a new reason
+- **Named paths come from the paths map.** Skills and docs cite a name (`SWIFT_STYLE_GUIDE`), never
+  a machine path. A name missing from this machine's map is asked for — never guessed
 - **Plan before the first edit of a non-trivial task**, in the chat, and wait for the go-ahead.
   Nothing is edited during analysis — "auto" mode doesn't replace the plan
 

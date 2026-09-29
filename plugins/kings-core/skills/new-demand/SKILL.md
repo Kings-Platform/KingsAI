@@ -24,7 +24,9 @@ the default standard is:
 | Provisional decisions during the demand | `demandas/<name>/decisoes/` — exported to `style-guide/` when it closes |
 | Studies and prototypes | `pocs/` |
 
-All inside the project's docs folder (`.ai/`, or `docs/` where that's the convention).
+All inside the project's docs folder (`.ai/`, or `docs/` where that's the convention). The full
+version of this default is the page named `DOCUMENTATION_STANDARD` in the paths map, when this
+machine has one.
 
 ## 0. What counts as starting
 

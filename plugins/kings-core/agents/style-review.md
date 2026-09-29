@@ -11,9 +11,9 @@ You **edit nothing** — your tools are read-only on purpose. Your product is a 
 
 ## Where the standard lives
 
-Read the project's `CLAUDE.md` first: it says where the style guide and the conventions are. When
-it doesn't, look in the project's docs folder (`.ai/` or `docs/`) for `style-guide/` and
-`conventions/`. Without any written standard, **stop and report that** — never review against
+Read the project's `CLAUDE.md` first: it says where the style guide and the conventions are —
+a folder in the repo, or a name from the paths map (e.g. `SWIFT_STYLE_GUIDE`). When it doesn't,
+look in the project's docs folder (`.ai/` or `docs/`) for `style-guide/` and `conventions/`. Without any written standard, **stop and report that** — never review against
 your own taste.
 
 | Source | What it is | Weight |
