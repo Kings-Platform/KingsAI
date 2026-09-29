@@ -1,0 +1,10 @@
+{
+  "name": "kings-swift",
+  "description": "Swift and iOS: code style and unit tests, following the Swift style guide named in the paths map",
+  "author": {
+    "name": "Gui Reis",
+    "url": "https://github.com/Gui25Reis"
+  },
+  "homepage": "https://github.com/Kings-Platform/Kings-AI-Platform",
+  "license": "GPL-3.0"
+}

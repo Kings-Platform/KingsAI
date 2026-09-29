@@ -12,6 +12,11 @@
       "name": "kings-core",
       "source": "./plugins/kings-core",
       "description": "Agents and skills that work in any project: living docs, style review, code review rounds, new demands, README style, Figma files"
+    },
+    {
+      "name": "kings-swift",
+      "source": "./plugins/kings-swift",
+      "description": "Swift and iOS: code style and unit tests, following the Swift style guide named in the paths map"
     }
   ]
 }
