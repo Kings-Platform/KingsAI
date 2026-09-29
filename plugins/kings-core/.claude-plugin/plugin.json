@@ -1,0 +1,10 @@
+{
+  "name": "kings-core",
+  "description": "Agents and skills that work in any project: living docs sync, README style",
+  "author": {
+    "name": "Gui Reis",
+    "url": "https://github.com/Gui25Reis"
+  },
+  "homepage": "https://github.com/Kings-Platform/Kings-AI-Platform",
+  "license": "GPL-3.0"
+}
