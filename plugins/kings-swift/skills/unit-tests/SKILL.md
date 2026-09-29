@@ -1,8 +1,9 @@
 ---
 name: unit-tests
-description: Writes or reviews Swift unit tests following the unit test conventions — the project's own, or the Swift style guide's. Use when the user asks for unit tests, when editing a *Tests.swift file, when creating a mock, spy or stub factory, or when reviewing an existing test. Covers suite structure, naming, mocks, UI action triggers and when to run the tests.
+description: Writes or reviews Swift unit tests following the unit test conventions — the project's own, or the Swift style guide's. Use when the user asks for unit tests, when editing a *Tests.swift file or anything in a test folder, when creating a mock, spy or stub factory, or when reviewing an existing test. Covers suite structure, naming, mocks, UI action triggers and when to run the tests.
 paths:
   - "**/*Tests.swift"
+  - "**/*Tests/**"
 ---
 
 # Unit tests
