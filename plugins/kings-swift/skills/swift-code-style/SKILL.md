@@ -11,13 +11,14 @@ This skill holds **no rules** — only where they are and how to apply them.
 
 ## Where the style is
 
-| Source | Weight |
-|---|---|
-| The project's style guide, when its `CLAUDE.md` points to one | **Rules.** The team's standard wins over any personal preference |
-| `SWIFT_STYLE_GUIDE` (named path — this machine's override, or the default) | The base when the project has no style guide of its own, and the complement where it's silent |
+`SWIFT_STYLE_GUIDE`, resolved by the "Named paths" order of the global instructions:
 
-A personal rule that contradicts the project's style guide is **not** applied in that project —
-mention the conflict instead.
+1. **The standard** — this machine's override, or the default when there's none. **It wins** on
+   everything it covers
+2. **Conventions** the project's `CLAUDE.md` points to — only where the standard is silent
+3. **The default**, when an override is the standard — only where both are silent
+
+A lower source that contradicts a higher one is **not** applied — mention the conflict instead.
 
 ## How to apply
 

@@ -42,8 +42,9 @@ layers, using Claude Code's own plugin system.
 | [`readme-style`](plugins/kings-core/skills/readme-style/SKILL.md) | Skill | README standard |
 | [`fig-layout`](plugins/kings-core/skills/fig-layout/SKILL.md) | Skill | Reads a Figma `.fig` with [`kings fig-parse`](https://github.com/Kings-Platform/KingsScript) |
 
-**`kings-swift`** — reads the named paths `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS`, unless the
-project's `CLAUDE.md` points to its own:
+**`kings-swift`** — reads the named paths `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS`, in the
+[named path order](#named-paths): the machine's override is the standard, the project's
+conventions complement it, the default fills what's left:
 
 | Component | Type | What it does |
 |---|---|---|
@@ -115,10 +116,12 @@ Skills cite a **name** instead of a path. Each value points to an **index** (`RE
 | File | Role |
 |---|---|
 | [`claude-md/paths.md`](claude-md/paths.md) | **Defaults** — every name, pre-mapped to its original source. Ships with the repo |
-| `~/.kings-ai/paths.md` | **Overrides** — only the names that differ on this machine. Win name by name |
+| `~/.kings-ai/paths.md` | **Overrides** — only the names that differ on this machine; each becomes the standard for its name |
 
-`global.md` holds only the rule and imports both (the defaults through the link
-`~/.kings-ai/paths.default.md`, created by the install).
+**Order, topic by topic:** the override is the standard and wins on what it covers; conventions
+the project's `CLAUDE.md` points to fill its gaps; the default fills what's left — and is the
+standard when there's no override. `global.md` holds only this rule and imports both files (the
+defaults through the link `~/.kings-ai/paths.default.md`, created by the install).
 
 A work machine pointing the Swift skills to the company's own guide:
 
@@ -126,7 +129,7 @@ A work machine pointing the Swift skills to the company's own guide:
 | Name | Path |
 |---|---|
 | `SWIFT_STYLE_GUIDE` | `~/Repos/docs/StyleGuide/README.md` |
-| `SWIFT_UNIT_TESTS` | `~/Repos/docs/Conventions/UnitTests/README.md` |
+| `SWIFT_UNIT_TESTS` | `~/Repos/docs/StyleGuide/unit-tests/README.md` |
 ```
 
 A name that resolves to a missing file is asked for, never guessed. New name: add it to

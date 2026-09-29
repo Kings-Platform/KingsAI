@@ -1,6 +1,6 @@
 ---
 name: unit-tests
-description: Writes or reviews Swift unit tests following the unit test conventions — the project's own, or the Swift style guide's. Use when the user asks for unit tests, when editing a *Tests.swift file or anything in a test folder, when creating a mock, spy or stub factory, or when reviewing an existing test. Covers suite structure, naming, mocks, UI action triggers and when to run the tests.
+description: Writes or reviews Swift unit tests following the unit test standard (SWIFT_UNIT_TESTS) and, only where it's silent, the project's complementary conventions. Use when the user asks for unit tests, when editing a *Tests.swift file or anything in a test folder, when creating a mock, spy or stub factory, or when reviewing an existing test. Covers suite structure, naming, mocks, UI action triggers and when to run the tests.
 paths:
   - "**/*Tests.swift"
   - "**/*Tests/**"
@@ -8,27 +8,32 @@ paths:
 
 # Unit tests
 
-This skill holds **no rules**. The rules live in the unit test conventions, the only authority.
-Here is the **order**: what to read at each step, and what not to decide alone.
+This skill holds **no rules**. The rules live in the unit test standard and its complementary
+conventions. Here is the **order**: what to read at each step, and what not to decide alone.
 
-> Why the split: a rule written in two places diverges at the first fix. When a convention
-> changes, this skill doesn't.
+> Why the split: a rule written in two places diverges at the first fix. When a rule changes,
+> this skill doesn't.
 
-## Where the conventions are
+## Where the rules are — and which one wins
 
-| Source | When |
-|---|---|
-| The project's own unit test conventions | When the project's `CLAUDE.md` points to them — they **win** |
-| `SWIFT_UNIT_TESTS` (named path — this machine's override, or the default) | Otherwise |
+`SWIFT_UNIT_TESTS`, resolved by the "Named paths" order of the global instructions:
 
-Its value is the conventions' index. Nothing resolves on this machine? **Stop and ask** — never
-write tests against your own taste.
+1. **The standard** — this machine's override, or the default when there's none. **It always
+   wins** — it's what code review enforces
+2. **Complementary conventions** the project's `CLAUDE.md` points to — only where the standard is
+   silent
+3. **The default**, when an override is the standard — only where both are silent
+
+A lower source that contradicts a higher one is not applied: follow the higher one and mention the
+conflict. Nothing resolves on this machine? **Stop and ask** — never write tests against your own
+taste.
 
 ## 1. Before writing — load the right context
 
-**Always:** the conventions' index and its base pages (the process and the structure of
-a test). Every specific page (mocks, language, architecture) **complements** the base, never
-replaces it.
+**Always, in the order above:** the standard's index and every page of it that the case
+touches; then the complementary conventions and, for what's still open, the default — each from
+its index and its base pages (the process and the structure of a test). Within each, every specific page (mocks, language, architecture) **complements** the base,
+never replaces it.
 
 **Depending on the case**, open the other pages using the README's **"how to use" routing tree**
 (new mock? triggered by a button? testing an enum?) instead of guessing — it follows the pages
@@ -66,7 +71,7 @@ No branching at all? Probably one scenario — don't invent variations to "cover
 3. **The tests** — the scenarios from the map
 
 Each step fails differently (compile / runtime / assertion); together, diagnosis gets expensive
-and review can't be sliced. Two things often forgotten, both in the conventions: **assertion
+and review can't be sliced. Two things often forgotten, both in the rules: **assertion
 messages** and **extracting a private helper when a block repeats**.
 
 > Creating mocks is mechanical once the contract is known — it can run while the deep analysis of
@@ -82,16 +87,17 @@ context (done with class A, starting B)? Pause and report first.
 
 Neither is optional, and neither is done from memory:
 
-**(a) Against the conventions.** Reopen the pages from step 1 and check **item by item**.
+**(a) Against the rules.** Reopen the pages from step 1 and check **item by item**, in the same
+order — the standard first.
 
 **(b) Against the production code.** Trace **line by line** the path each assertion exercises:
 which overload is called, what reaches the mock, where each expected value comes from. Never
 deduce from a parameter or field name.
 
 **A green build is not (a).** Passing tests confirm it compiles and behaves as asserted — not
-naming, Given/When/Then, `#require` vs `#expect`, or "never compare a raw string". The feeling of
-"all green, done" is exactly the trigger to run (a) on purpose. Closing a unit means running (a)
-and (b) again on what it added, even when green.
+naming, how the test body is laid out, `#require` vs `#expect`, or "never compare a raw string".
+The feeling of "all green, done" is exactly the trigger to run (a) on purpose. Closing a unit
+means running (a) and (b) again on what it added, even when green.
 
 ## 5. Running — only when needed, only at the end
 
@@ -117,17 +123,17 @@ the code answers (that's step 4), or as a substitute for the review.
 
 ## 6. What not to decide alone
 
-Points the conventions mark as **judgement, not rule**: ask, don't pick silently — and when
+Points the rules mark as **judgement, not rule**: ask, don't pick silently — and when
 reviewing someone else's test, never flag them as errors.
 
 Also never decide alone: **widening access in production code** (`private` → `private(set)`,
-exposing an outlet) beyond the cases the conventions already list. That's production scope.
+exposing an outlet) beyond the cases the rules already list. That's production scope.
 
-## 7. When the conventions don't cover the case
+## 7. When neither the standard nor the conventions cover the case
 
 Expected — they grow by demand. **Ask**, solve it together, and at the end record the decision
-on the right page, with the reason and the discarded alternative. Never invent a convention
-silently.
+on the right page — usually the complementary conventions, since the standard belongs to whoever
+owns it — with the reason and the discarded alternative. Never invent a convention silently.
 
 ## Tests not requested
 
