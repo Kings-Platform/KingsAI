@@ -9,8 +9,7 @@
 - **Nada que cite empresa, cliente ou pessoa** — isso vai pra marketplace privado (ex.: `Kings-AI-Novibet`) ou pro arquivo pessoal privado.
 - Skill: a `description` é o gatilho — dizer **quando** usar, com as frases que o usuário falaria.
 - Agente: `tools` mínimo pro trabalho dele.
-- Validar antes de commitar: `claude plugin validate .` e `claude plugin validate plugins/<nome>`.
-- Testar instalação sempre num `HOME` temporário, nunca no `~/.claude` real.
+- Validar antes de commitar e testar instalação num config temporário: seção "Validating" do README.
 
 ## Git
 

@@ -19,6 +19,7 @@ layers, using Claude Code's own plugin system.
 - [Global instructions](#global-instructions)
 - [Structure](#structure)
 - [Adding to a plugin](#adding-to-a-plugin)
+- [Validating](#validating)
 - [Author](#author)
 
 ## Plugins
@@ -55,16 +56,16 @@ Components are namespaced by plugin: the agent is `kings-core:docs-sync`.
 ## Global instructions
 
 Plugins can't carry always-on instructions, so [`claude-md/global.md`](claude-md/global.md) is
-linked as the user's `CLAUDE.md`:
+linked as the user's `CLAUDE.md`. It imports `~/.kings-ai/personal.md`, a private file with
+personal context and machine-specific pointers, kept outside this repo.
 
 ```bash
-# Back up the current one, then link
-mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak
-ln -s "$PWD/Kings-AI-Platform/claude-md/global.md" ~/.claude/CLAUDE.md
+# Links ~/.claude/CLAUDE.md to global.md (the previous one is kept as .bak) and creates
+# ~/.kings-ai/personal.md from the template, if missing
+./Kings-AI-Platform/install/install.sh
 ```
 
-It imports `~/.kings-ai/personal.md` — a private file with personal context, kept outside this
-repo.
+Move what's personal from the `.bak` into `personal.md` — the template says what goes where.
 
 ## Structure
 
@@ -75,6 +76,7 @@ repo.
 | `plugins/<name>/agents/` | Subagents, one `.md` each |
 | `plugins/<name>/skills/<skill>/SKILL.md` | Skills |
 | [`claude-md/`](claude-md/) | Always-on instructions, linked into `~/.claude/` |
+| [`install/`](install/) | Links the instructions and creates the personal file from [`personal.example.md`](install/personal.example.md) |
 
 ## Adding to a plugin
 
@@ -83,8 +85,21 @@ repo.
 - **Agent:** `plugins/<plugin>/agents/<name>.md`, with `name`, `description` and `tools`
 - **Plugin:** a folder under `plugins/` with `.claude-plugin/plugin.json`, plus its entry in
   `marketplace.json`
-- Check before committing: `claude plugin validate .`
 - Nothing that names a company, client or person — that goes to a private marketplace
+
+## Validating
+
+```bash
+# Manifests
+claude plugin validate .
+claude plugin validate plugins/kings-core
+
+# Install in a throwaway config, so the real ~/.claude stays untouched
+export CLAUDE_CONFIG_DIR="$(mktemp -d)"
+claude plugin marketplace add ./Kings-AI-Platform
+claude plugin install kings-core@kings-ai-platform --scope user
+claude plugin list
+```
 
 </br>
 
