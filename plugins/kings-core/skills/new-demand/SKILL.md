@@ -25,8 +25,8 @@ the default standard is:
 | Studies and prototypes | `pocs/` |
 
 All inside the project's docs folder (`.ai/`, or `docs/` where that's the convention). The full
-version of this default is the page named `DOCUMENTATION_STANDARD` in the paths map, when this
-machine has one.
+version of this default is the named path `DOCUMENTATION_STANDARD`, when it resolves on this
+machine.
 
 ## 0. What counts as starting
 

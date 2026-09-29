@@ -1,9 +1,8 @@
-# Paths map
+# Path overrides
 
 <!-- Copied to ~/.kings-ai/paths.md by install.sh. Private and per machine: never commit it. -->
-<!-- Skills cite these names instead of paths. Leave a name out when this machine doesn't have it. -->
+<!-- Only the names whose location differs from the default in global.md ("Named paths"). -->
+<!-- Each path points to an index (README.md / index.md) that maps the pages behind it. -->
 
-| Name | Path | What it is |
-|---|---|---|
-| `DOCUMENTATION_STANDARD` | | How docs are organized in any personal project — read by `new-demand` and `docs-sync` |
-| `SWIFT_STYLE_GUIDE` | | Swift style guide folder: code style, project structure, unit tests — read by `kings-swift` |
+| Name | Path |
+|---|---|

@@ -42,8 +42,8 @@ layers, using Claude Code's own plugin system.
 | [`readme-style`](plugins/kings-core/skills/readme-style/SKILL.md) | Skill | README standard |
 | [`fig-layout`](plugins/kings-core/skills/fig-layout/SKILL.md) | Skill | Reads a Figma `.fig` with [`kings fig-parse`](https://github.com/Kings-Platform/KingsScript) |
 
-**`kings-swift`** — reads the style guide named `SWIFT_STYLE_GUIDE` in the paths map, unless the
-project has its own:
+**`kings-swift`** — reads the named paths `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS`, unless the
+project's `CLAUDE.md` points to its own:
 
 | Component | Type | What it does |
 |---|---|---|
@@ -97,7 +97,7 @@ linked as the user's `CLAUDE.md`. It imports two private files, kept outside thi
 | File | What it holds |
 |---|---|
 | `~/.kings-ai/personal.md` | Personal context — who you are, how you like to work |
-| `~/.kings-ai/paths.md` | Where things live **on this machine**, by name — skills cite the name, each machine sets the path |
+| `~/.kings-ai/paths.md` | This machine's **path overrides** — see [Named paths](#named-paths) |
 
 ```bash
 # Links ~/.claude/CLAUDE.md to global.md (the previous one is kept as .bak) and creates the two
@@ -106,6 +106,30 @@ linked as the user's `CLAUDE.md`. It imports two private files, kept outside thi
 ```
 
 Move what's personal from the `.bak` into `personal.md` — the template says what goes where.
+
+### Named paths
+
+Skills cite a **name** instead of a path. `global.md` pre-maps every name to a default; a machine
+overrides only what differs, in `~/.kings-ai/paths.md`. Each value points to an **index**
+(`README.md` / `index.md`) that maps the pages behind it.
+
+| Name | Default |
+|---|---|
+| `DOCUMENTATION_STANDARD` | `~/.claude/docs/padrao-documentacao.md` |
+| `SWIFT_STYLE_GUIDE` | `~/.claude/docs/KingsStyleGuide/Swift/README.md` |
+| `SWIFT_UNIT_TESTS` | `~/.claude/docs/KingsStyleGuide/Swift/UnitTests/README.md` |
+
+A work machine pointing the Swift skills to the company's own guide:
+
+```markdown
+| Name | Path |
+|---|---|
+| `SWIFT_STYLE_GUIDE` | `~/Repos/docs/StyleGuide/README.md` |
+| `SWIFT_UNIT_TESTS` | `~/Repos/docs/Conventions/UnitTests/README.md` |
+```
+
+A name that resolves to a missing file is asked for, never guessed. New name: add it to the table
+in `global.md` with its default.
 
 ## Project conventions
 
@@ -122,7 +146,7 @@ and fall back to a default when it's silent:
 | Who commits and opens PRs | The user; the AI drafts |
 | Building or running the app | Not allowed — static checks only |
 | Extra steps (ticket fields, notifications) | None |
-| A shared guide outside the repo | A **name** from the paths map (`SWIFT_STYLE_GUIDE`) — never a machine path |
+| A shared guide outside the repo | A [named path](#named-paths) (`SWIFT_STYLE_GUIDE`) — never a machine path |
 
 A company or project plugin adds its own specifics on top — never by editing `kings-core`.
 

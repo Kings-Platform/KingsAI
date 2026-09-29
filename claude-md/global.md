@@ -1,13 +1,28 @@
 # Global instructions
 
-Generic working rules, valid in any project. Two private files are imported below, both created
-by the install step from a template — never delete them, an unresolved import leaves its literal
-text in the prompt:
-
-- **Personal context** — who the user is, how they like to work and learn
-- **Paths map** — where things live on this machine, by name
+Generic working rules, valid in any project. Two private files are imported, both created by the
+install step from a template — never delete them, an unresolved import leaves its literal text in
+the prompt: the **personal context** (who the user is, how they like to work and learn), right
+below, and this machine's **path overrides**, in "Named paths".
 
 @~/.kings-ai/personal.md
+
+## Named paths
+
+Skills and docs cite a **name**, never a machine path. Each name points to an **index** (a
+`README.md` or `index.md`) — start from it; it maps the pages behind it.
+
+To resolve a name: **this machine's override wins; without one, use the default**. The resolved
+file doesn't exist on this machine? Ask — never guess another location.
+
+| Name | Default | What it is |
+|---|---|---|
+| `DOCUMENTATION_STANDARD` | `~/.claude/docs/padrao-documentacao.md` | How docs are organized in a project: demands, decisions, studies |
+| `SWIFT_STYLE_GUIDE` | `~/.claude/docs/KingsStyleGuide/Swift/README.md` | Swift code style and how screens are structured |
+| `SWIFT_UNIT_TESTS` | `~/.claude/docs/KingsStyleGuide/Swift/UnitTests/README.md` | Swift unit test conventions: process, structure, mocks, triggers |
+
+This machine's overrides:
+
 @~/.kings-ai/paths.md
 
 ## Before acting
@@ -22,8 +37,6 @@ text in the prompt:
 - **Prefer the cheapest structured source.** Knowledge graph, index, processed doc, prototype —
   before raw code, images or PDFs
 - **A decision already closed and documented is not reopened** without a new reason
-- **Named paths come from the paths map.** Skills and docs cite a name (`SWIFT_STYLE_GUIDE`), never
-  a machine path. A name missing from this machine's map is asked for — never guessed
 - **Plan before the first edit of a non-trivial task**, in the chat, and wait for the go-ahead.
   Nothing is edited during analysis — "auto" mode doesn't replace the plan
 

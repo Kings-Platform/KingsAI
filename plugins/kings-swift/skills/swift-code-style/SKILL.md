@@ -14,20 +14,18 @@ This skill holds **no rules** — only where they are and how to apply them.
 | Source | Weight |
 |---|---|
 | The project's style guide, when its `CLAUDE.md` points to one | **Rules.** The team's standard wins over any personal preference |
-| `SWIFT_STYLE_GUIDE` (paths map): `CodeStyle/` and the project structure page | The base when the project has no style guide of its own, and the complement where it's silent |
+| `SWIFT_STYLE_GUIDE` (named path — this machine's override, or the default) | The base when the project has no style guide of its own, and the complement where it's silent |
 
 A personal rule that contradicts the project's style guide is **not** applied in that project —
 mention the conflict instead.
 
 ## How to apply
 
-1. **Load only what the change touches.** The style guide's index says which page covers what:
-   a new enum → the enums page; a protocol conformance → extensions and protocols; a string shown
-   to the user → localized strings. Don't read every page for a one-line change
-2. **New screen or view controller:** the project structure page first — how screens are built
-   (ViewCode, no storyboard except the launch screen, Screen/Controller split) — unless the
-   project already does it differently. **The project's existing pattern wins** over the
-   personal default: follow what's there
+1. **Start from the index and load only what the change touches.** The index says which page
+   covers what: a new enum → the enums page; a protocol conformance → extensions and protocols;
+   a string shown to the user → localized strings. Don't read every page for a one-line change
+2. **New screen or view controller:** the guide's page on how screens are built, when it has
+   one. **The project's existing pattern wins** over the guide's default: follow what's there
 3. **Write to the rule, not to the example next to it.** Nearby code may predate the rule — the
    style applies to new code and to code the task touches, never as a license to sweep the file
 4. **A rule that cites a real file as its example:** check the file matches before applying the

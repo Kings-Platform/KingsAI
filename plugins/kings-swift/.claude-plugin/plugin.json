@@ -1,6 +1,6 @@
 {
   "name": "kings-swift",
-  "description": "Swift and iOS: code style and unit tests, following the Swift style guide named in the paths map",
+  "description": "Swift and iOS: code style and unit tests, following the SWIFT_STYLE_GUIDE and SWIFT_UNIT_TESTS named paths",
   "author": {
     "name": "Gui Reis",
     "url": "https://github.com/Gui25Reis"

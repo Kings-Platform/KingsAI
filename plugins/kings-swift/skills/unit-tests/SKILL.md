@@ -18,13 +18,14 @@ Here is the **order**: what to read at each step, and what not to decide alone.
 | Source | When |
 |---|---|
 | The project's own unit test conventions | When the project's `CLAUDE.md` points to them — they **win** |
-| `UnitTests/` inside `SWIFT_STYLE_GUIDE` (paths map) | Otherwise — the base for any Swift project |
+| `SWIFT_UNIT_TESTS` (named path — this machine's override, or the default) | Otherwise |
 
-Neither exists on this machine? **Stop and ask** — never write tests against your own taste.
+Its value is the conventions' index. Nothing resolves on this machine? **Stop and ask** — never
+write tests against your own taste.
 
 ## 1. Before writing — load the right context
 
-**Always:** the conventions' `README.md` and its two base pages (the process and the structure of
+**Always:** the conventions' index and its base pages (the process and the structure of
 a test). Every specific page (mocks, language, architecture) **complements** the base, never
 replaces it.
 
