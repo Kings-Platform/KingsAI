@@ -1,4 +1,4 @@
-# Kings AI Platform
+# KingsAI
 
 ![Claude Code](https://img.shields.io/badge/Claude_Code-D97757?logo=claude&logoColor=white)
 [![License](https://img.shields.io/badge/license-GPL--3.0-brightgreen)](./LICENSE)
@@ -56,10 +56,10 @@ Company-specific plugins live in their own private marketplaces, installed next 
 
 ```bash
 # Add the marketplace (or a local clone, to edit plugins in place)
-claude plugin marketplace add Kings-Platform/Kings-AI-Platform
+claude plugin marketplace add Kings-Platform/KingsAI
 
 # Install a plugin — user scope: every project on this machine
-claude plugin install kings-core@kings-ai-platform --scope user
+claude plugin install kings-core@kingsai --scope user
 ```
 
 | Scope | Where it applies | Setting |
@@ -75,11 +75,11 @@ nothing until an update:
 
 ```bash
 # From GitHub: fetch the marketplace, then update the plugin
-claude plugin marketplace update kings-ai-platform
-claude plugin update kings-core@kings-ai-platform
+claude plugin marketplace update kingsai
+claude plugin update kings-core@kingsai
 
 # From a local clone: commit, then update — it takes the commit checked out, even on a branch
-claude plugin update kings-core@kings-ai-platform
+claude plugin update kings-core@kingsai
 ```
 
 With [KingsScript](https://github.com/Kings-Platform/KingsScript), `kings ai-update` does all of it,
@@ -102,7 +102,7 @@ linked as the user's `CLAUDE.md`. It imports two private files, kept outside thi
 ```bash
 # Links ~/.claude/CLAUDE.md to global.md (the previous one is kept as .bak) and creates the two
 # private files from their templates, if missing
-./Kings-AI-Platform/install/install.sh
+./KingsAI/install/install.sh
 ```
 
 Move what's personal from the `.bak` into `personal.md` — the template says what goes where.
@@ -180,8 +180,8 @@ claude plugin validate plugins/kings-core
 
 # Install in a throwaway config, so the real ~/.claude stays untouched
 export CLAUDE_CONFIG_DIR="$(mktemp -d)"
-claude plugin marketplace add ./Kings-AI-Platform
-claude plugin install kings-core@kings-ai-platform --scope user
+claude plugin marketplace add ./KingsAI
+claude plugin install kings-core@kingsai --scope user
 claude plugin list
 ```
 
