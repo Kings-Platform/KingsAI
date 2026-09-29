@@ -1,0 +1,17 @@
+{
+  "name": "kings-ai-platform",
+  "owner": {
+    "name": "Gui Reis",
+    "url": "https://github.com/Gui25Reis"
+  },
+  "metadata": {
+    "description": "Reusable Claude Code agents and skills, one plugin per context"
+  },
+  "plugins": [
+    {
+      "name": "kings-core",
+      "source": "./plugins/kings-core",
+      "description": "Agents and skills that work in any project: living docs sync, README style"
+    }
+  ]
+}
