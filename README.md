@@ -17,6 +17,7 @@ layers, using Claude Code's own plugin system.
 - [Plugins](#plugins)
 - [Install](#install)
 - [Global instructions](#global-instructions)
+- [Project conventions](#project-conventions)
 - [Structure](#structure)
 - [Adding to a plugin](#adding-to-a-plugin)
 - [Validating](#validating)
@@ -26,7 +27,19 @@ layers, using Claude Code's own plugin system.
 
 | Plugin | Scope | Contents |
 |---|---|---|
-| [`kings-core`](plugins/kings-core/) | Any project | `docs-sync` agent, `readme-style` skill |
+| [`kings-core`](plugins/kings-core/) | Any project | See below |
+
+**`kings-core`:**
+
+| Component | Type | What it does |
+|---|---|---|
+| [`docs-sync`](plugins/kings-core/agents/docs-sync.md) | Agent | Keeps the project's living docs in sync with what a session delivered |
+| [`style-review`](plugins/kings-core/agents/style-review.md) | Agent | Reviews the diff against the written standard — reports, never edits |
+| [`pre-review`](plugins/kings-core/skills/pre-review/SKILL.md) | Skill | The cycle around `style-review` before human review |
+| [`code-review-analysis`](plugins/kings-core/skills/code-review-analysis/SKILL.md) | Skill | A round of PR review comments, recorded in `CR-<PR>.md` |
+| [`new-demand`](plugins/kings-core/skills/new-demand/SKILL.md) | Skill | Opens a demand: inputs, context, doc with Timeline, plan |
+| [`readme-style`](plugins/kings-core/skills/readme-style/SKILL.md) | Skill | README standard |
+| [`fig-layout`](plugins/kings-core/skills/fig-layout/SKILL.md) | Skill | Reads a Figma `.fig` with [`kings fig-parse`](https://github.com/Kings-Platform/KingsScript) |
 
 Company-specific plugins live in their own private marketplaces, installed next to this one.
 
@@ -48,10 +61,24 @@ claude plugin install kings-core@kings-ai-platform --scope user
 
 Components are namespaced by plugin: the agent is `kings-core:docs-sync`.
 
+Installed plugins are **copied to a cache, pinned to a commit** — editing the source changes
+nothing until an update:
+
+```bash
+# From GitHub: fetch the marketplace, then update the plugin
+claude plugin marketplace update kings-ai-platform
+claude plugin update kings-core@kings-ai-platform
+
+# From a local clone: commit, then update — it takes the commit checked out, even on a branch
+claude plugin update kings-core@kings-ai-platform
+```
+
+With [KingsScript](https://github.com/Kings-Platform/KingsScript), `kings ai-update` does all of it,
+and its daily checkup runs it by itself — skipping a local clone that isn't clean and on its
+default branch.
+
 > [!NOTE]
-> From a local clone (`claude plugin marketplace add ./Kings-AI-Platform`), edits take effect on
-> the next session or with `/reload-plugins` — no reinstall. From GitHub, updates arrive with
-> `claude plugin marketplace update kings-ai-platform`.
+> An update applies to new sessions — restart the running ones.
 
 ## Global instructions
 
@@ -66,6 +93,24 @@ personal context and machine-specific pointers, kept outside this repo.
 ```
 
 Move what's personal from the `.bak` into `personal.md` — the template says what goes where.
+
+## Project conventions
+
+Skills and agents carry no project paths. They read the project's `CLAUDE.md` for what they need,
+and fall back to a default when it's silent:
+
+| The skills need to know | Default when `CLAUDE.md` doesn't say |
+|---|---|
+| Docs folder | `.ai/`, or `docs/` when that's already the convention |
+| Index of work (demands and their status) | `demandas/README.md` in the docs folder |
+| Where a demand's docs live | `demandas/<name>/` |
+| Style guide and conventions | `style-guide/` and `conventions/` in the docs folder |
+| Branching model and a branch's base | Never assumed — asked |
+| Who commits and opens PRs | The user; the AI drafts |
+| Building or running the app | Not allowed — static checks only |
+| Extra steps (ticket fields, notifications) | None |
+
+A company or project plugin adds its own specifics on top — never by editing `kings-core`.
 
 ## Structure
 
