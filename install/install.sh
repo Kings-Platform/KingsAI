@@ -1,18 +1,26 @@
 #!/bin/bash
-# Links the generic instructions as the user's CLAUDE.md and creates the private personal file.
-# Safe to run again. Plugins are installed separately (see README).
+# Links the generic instructions as the user's CLAUDE.md and creates the private files it imports
+# (personal context and paths map). Safe to run again. Plugins are installed separately (see README).
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 TARGET="$CLAUDE_DIR/CLAUDE.md"
-PERSONAL="$HOME/.kings-ai/personal.md"
+PRIVATE_DIR="$HOME/.kings-ai"
 
-# The import in global.md points here; a missing file would leave the literal "@path" in the prompt.
-create_personal_file() {
-  [ -f "$PERSONAL" ] && return
-  mkdir -p "$(dirname "$PERSONAL")"
-  cp "$ROOT/install/personal.example.md" "$PERSONAL"
-  printf 'Personal file created: %s (fill it in)\n' "$PERSONAL"
+# global.md imports these; a missing file would leave the literal "@path" in the prompt.
+create_private_file() {
+  local target="$PRIVATE_DIR/$1"
+  [ -f "$target" ] && return
+  mkdir -p "$PRIVATE_DIR"
+  cp "$ROOT/install/$2" "$target"
+  printf 'Created %s (fill it in)\n' "$target"
+}
+
+# The defaults ship with the repo; a fixed link lets global.md import them without relying on how
+# a relative import resolves through the CLAUDE.md symlink.
+link_path_defaults() {
+  mkdir -p "$PRIVATE_DIR"
+  ln -sfn "$ROOT/claude-md/paths.md" "$PRIVATE_DIR/paths.default.md"
 }
 
 # An existing CLAUDE.md is kept as a dated backup, so its content can be moved to personal.md.
@@ -30,5 +38,7 @@ link_global_instructions() {
   printf 'CLAUDE.md -> %s\n' "$ROOT/claude-md/global.md"
 }
 
-create_personal_file
+create_private_file personal.md personal.example.md
+create_private_file paths.md paths.example.md
+link_path_defaults
 link_global_instructions

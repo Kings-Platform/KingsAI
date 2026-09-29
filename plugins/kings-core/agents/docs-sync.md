@@ -52,8 +52,8 @@ Find the project root (closest `.git`) and its docs folder: prefer `.ai/`, but r
 when the project already uses it — never force a rename. Read the project's `CLAUDE.md` and the
 docs index (`README.md` of the docs folder): they're the local authority on structure and format
 and win over anything generic here. If `CLAUDE.md` points to a documentation standard, read it too.
-Rules valid in every project of the user (documentation standard, vault conventions) may live in
-`~/.kings-ai/personal.md` — read it when it exists.
+When the project doesn't define its structure, read the named path `DOCUMENTATION_STANDARD` (see
+"Named paths" in the global instructions), if it resolves on this machine.
 
 No `.ai/` and no `docs/`: **don't create one.** That's the user's call — report it, with a
 proposal of what would go there.

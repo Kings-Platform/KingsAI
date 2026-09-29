@@ -1,11 +1,21 @@
 # Global instructions
 
-Generic working rules, valid in any project. Personal context (who the user is, how they like to
-work and learn, machine-specific pointers) lives in a private file, imported below. The install
-step creates it from a template — never delete it, an unresolved import leaves its literal text
-in the prompt.
+Generic working rules, valid in any project. Two private files are imported, both created by the
+install step from a template — never delete them, an unresolved import leaves its literal text in
+the prompt: the **personal context** (who the user is, how they like to work and learn), right
+below, and the **named paths** (defaults and this machine's overrides), in "Named paths".
 
 @~/.kings-ai/personal.md
+
+## Named paths
+
+Skills and docs cite a **name**, never a machine path; each name points to an **index** that maps
+the pages behind it. Resolve a name with **this machine's override first, the default otherwise**.
+The resolved file doesn't exist on this machine? Ask — never guess another location.
+
+@~/.kings-ai/paths.default.md
+
+@~/.kings-ai/paths.md
 
 ## Before acting
 
