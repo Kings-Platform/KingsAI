@@ -16,20 +16,23 @@ conventions. Here is the **order**: what to read at each step, and what not to d
 
 ## Where the rules are — and which one wins
 
-1. **The standard: `SWIFT_UNIT_TESTS`** (named path — this machine's override, or the default).
-   Its value is the standard's index. **It always wins** — it's what code review enforces
-2. **Complementary conventions** — the ones the project's `CLAUDE.md` points to. They apply
-   **only where the standard is silent**. A convention that contradicts the standard is not
-   applied: follow the standard and mention the conflict
+`SWIFT_UNIT_TESTS`, resolved by the "Named paths" order of the global instructions:
 
-The standard doesn't resolve on this machine? **Stop and ask** — never write tests against your
-own taste.
+1. **The standard** — this machine's override, or the default when there's none. **It always
+   wins** — it's what code review enforces
+2. **Complementary conventions** the project's `CLAUDE.md` points to — only where the standard is
+   silent
+3. **The default**, when an override is the standard — only where both are silent
+
+A lower source that contradicts a higher one is not applied: follow the higher one and mention the
+conflict. Nothing resolves on this machine? **Stop and ask** — never write tests against your own
+taste.
 
 ## 1. Before writing — load the right context
 
-**Always, in this order:** the standard's index and every page of it that the case touches;
-then the complementary conventions' index and its base pages (the process and the structure of a
-test). Within each, every specific page (mocks, language, architecture) **complements** the base,
+**Always, in the order above:** the standard's index and every page of it that the case
+touches; then the complementary conventions and, for what's still open, the default — each from
+its index and its base pages (the process and the structure of a test). Within each, every specific page (mocks, language, architecture) **complements** the base,
 never replaces it.
 
 **Depending on the case**, open the other pages using the README's **"how to use" routing tree**
@@ -84,8 +87,8 @@ context (done with class A, starting B)? Pause and report first.
 
 Neither is optional, and neither is done from memory:
 
-**(a) Against the rules.** Reopen the pages from step 1 and check **item by item** — the
-standard first, then the complementary conventions.
+**(a) Against the rules.** Reopen the pages from step 1 and check **item by item**, in the same
+order — the standard first.
 
 **(b) Against the production code.** Trace **line by line** the path each assertion exercises:
 which overload is called, what reaches the mock, where each expected value comes from. Never

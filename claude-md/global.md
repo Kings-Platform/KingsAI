@@ -10,8 +10,16 @@ below, and the **named paths** (defaults and this machine's overrides), in "Name
 ## Named paths
 
 Skills and docs cite a **name**, never a machine path; each name points to an **index** that maps
-the pages behind it. Resolve a name with **this machine's override first, the default otherwise**.
-The resolved file doesn't exist on this machine? Ask — never guess another location.
+the pages behind it. A name can have two values — this machine's override and the default below.
+When a skill follows a guide by name, the sources apply **topic by topic, in this order**:
+
+1. **The override**, when this machine sets one — it's **the standard** and wins on what it covers
+2. **Conventions the project's `CLAUDE.md` points to** — only where the standard is silent
+3. **The default** — only where both are silent. Without an override, the default is the standard
+
+A source that contradicts a higher one is not applied — follow the higher one and mention the
+conflict. A file that doesn't exist on this machine is skipped; nothing resolves? Ask — never
+guess another location.
 
 @~/.kings-ai/paths.default.md
 

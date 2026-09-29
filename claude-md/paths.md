@@ -1,7 +1,8 @@
 # Named paths — defaults
 
-Where each name points when this machine has no override in `~/.kings-ai/paths.md`. Every value is
-an index (`README.md` / `index.md`) that maps the pages behind it.
+The original source of each name. Without an override in `~/.kings-ai/paths.md` it's the standard;
+with one, it fills only what the override doesn't cover (order in `global.md`, "Named paths").
+Every value is an index (`README.md` / `index.md`) that maps the pages behind it.
 
 | Name | Default | What it is |
 |---|---|---|
