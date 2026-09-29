@@ -1,4 +1,4 @@
-# Kings AI Platform — instruções pra IA
+# KingsAI — instruções pra IA
 
 - **O que é e como instalar:** [README.md](README.md).
 - **Decisões e fases:** `docs/`, local e fora do git — o repo é feito pra poder ser público. Se a pasta existir, `docs/Roadmap.md` é o ponto de partida.

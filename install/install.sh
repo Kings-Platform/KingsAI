@@ -23,18 +23,19 @@ link_path_defaults() {
   ln -sfn "$ROOT/claude-md/paths.md" "$PRIVATE_DIR/paths.default.md"
 }
 
-# An existing CLAUDE.md is kept as a dated backup, so its content can be moved to personal.md.
+# A real CLAUDE.md is kept as a dated backup, so its content can be moved to personal.md; an old
+# link (e.g. to a clone that moved) is just replaced.
 link_global_instructions() {
   mkdir -p "$CLAUDE_DIR"
   if [ -L "$TARGET" ] && [ "$(readlink "$TARGET")" = "$ROOT/claude-md/global.md" ]; then
     printf 'CLAUDE.md already linked\n'
     return
   fi
-  if [ -e "$TARGET" ]; then
+  if [ -e "$TARGET" ] && [ ! -L "$TARGET" ]; then
     mv "$TARGET" "$TARGET.$(date +%Y-%m-%d_%H-%M-%S).bak"
     printf 'Previous CLAUDE.md kept as a .bak next to it\n'
   fi
-  ln -s "$ROOT/claude-md/global.md" "$TARGET"
+  ln -sfn "$ROOT/claude-md/global.md" "$TARGET"
   printf 'CLAUDE.md -> %s\n' "$ROOT/claude-md/global.md"
 }
 
