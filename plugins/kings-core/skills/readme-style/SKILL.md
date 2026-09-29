@@ -9,6 +9,9 @@ Good documentation here is **precise and visual**: the reader scans and finds wh
 Tables, bullets and code carry the *what* and the *how*. Prose only explains the *why* and the
 *when* (reason, trade-off, what **not** to do), in 1–3 sentences.
 
+Live reference of the current style, public: the
+[KingsScript README](https://github.com/Kings-Platform/KingsScript#readme) (tool, English).
+
 ## General rules
 
 - **Language:** Portuguese (pt-BR) for Brazilian or personal-business projects; English for
