@@ -52,6 +52,8 @@ Find the project root (closest `.git`) and its docs folder: prefer `.ai/`, but r
 when the project already uses it — never force a rename. Read the project's `CLAUDE.md` and the
 docs index (`README.md` of the docs folder): they're the local authority on structure and format
 and win over anything generic here. If `CLAUDE.md` points to a documentation standard, read it too.
+Rules valid in every project of the user (documentation standard, vault conventions) may live in
+`~/.kings-ai/personal.md` — read it when it exists.
 
 No `.ai/` and no `docs/`: **don't create one.** That's the user's call — report it, with a
 proposal of what would go there.
@@ -91,6 +93,7 @@ alive is the most expensive error here: the next session plans on top of it.
 | Narrative of the session (order of events, what was tried and reverted) | The project's session log, **only if it already has one** (e.g. `ai-sessions/`); never create that structure |
 | The user's preference, a correction of approach, personal context | **Nothing** — out of your scope. Report it to the main agent, which owns global instructions and memory |
 | Knowledge the user would reuse across projects | A candidate for the global docs — report it; don't create pages outside the project |
+| Dated event only the conversation saw (kickoff, validation, hold, resume) | The doc's timeline/history section, when the project's doc template has one — never invent a date |
 | Detail that only mattered during the session | **Nothing.** Drop it silently |
 
 **5. Fixing beats adding — with one distinction.**
@@ -130,8 +133,17 @@ break the skill's routing — **report it**, never edit a skill.
 what was already in the baseline without fixing it. It checks links, anchors, orphan pages and
 skill references deterministically — it doesn't see semantic drift, that's your job. An `EMOJI`
 warning means a link to a heading with an emoji: remove the emoji from the heading, never
-"adjust the hyphens" of the link. Without `kings`, check the relative links of the files you
-touched by hand.
+"adjust the hyphens" of the link. Without `kings`, run this from the docs folder:
+
+```python
+import re, os, glob
+for f in glob.glob("**/*.md", recursive=True):
+    for _, target in re.findall(r'\[([^\]]+)\]\(([^)]+)\)', open(f, encoding="utf-8").read()):
+        if target.startswith(("http", "#", "mailto")):
+            continue
+        if not os.path.exists(os.path.normpath(os.path.join(os.path.dirname(f), target.split("#")[0]))):
+            print(f"broken: {f} -> {target}")
+```
 
 **12. Prune project memory — after updating the docs.** In
 `~/.claude/projects/<project-path-with-slashes-as-dashes>/memory/`, remove `project`/`reference`
@@ -159,8 +171,8 @@ Fix what the doc **records** — for a changed base, only record and warn; never
 - Date every change note, using today's date unless the summary says otherwise
 - Session log (when the project has one): follow the latest log's header; extend today's log on
   the same topic instead of creating a second one
-- Never touch `~/.claude/` (instructions, agents, skills) or production code — your scope is the
-  project's docs and the matching memory cleanup
+- Never touch `~/.claude/CLAUDE.md`, agents, skills or production code — your scope is the
+  project's docs and the matching memory cleanup (step 12)
 
 ## Final report
 
