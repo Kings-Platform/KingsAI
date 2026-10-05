@@ -48,7 +48,9 @@ conventions complement it, the default fills what's left:
 
 | Component | Type | What it does |
 |---|---|---|
-| [`unit-tests`](plugins/kings-swift/skills/unit-tests/SKILL.md) | Skill | Writes and reviews unit tests: map, three steps, double check, when to run |
+| [`unit-tests`](plugins/kings-swift/skills/unit-tests/SKILL.md) | Skill | The order of a unit test task: context, approved scenario map, writing handed to the agent, double check, when to run |
+| [`unit-tests-write`](plugins/kings-swift/agents/unit-tests-write.md) | Agent | Writes the doubles and the suite of one unit from the approved map — never touches production code, never runs |
+| [`unit-tests-run`](plugins/kings-swift/agents/unit-tests-run.md) | Agent | Runs an assembled test command and reports per test — only when the user asked for a run |
 | [`swift-code-style`](plugins/kings-swift/skills/swift-code-style/SKILL.md) | Skill | Applies the code style and screen structure while writing Swift |
 
 Company-specific plugins live in their own private marketplaces, installed next to this one.
