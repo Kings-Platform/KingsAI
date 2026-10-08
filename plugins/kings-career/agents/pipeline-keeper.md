@@ -40,6 +40,9 @@ row that doesn't exist → `STATUS: NOT_FOUND`; don't create it.
   (case-insensitive, ignoring seniority words). Found → `STATUS: DUPLICATE` with the existing
   row quoted; don't add. The caller decides.
 - Dates as the profile uses them (`DD/MM` or ISO); copy the existing rows' format.
+- **An existing table with different columns keeps its columns.** A candidate who already had a
+  log before the plugin points the profile at it; you append rows in that file's own shape,
+  mapping the fields above into it, and never reshape the table.
 - Status vocabulary is fixed: `sent`, `pending-user: <what>`, `confirmed`, `in-process`,
   `rejected`, `discarded: <why>`, `closed`; outreach: `sent`, `queued: quota`, `accepted`,
   `replied`.
