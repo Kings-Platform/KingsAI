@@ -17,6 +17,11 @@
       "name": "kings-swift",
       "source": "./plugins/kings-swift",
       "description": "Swift and iOS: code style and unit tests, following the SWIFT_STYLE_GUIDE and SWIFT_UNIT_TESTS named paths"
+    },
+    {
+      "name": "kings-career",
+      "source": "./plugins/kings-career",
+      "description": "Job search: posting screening, ATS and email applications, LinkedIn outreach, recruiter replies, inbox triage and interview prep, following the CAREER_PROFILE named path"
     }
   ]
 }

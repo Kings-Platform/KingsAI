@@ -29,6 +29,7 @@ layers, using Claude Code's own plugin system.
 |---|---|---|
 | [`kings-core`](plugins/kings-core/) | Any project | See below |
 | [`kings-swift`](plugins/kings-swift/) | Swift and iOS projects | See below |
+| [`kings-career`](plugins/kings-career/) | Job search | See below |
 
 **`kings-core`:**
 
@@ -52,6 +53,24 @@ conventions complement it, the default fills what's left:
 | [`unit-tests-write`](plugins/kings-swift/agents/unit-tests-write.md) | Agent | Writes the doubles and the suite of one unit from the approved map — never touches production code, never runs |
 | [`unit-tests-run`](plugins/kings-swift/agents/unit-tests-run.md) | Agent | Runs an assembled test command and reports per test — only when the user asked for a run |
 | [`swift-code-style`](plugins/kings-swift/skills/swift-code-style/SKILL.md) | Skill | Applies the code style and screen structure while writing Swift |
+
+**`kings-career`** — job search as an operation. Reads the candidate's private profile through
+the named path `CAREER_PROFILE` (facts, rules, form answers, templates, pipeline); the plugin
+holds only the procedures. Details, flow and the autonomy table in its
+[README](plugins/kings-career/README.md):
+
+| Component | Type | What it does |
+|---|---|---|
+| [`job-intake`](plugins/kings-career/skills/job-intake/SKILL.md) | Skill | Entry point for a posting link: screen, duplicate check, fit by the rules, route |
+| [`ats-apply`](plugins/kings-career/skills/ats-apply/SKILL.md) | Skill | Applies through an ATS form, with a playbook per platform and the answer bank |
+| [`application-email`](plugins/kings-career/skills/application-email/SKILL.md) | Skill | Applies by email, CV attached, through the profile's send command |
+| [`linkedin-outreach`](plugins/kings-career/skills/linkedin-outreach/SKILL.md) | Skill | Invitation with note or DM, from the templates, within the weekly budget |
+| [`reply-drafter`](plugins/kings-career/skills/reply-drafter/SKILL.md) | Skill | Drafts a reply to a recruiter — sent only after approval |
+| [`inbox-triage`](plugins/kings-career/skills/inbox-triage/SKILL.md) | Skill | Sorts recent email and updates the pipeline |
+| [`interview-prep`](plugins/kings-career/skills/interview-prep/SKILL.md) | Skill | Topics, STAR stories, audio scripts, platform rules — prepares, never impersonates |
+| [`job-screener`](plugins/kings-career/agents/job-screener.md) | Agent | Reads a posting and returns a structured card — read-only |
+| [`form-filler`](plugins/kings-career/agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
+| [`pipeline-keeper`](plugins/kings-career/agents/pipeline-keeper.md) | Agent | The only writer of the pipeline, one row per action |
 
 Company-specific plugins live in their own private marketplaces, installed next to this one.
 
