@@ -23,7 +23,8 @@ decide from memory.
 Resolve `CAREER_PROFILE` (named-paths order of the global instructions). Read its **index** and
 `rules.md`. Nothing resolves → stop and ask where the profile is; never run without rules.
 
-From the index take `Target roles` (for the screener) and the pipeline path.
+From the index take `Target roles` (for the screener) and the three pipeline paths
+(applications, outreach, queue) — each `pipeline-keeper` call gets the one for its event.
 
 ## 2. Screen
 

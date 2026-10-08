@@ -10,7 +10,9 @@ don't judge the event; you record what the caller tells you.
 
 ## Input (in the prompt of whoever called you)
 
-- `PIPELINE`: path to the pipeline file (from the profile index; markdown table by default)
+- `PIPELINE`: path to the file that holds the table for this event. The profile index names one
+  per table (applications, outreach, queue); by default all three live in `pipeline.md`. The
+  caller resolves it — you never pick a file
 - `EVENT`: one of `application`, `outreach`, `queue`, `status`
 - `ROW`: the fields for that event (below)
 - `KEY` (for `status`): how to find the existing row — company + role, or the external id
@@ -38,7 +40,8 @@ row that doesn't exist → `STATUS: NOT_FOUND`; don't create it.
 
 - **Before adding an application row, search for a duplicate**: same company and a matching role
   (case-insensitive, ignoring seniority words). Found → `STATUS: DUPLICATE` with the existing
-  row quoted; don't add. The caller decides.
+  row quoted; don't add. The caller decides. (`job-intake` already checked; this is the safety
+  net for every other caller.)
 - Dates as the profile uses them (`DD/MM` or ISO); copy the existing rows' format.
 - **An existing table with different columns keeps its columns.** A candidate who already had a
   log before the plugin points the profile at it; you append rows in that file's own shape,

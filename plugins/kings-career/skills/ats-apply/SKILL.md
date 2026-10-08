@@ -35,10 +35,10 @@ form.
 
 1. `CAREER_PROFILE` → index (CV and cover-letter paths per language), `facts.md`, `answers.md`,
    `rules.md`.
-2. **Map the form's questions first.** Ask the agent for a dry run? No — cheaper: open the
-   form yourself once with `get_page_text` / a labels read, list the questions, close it. Or let
-   the agent map and return `pending` on the first pass; either is fine, but the answers must be
-   resolved **here**, not improvised there.
+2. **Map the form's questions first** — through the agent, never by reading the page here. Call
+   `form-filler` with `SUBMIT: map`: it opens the form, lists every field and question with what
+   matched the profile and what didn't, types nothing, and returns. The answers are resolved
+   **here**, never improvised there.
 3. For each question: the answer from `answers.md`; a free-text question from its "already
    answered" table; a new free-text question → write it from `facts.md` (summary, stories) and
    **show it to the user** before sending, unless the profile's autonomy says otherwise. A
@@ -49,6 +49,10 @@ form.
    dates are correct, so it can fix what the parser breaks.
 
 ## 3. Hand off
+
+**Platforms whose playbook says "account required"** (Workday, Gupy, SuccessFactors, Oracle
+Cloud…): ask the user to log in first and tell you when the form is open. The agent never logs
+in; called too early it only returns `pending: login`.
 
 Call `form-filler` with `URL`, `PLAYBOOK`, `FACTS`, `ANSWERS` (path + the resolved answers for
 this form), `FILES`, and `SUBMIT: yes` when the profile grants autonomy for applications,

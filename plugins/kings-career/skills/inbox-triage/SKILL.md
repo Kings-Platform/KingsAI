@@ -11,7 +11,7 @@ description: Reads the recent email of the candidate's application account and s
 
 ## 2. Read
 
-Search the last N threads (default: since the last triage recorded in the pipeline, or 2 days)
+Search the last N threads (default: 2 days, or the window the user gives)
 with the read-only tool. Subject and snippet are usually enough; open the body only for
 invitations, tests and anything with a deadline.
 

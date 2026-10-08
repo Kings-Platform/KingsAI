@@ -12,7 +12,8 @@ mechanics and the limits.
 ## 1. Load
 
 From `CAREER_PROFILE`: the index (languages, invitation budget), `rules.md` → Outreach and Red
-flags, the templates `invite.<lang>.md` and `dm.<lang>.md`, and the pipeline's Outreach table.
+flags, the templates `invite.<lang>.md` and `dm.<lang>.md`, and the Outreach table (the index names
+its file).
 
 ## 2. Vet the list — before the first send
 

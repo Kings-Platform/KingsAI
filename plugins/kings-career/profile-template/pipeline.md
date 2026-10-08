@@ -11,7 +11,7 @@
 Status values: `sent` · `pending-user: <what>` · `confirmed` · `in-process` · `rejected` ·
 `discarded: <why>` · `closed`.
 
-Channel values: `greenhouse` · `lever` · `ashby` · `workday` · `email` · `linkedin-dm` ·
+Channel values: `greenhouse` · `lever` · `ashby` · `workday` · `email` · `dm` ·
 `easy-apply` · `site` · `<other ATS>`.
 
 ## Outreach

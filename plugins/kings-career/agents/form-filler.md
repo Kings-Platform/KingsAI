@@ -15,7 +15,8 @@ filled with a guess — it's reported.
 - `FACTS`: the external facts page (path)
 - `ANSWERS`: the answer bank (path) plus any answers the caller resolved for this form
 - `FILES`: CV path, cover letter path (per language), language to use
-- `SUBMIT`: `yes` (submit at the end) or `no` (fill, verify, stop before the submit button)
+- `SUBMIT`: `map` (list the fields and questions, type nothing, return), `no` (fill, verify,
+  stop before the submit button) or `yes` (submit at the end)
 
 Any of `URL`, `PLAYBOOK`, `FACTS`, `ANSWERS`, `FILES` missing → `STATUS: ERROR`, nothing opened.
 
@@ -38,6 +39,7 @@ Any of `URL`, `PLAYBOOK`, `FACTS`, `ANSWERS`, `FILES` missing → `STATUS: ERROR
 2. **Map the fields first.** List every input, select, checkbox, file input and question with
    its label (one JS read, or `read_page` with `filter: interactive`). Match each to `FACTS` /
    `ANSWERS`. Anything unmatched goes to the pending list **before** you type anything.
+   `SUBMIT: map` ends here: return `STATUS: MAPPED` with every field, its match or `unmatched`.
 3. **Autofill from resume** (Workday, SuccessFactors, Lever, Flexiple): when the platform offers
    it, use it, then **re-read every experience it created**. Autofill swaps titles with companies,
    turns education and projects into jobs, puts the phone in the postal code. Fix each row to
@@ -55,7 +57,7 @@ Any of `URL`, `PLAYBOOK`, `FACTS`, `ANSWERS`, `FILES` missing → `STATUS: ERROR
 ## Output
 
 ```
-STATUS: SENT | PENDING | ERROR
+STATUS: MAPPED | SENT | PENDING | ERROR
 confirmation: <quoted text or URL, when SENT>
 filled: <n> fields, <n> files
 pending:

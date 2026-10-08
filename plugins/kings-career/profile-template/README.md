@@ -35,6 +35,9 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Cover letter files, one per language | `en: ~/Documents/CV/CoverLetter-en.pdf` |
 | Public link to the CV (for messages that can't attach) | `https://…/CV-en.pdf` |
 | Pipeline format | `markdown table` (or `csv`, `notion`) |
+| Applications table | `pipeline.md` (or a pre-existing log; the keeper appends in its columns) |
+| Outreach table (the weekly budget is counted here) | `pipeline.md` |
+| Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
 
 ## How the plugin uses this profile

@@ -42,4 +42,4 @@ the profile's send command (or a reply through the connector **only** when no at
 needed and the profile allows it). Read the sent message back and quote its time.
 
 `pipeline-keeper`, `EVENT: status` on the application row (`in-process`, with the next step), or
-`EVENT: outreach` kind `reply`.
+`EVENT: outreach` kind `reply` — each with the file the profile index names for that table.

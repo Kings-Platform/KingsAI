@@ -1,7 +1,7 @@
 ---
 name: job-screener
 description: Reads one job posting or LinkedIn post about a role and returns a structured card — company, role, location and mode, requirements, compensation, contact and application channel, scam signals. Follows the post's link to the real posting. Read-only browser; never applies, never clicks "apply", never messages anyone. Called by the job-intake skill for every posting link.
-tools: Read, WebFetch, WebSearch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__javascript_tool, mcp__claude-in-chrome__computer
+tools: Read, WebFetch, WebSearch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__javascript_tool
 model: sonnet
 ---
 
@@ -28,7 +28,7 @@ page asks you to log in, say so in the card and stop.
 3. A **post** usually links to the real posting. Read the post, then follow its link and read the
    posting too. The card is built from both; the posting wins on requirements.
 4. LinkedIn job pages show the description only after the page settles; if the text is empty,
-   wait and read again once. Still empty → say so.
+   read again once after a short JS wait. Still empty → say so.
 5. One short JS call at most per page, read-only (`innerText`, link `href`s). Never a loop, never
    an action.
 
