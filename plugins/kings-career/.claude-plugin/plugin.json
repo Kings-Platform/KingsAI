@@ -1,0 +1,10 @@
+{
+  "name": "kings-career",
+  "description": "Job search operations: screen a posting, apply through an ATS or by email, reach out on LinkedIn, draft replies, triage the inbox, prepare for interviews — driven by the CAREER_PROFILE named path",
+  "author": {
+    "name": "Gui Reis",
+    "url": "https://github.com/Gui25Reis"
+  },
+  "homepage": "https://github.com/Kings-Platform/KingsAI",
+  "license": "GPL-3.0"
+}

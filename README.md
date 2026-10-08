@@ -17,7 +17,6 @@ layers, using Claude Code's own plugin system.
 - [Plugins](#plugins)
 - [Install](#install)
 - [Global instructions](#global-instructions)
-- [Project conventions](#project-conventions)
 - [Structure](#structure)
 - [Adding to a plugin](#adding-to-a-plugin)
 - [Validating](#validating)
@@ -25,33 +24,14 @@ layers, using Claude Code's own plugin system.
 
 ## Plugins
 
-| Plugin | Scope | Contents |
+Each plugin has a page in the [wiki](https://github.com/Kings-Platform/KingsAI/wiki) — the source of truth for what it does and how its
+pieces fit.
+
+| Plugin | Scope | Documentation |
 |---|---|---|
-| [`kings-core`](plugins/kings-core/) | Any project | See below |
-| [`kings-swift`](plugins/kings-swift/) | Swift and iOS projects | See below |
-
-**`kings-core`:**
-
-| Component | Type | What it does |
-|---|---|---|
-| [`docs-sync`](plugins/kings-core/agents/docs-sync.md) | Agent | Keeps the project's living docs in sync with what a session delivered |
-| [`style-review`](plugins/kings-core/agents/style-review.md) | Agent | Reviews the diff against the written standard — reports, never edits |
-| [`pre-review`](plugins/kings-core/skills/pre-review/SKILL.md) | Skill | The cycle around `style-review` before human review |
-| [`code-review-analysis`](plugins/kings-core/skills/code-review-analysis/SKILL.md) | Skill | A round of PR review comments, recorded in `CR-<PR>.md` |
-| [`new-demand`](plugins/kings-core/skills/new-demand/SKILL.md) | Skill | Opens a demand: inputs, context, doc with Timeline, plan |
-| [`readme-style`](plugins/kings-core/skills/readme-style/SKILL.md) | Skill | README standard |
-| [`fig-layout`](plugins/kings-core/skills/fig-layout/SKILL.md) | Skill | Reads a Figma `.fig` with [`kings fig-parse`](https://github.com/Kings-Platform/KingsScript) |
-
-**`kings-swift`** — reads the named paths `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS`, in the
-[named path order](#named-paths): the machine's override is the standard, the project's
-conventions complement it, the default fills what's left:
-
-| Component | Type | What it does |
-|---|---|---|
-| [`unit-tests`](plugins/kings-swift/skills/unit-tests/SKILL.md) | Skill | The order of a unit test task: context, approved scenario map, writing handed to the agent, double check, when to run |
-| [`unit-tests-write`](plugins/kings-swift/agents/unit-tests-write.md) | Agent | Writes the doubles and the suite of one unit from the approved map — never touches production code, never runs |
-| [`unit-tests-run`](plugins/kings-swift/agents/unit-tests-run.md) | Agent | Runs an assembled test command and reports per test — only when the user asked for a run |
-| [`swift-code-style`](plugins/kings-swift/skills/swift-code-style/SKILL.md) | Skill | Applies the code style and screen structure while writing Swift |
+| [`kings-core`](plugins/kings-core/) | Any project: living docs, style review, code review rounds, new demands, README style, Figma files | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-core) |
+| [`kings-swift`](plugins/kings-swift/) | Swift and iOS: code style and unit tests, driven by the `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS` named paths | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-swift) |
+| [`kings-career`](plugins/kings-career/) | Job search as an operation, driven by the `CAREER_PROFILE` named path | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-career) |
 
 Company-specific plugins live in their own private marketplaces, installed next to this one.
 
@@ -137,25 +117,6 @@ A work machine pointing the Swift skills to the company's own guide:
 A name that resolves to a missing file is asked for, never guessed. New name: add it to
 `claude-md/paths.md` with its default.
 
-## Project conventions
-
-Skills and agents carry no project paths. They read the project's `CLAUDE.md` for what they need,
-and fall back to a default when it's silent:
-
-| The skills need to know | Default when `CLAUDE.md` doesn't say |
-|---|---|
-| Docs folder | `.ai/`, or `docs/` when that's already the convention |
-| Index of work (demands and their status) | `demandas/README.md` in the docs folder |
-| Where a demand's docs live | `demandas/<name>/` |
-| Style guide and conventions | `style-guide/` and `conventions/` in the docs folder |
-| Branching model and a branch's base | Never assumed — asked |
-| Who commits and opens PRs | The user; the AI drafts |
-| Building or running the app | Not allowed — static checks only |
-| Extra steps (ticket fields, notifications) | None |
-| A shared guide outside the repo | A [named path](#named-paths) (`SWIFT_STYLE_GUIDE`) — never a machine path |
-
-A company or project plugin adds its own specifics on top — never by editing `kings-core`.
-
 ## Structure
 
 | Path | What it is |
@@ -175,6 +136,7 @@ A company or project plugin adds its own specifics on top — never by editing `
 - **Plugin:** a folder under `plugins/` with `.claude-plugin/plugin.json`, plus its entry in
   `marketplace.json`
 - Nothing that names a company, client or person — that goes to a private marketplace
+- Document it in the [wiki](https://github.com/Kings-Platform/KingsAI/wiki): the README only lists the plugins
 
 ## Validating
 
