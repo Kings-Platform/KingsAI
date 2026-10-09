@@ -12,7 +12,8 @@ mechanics and the limits.
 ## 1. Load
 
 From `CAREER_PROFILE`: the index (languages, invitation budget), `rules.md` → Outreach and Red
-flags, the templates `invite.<lang>.md` and `dm.<lang>.md`, and the Outreach table (the index names
+flags, the `invite` and `dm` texts from where `templates/README.md` says they live (unreadable →
+stop and say so; never write the note from memory), and the Outreach table (the index names
 its file).
 
 ## 2. Vet the list — before the first send

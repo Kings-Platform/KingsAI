@@ -11,7 +11,9 @@ This skill is the **order** between the two.
 ## 1. Load
 
 From `CAREER_PROFILE`: the index (send command, CV paths, languages), `rules.md`, `facts.md`
-(only for the facts the template needs), and the template `templates/email.<lang>.html`.
+(only for the facts the template needs), and the `email` text from where `templates/README.md`
+says it lives (a file, or another source read the way its row says). Unreadable → stop and say
+so; never write the email from memory.
 
 **Language:** the posting's language; when the recruiter and the posting differ, the rule in
 `rules.md` → Presentation decides. A recruiter in the candidate's own language with an
@@ -34,7 +36,9 @@ international project → attach **both** CVs.
   and the posting marks as mandatory: name it honestly in one sentence, or leave it out — never
   claim it.
 - When the posting **dictates a subject line**, use it verbatim.
-- Write the HTML to the scratchpad (never inside the profile or a repo).
+- A source in plain paragraphs becomes HTML: one `<p>` per paragraph, `<br>` for a line break
+  inside one, links as `<a>`. Write the HTML to the scratchpad (never inside the profile or a
+  repo).
 
 ## 4. Send
 

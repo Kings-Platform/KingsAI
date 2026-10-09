@@ -1,15 +1,33 @@
 # Templates
 
-<!-- Your approved texts. One file per text and language: invite.en.md, invite.pt.md, dm.en.md, -->
-<!-- email.en.html, cover-letter.en.md … The skills fill the placeholders and change nothing else. -->
+<!-- Your approved texts. This page is the INDEX the skills read: each text, in each language, -->
+<!-- points to where it lives. A file in this folder is the default; any other source works -->
+<!-- (a doc, a note app block…) as long as the row says how to read it. One text, one source. -->
 
-| File | Used by | Limits |
+## Where each text lives
+
+| Text | Language | Source | How to read it |
+|---|---|---|---|
+| `invite` | `en` | `invite.en.md` | file in this folder |
+| `dm` | `en` | `dm.en.md` | file in this folder |
+| `email` | `en` | `email.en.html` | file in this folder |
+| `cover-letter` | `en` | `cover-letter.en.md` | file in this folder |
+| `relocation` | `en` | `relocation.en.md` | file in this folder |
+
+A text kept elsewhere: put the address in **Source** and the tool and any quirk in **How to
+read it** — e.g. `block <id>` · `document connector, fetch by id; placeholders come escaped as
+\{name\}`. The skills follow that column; they never keep a copy, and when the source can't be
+read they stop and say so instead of writing the text themselves.
+
+## What each text is for
+
+| Text | Used by | Limits |
 |---|---|---|
-| `invite.<lang>.md` | `linkedin-outreach` | LinkedIn: 300 characters with Premium, 200 without — the skill checks |
-| `dm.<lang>.md` | `linkedin-outreach` | Paragraphs separated by blank lines |
-| `email.<lang>.html` | `application-email` | Plain HTML paragraphs; the CV goes as attachment |
-| `cover-letter.<lang>.md` | `ats-apply` | Where a form has a cover-letter field; otherwise the PDF in the profile index |
-| `relocation.<lang>.md` | all | The one sentence used when relocation is `conditional` |
+| `invite` | `linkedin-outreach` | LinkedIn: 300 characters with Premium, 200 without — the skill checks |
+| `dm` | `linkedin-outreach` | Paragraphs separated by blank lines |
+| `email` | `application-email` | Paragraphs; the CV goes as attachment. HTML or plain paragraphs — the skill turns paragraphs into `<p>` |
+| `cover-letter` | `ats-apply` | Where a form has a cover-letter text field; otherwise the PDF in the profile index |
+| `relocation` | all | The one sentence used when relocation is `conditional` |
 
 ## Placeholders
 
@@ -18,8 +36,11 @@
 | `{first_name}` | The recipient's first name, capitalized |
 | `{company}` | The company, only where the template asks for it |
 | `{role}` | The role title, usually only in the email subject |
-| `{cv_link}` | The public CV link from the profile index |
-| `{relocation}` | The relocation sentence, when the posting is in another country |
+| `{cv_link}` | The public CV link from the profile index, in the text's language |
+| `{relocation}` | The `relocation` text, when the posting is in another country; otherwise the line is dropped |
+| `{country}` | The posting's country, inside `relocation` |
+
+The skills fill the placeholders and change nothing else.
 
 ## Example: `invite.en.md`
 

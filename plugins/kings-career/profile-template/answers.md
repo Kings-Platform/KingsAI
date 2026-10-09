@@ -23,7 +23,7 @@
 | Authorized to work in your country | yes |
 | Authorized to work in the US / EU / UK / other | |
 | Will require sponsorship | `yes (H-1B)` / … |
-| Open to relocation | `conditional` — sentence in `templates/` |
+| Open to relocation | `conditional` — the `relocation` text in `templates/` |
 | Based in <posting city>? | no |
 | Preferred location (free text) | |
 
