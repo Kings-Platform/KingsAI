@@ -26,10 +26,14 @@ From the application URL:
 | `zohorecruit.com` | [zoho-recruit](playbooks/zoho-recruit.md) |
 | `successfactors` | [successfactors](playbooks/successfactors.md) |
 | `oraclecloud.com` | [oracle-cloud](playbooks/oracle-cloud.md) |
-| anything else | [generic](playbooks/generic.md) — and write a new playbook from the agent's `notes` afterwards |
+| `keka.com/careers` | [keka](playbooks/keka.md) |
+| `docs.google.com/forms` / `forms.gle` | [google-forms](playbooks/google-forms.md) |
+| `linkedin.com/jobs/view` with Easy Apply (only when the profile's rules allow it) | [linkedin-easy-apply](playbooks/linkedin-easy-apply.md) |
+| anything else | the profile's **site notes** (`Site notes` in the index) for that site, if any, plus [generic](playbooks/generic.md) |
 
 A company careers page often **embeds** one of these; the playbook says how to reach the real
-form.
+form. Pass the agent both sources when they exist: the plugin playbook for the platform and the
+profile's site notes for that specific site.
 
 ## 2. Resolve the answers — before the agent opens anything
 
@@ -56,8 +60,11 @@ Cloud…): ask the user to log in first and tell you when the form is open. The 
 in; called too early it only returns `pending: login`.
 
 Call `form-filler` with `URL`, `PLAYBOOK`, `FACTS`, `ANSWERS` (path + the resolved answers for
-this form), `FILES`, and `SUBMIT: yes` when the profile grants autonomy for applications,
-`no` otherwise (then the user clicks submit).
+this form), `FILES`, and `SUBMIT: no`: the agent fills and verifies everything and stops with the
+submit button visible. **The final click is made here, in the main session**, after reading the
+agent's report — so the user's approval (the profile's autonomy, or a per-click permission
+prompt) applies to that one action. An agent relayed a "submit" by the caller may refuse it, and
+it should. `SUBMIT: yes` stays available for runs the user explicitly delegates end to end.
 
 Blocked platform (the browser tool reports "permission denied" on the domain, or a CAPTCHA, or
 a login): the agent returns `PENDING`. Don't retry around it; tell the user what to unblock and
@@ -68,8 +75,13 @@ hand over the tab with the form filled as far as it went.
 `pipeline-keeper`, `EVENT: application`, channel `<platform>`, status `sent` or
 `pending-user: <what>`, external id = the confirmation or requisition id.
 
-The agent's `notes` go into the playbook (a selector that changed, a new trap). That's how the
-next application on that platform is cheaper. Don't skip it.
+The agent's `notes` are kept so the next application is cheaper. Where they go:
+
+- **A reusable mechanic of an ATS family** (Greenhouse, Lever, Keka, Easy Apply…: a selector, a
+  widget, a trap every tenant shares) → the plugin playbook.
+- **Anything specific to one site or tenant** (a company's own careers page, a job board, a
+  question only that employer asks) → the profile's **site notes**. A new site never needs a
+  plugin change.
 
 ## Output
 

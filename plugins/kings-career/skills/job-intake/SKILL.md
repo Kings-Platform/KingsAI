@@ -66,7 +66,7 @@ an essay; don't inflate.
 | `ats:<platform>` or `site` with a form | `ats-apply` |
 | `email` | `application-email` |
 | `dm` ("DM me your resume"), or no channel at all | `linkedin-outreach`: invitation to the author; the application goes by DM after the connection is accepted |
-| `easy-apply` | Tell the user: Easy Apply is theirs to click. Still do the outreach step |
+| `easy-apply` | `ats-apply` with the Easy Apply playbook when `rules.md` allows the AI to submit Easy Apply; otherwise tell the user it's theirs to click. Still do the outreach step |
 
 **And, for every route**, the outreach rule from `rules.md` ("a posting link always means…"):
 when the author is `2nd`/`3rd`, queue the invitation through `linkedin-outreach`; when `1st`,
