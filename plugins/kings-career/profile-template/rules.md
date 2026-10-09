@@ -11,7 +11,7 @@ How any text about you is written (email, note, DM, form answer, cover letter):
 - Never claim:
 - Don't lead with:
 - Name the current employer in outreach? `yes / no`
-- Relocation: `never` / `conditional` (the exact sentence lives in `templates/`) / `open`
+- Relocation: `never` / `conditional` (the exact sentence is the `relocation` text in `templates/`) / `open`
 - When the posting language differs from the recruiter's, write in:
 
 ## Never say

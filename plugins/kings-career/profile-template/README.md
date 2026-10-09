@@ -14,7 +14,7 @@ page it needs for the task. Every skill and agent of the plugin takes its facts,
 | [facts.md](facts.md) | Who you are **as the outside should see it**: experiences, education, links, application contacts, CV paths | Everything that writes about you |
 | [rules.md](rules.md) | How to present you, what never to say, who not to contact, red flags, and where you override the plugin's default autonomy | Everything, before acting |
 | [answers.md](answers.md) | Your answer bank for application forms: salary, work authorization, relocation, start date, degree… | `ats-apply`, `form-filler` |
-| [templates/](templates/) | Your approved texts: invitation note, DM, application email, cover letter, in each language you apply in | `linkedin-outreach`, `application-email` |
+| [templates/](templates/) | Your approved texts — invitation note, DM, application email, cover letter, relocation sentence — in each language; its README says where each one lives (a file here, or another source) | `linkedin-outreach`, `application-email` |
 | [pipeline.md](pipeline.md) | Every application and contact, one row each — the single place the plugin checks "did I already apply?" | `job-intake`, `pipeline-keeper`, `linkedin-outreach` |
 
 ## Settings

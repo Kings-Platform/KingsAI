@@ -43,8 +43,9 @@ form.
    answered" table; a new free-text question → write it from `facts.md` (summary, stories) and
    **show it to the user** before sending, unless the profile's autonomy says otherwise. A
    question with no basis in the profile → it stays pending for the user.
-4. Cover letter: the profile's PDF when there's a file field; the `cover-letter.<lang>.md`
-   text when it's a text field; always when the field exists, even if optional (profile rule).
+4. Cover letter: the profile's PDF when there's a file field; the `cover-letter` text, from
+   where `templates/README.md` says it lives, when it's a text field; always when the field
+   exists, even if optional (profile rule).
 5. Autofill platforms (Workday, SuccessFactors, Lever): tell the agent which experiences and
    dates are correct, so it can fix what the parser breaks.
 
