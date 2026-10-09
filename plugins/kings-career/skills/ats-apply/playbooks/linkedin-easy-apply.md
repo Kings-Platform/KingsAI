@@ -7,7 +7,7 @@ not a page; some employers feed it from their ATS (`applicantTrackingSystemName=
 ## Opening and finding the modal
 
 - **Before anything**, read the job page for "Candidatura enviada" under "Status da candidatura"
-  (already applied) or "Não aceita mais candidaturas" (closed). Either one: stop and report.
+  (already applied) or "Não aceita mais candidaturas" / "Não aceita candidaturas agora" (closed — match "Não aceita" + "candidaturas"). Either one: stop and report.
 
 - A ref click on "Candidatura simplificada" sometimes doesn't open it; a **coordinate click** does.
 - `[role=dialog]` and `.jobs-easy-apply-modal` don't match (hashed classes). Find the root by
