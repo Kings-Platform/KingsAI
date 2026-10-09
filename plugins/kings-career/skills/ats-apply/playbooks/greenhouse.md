@@ -8,6 +8,11 @@
   an iframe `job-boards.greenhouse.io/embed/job_app`. The browser tool may not run JS on the
   company's domain; open the board URL or the embed directly:
   `boards.greenhouse.io/embed/job_app?for=<company>&token=<id>`.
+- **Start with "Autofill my application" (MyGreenhouse)** when the button is there — the user's
+  saved profile fills name, contact, location and resume. Then read every value back (react-select
+  values live in `.select__single-value`, not in the input) and fill only what's left.
+- Embed host: `job-boards.greenhouse.io/embed/job_app?for=<company>&token=<id>` works too. Keep
+  `location.href` out of JS results — the token in the query string gets the result blocked.
 - **"Already applied?"** `my.greenhouse.io/applications` lists the user's applications when
   they're logged in to MyGreenhouse. Some boards autofill from it ("Autofilled from
   MyGreenhouse") — check nothing was overwritten.
@@ -19,6 +24,10 @@
   and `question_<n>` for the company's questions.
 - **Text and textarea: `form_input` by ref** — reliable. Click + `type` on a ref sometimes
   doesn't enter the text.
+- Company questions can be single-line inputs even for long answers; `form_input` by ref works.
+- `find` may return nothing on the embed; `read_page` with filter `interactive` gives usable refs.
+- `scrollIntoView` may not move the page: `scrollTo(scrollY + rect.top - 300)`, then click.
+- The `[role=option]` list always carries the phone-country options; filter `+\d+$` when reading too.
 - Some fields that look like text are react-selects (`form_input` returns empty): treat them as
   selects.
 

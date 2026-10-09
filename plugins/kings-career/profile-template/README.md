@@ -39,6 +39,7 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Outreach table (the weekly budget is counted here) | `pipeline.md` |
 | Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
+| Site notes (selectors, traps and quirks of specific job sites and company careers pages) | `sites.md` (or any notes file) |
 
 ## How the plugin uses this profile
 

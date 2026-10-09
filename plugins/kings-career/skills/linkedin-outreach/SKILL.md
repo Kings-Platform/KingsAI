@@ -1,6 +1,6 @@
 ---
 name: linkedin-outreach
-description: Sends a LinkedIn invitation with a note, or a DM to an existing connection, using the profile's templates. Use when job-intake asks to invite the author of a posting, when the user shares profile links ("connect with these", "send the note to"), when a recruiter accepted and a DM is due, or when a batch of recruiters needs the standard message. Respects the weekly invitation budget from the profile, queues what doesn't fit, and records every send in the pipeline. Never opens a profile page or a conversation that it doesn't need to.
+description: Sends a LinkedIn invitation with a note, or a DM to an existing connection, using the profile's templates. Use when job-intake asks to invite the author of a posting, when the user shares profile links ("connect with these", "send the note to"), when a recruiter accepted and a DM is due, or when a batch of recruiters needs the standard message. Respects the weekly invitation budget from the profile, queues what doesn't fit, and records every send in the pipeline. Never opens a profile page or a conversation that it doesn't need to. Also withdraws old pending invitations ("cancel the invites older than 2 months", "clean up sent invitations") and visits profiles when the invitation quota is spent.
 ---
 
 # LinkedIn outreach
@@ -60,7 +60,33 @@ fine; **opening a conversation marks it read** — only open the one you're writ
 
 A reply to a recruiter is **not** this skill: that's `reply-drafter`, with approval.
 
-## 6. Verify and record
+## 6. When the quota is spent: visit instead
+
+When the budget (or LinkedIn's own limit) is spent and the profile's rules say so, visit the
+person's profile so the visit shows in their history, and keep the invitation queued. Open
+`/in/<slug>` in a **new tab**, wait a few seconds for the title to show the name, close the tab.
+No clicks on the profile.
+
+## 7. Withdraw old invitations
+
+When the user asks to clean up pending invitations (the profile's rules give the age, e.g. 2+
+months, and whether to visit a profile first):
+
+1. Open `/mynetwork/invitation-manager/sent/` **once** in its own tab and load the list with real
+   wheel scrolls (scripted scrolling doesn't trigger the lazy load). Collect the cards at or over
+   the age, with name and headline.
+2. Profile visits the rules ask for happen in **another tab** (open, wait, close) — never by
+   navigating the list tab, which would force reloading the whole list for every person.
+3. Withdraw each one from the list: find the card **by exact name**, center it, click its
+   "Withdraw"/"Retirar", confirm in the modal (it doesn't show the name, so the name check is on
+   the card), and check the card is gone. Never click a fixed coordinate.
+4. Batches of ~25 with pauses; stop at any LinkedIn warning. A withdrawn person can't be
+   invited again for ~3 weeks, and withdrawing frees **no** weekly quota — say so if the user
+   expects it to.
+
+Estimate the cost before a big batch (number of cards × actions) and tell the user.
+
+## 8. Verify and record
 
 After a batch, open `/mynetwork/invitation-manager/sent/` once and confirm the names are there
 (the list paginates by scroll; load until every name of the batch appears). Then one
