@@ -1,7 +1,7 @@
 ---
 name: opportunity-analyst
 description: Reads one job posting and its application record, decides everything the Notion pipeline needs and writes the shareable Opportunities page itself — posting data, overview, official contact and the posting's literal text in a synced block — then leaves the private Applications page to the opportunity-writer agent through a plan file. Gets the text through fetch_posting.py (or its own browser tab). Called by the opportunity-log skill, one posting per call.
-tools: Read, Write, Bash, Grep, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__tabs_close_mcp
+tools: Read, Write, Bash, Grep, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, mcp__claude_ai_Gmail__get_thread, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__tabs_close_mcp
 model: sonnet
 ---
 
@@ -71,7 +71,9 @@ Follow the profile's property rules and mapping rules, from evidence only:
   facts.md").
 - With an application: its properties (status from the latest event in the record, language sent,
   platform, expectation sent, gaps) and the "Respostas enviadas" body — only what the record holds;
-  "não registrado" for what it doesn't.
+  "não registrado" for what it doesn't. An application sent by e-mail whose record has a Gmail id →
+  read that thread (`get_thread`, read-only, `PLAIN_TEXT`) for the recipient, subject, language,
+  attachment and the gap sentence; a reply in the thread is a later event for the status.
 - `processo`: when the record shows a selection process, search the Empregos data source for the
   company and put that page's URL; otherwise `null`.
 
