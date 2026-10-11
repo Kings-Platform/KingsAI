@@ -54,6 +54,8 @@ Per posting, a scratch directory `OUT` of its own.
    profile) and `PLAN`. A plan with no application and no deferred properties needs no writer. They have no shell: follow them by their completion
    notices, not by a done-file.
 
+- Once the last hand-back report is in, finish (options, report) in the same turn: never stop to
+  wait for a completion notice that only adds token counts — it may not wake the session.
 - `NEEDS_TEXT` → nothing readable even in the browser: ask the user for the text (a paste becomes
   `DESCRIPTION_FILE`) or for confirmation that the posting is gone.
 - `PARTIAL` or `ERROR` from a writer → report what was and wasn't written; the plan file stays,
