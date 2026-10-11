@@ -34,13 +34,18 @@ The writer checks for duplicates; a posting already complete in Notion can simpl
 
 Per posting, a scratch directory `OUT` of its own.
 
+0. **Route first.** `python3 -I scripts/fetch_posting.py --supports <LINK>` exits 2 for a source
+   that needs the browser; a posting that is only a LinkedIn post (no `LINK`) needs it too. Those
+   skip step 1 and go straight to step 2 — a first call without the browser would only come back
+   `NEEDS_BROWSER`.
 1. **Analysts in parallel** (batches of 5–10, in the background, watched as the session's own
    rules say): `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT`
    (this skill's `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`,
    `APPLICATION`, `OUT`, `BROWSER: no`.
-2. **Browser cases one at a time.** Chrome's tabs are shared by every agent, so parallel browsing
-   mixes pages. Each `NEEDS_BROWSER` → the same analyst call with `BROWSER: allowed`, waiting for
-   it to return before the next.
+2. **Browser cases one at a time**, in parallel with step 1 (one browser agent at a time, any
+   number of non-browser ones). Chrome's tabs are shared by every agent, so parallel browsing
+   mixes pages. Each routed case and each `NEEDS_BROWSER` → the analyst call with
+   `BROWSER: allowed`, waiting for it to return before the next.
 3. **Options once.** Merge every plan's `new_options`, add them in one `update-data-source` per
    column (fetch it, resend every existing option plus the new ones), and append them to the
    profile's "Select options" list. Writers never touch a schema, so parallel writers can't erase

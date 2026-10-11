@@ -3,6 +3,7 @@
 
 Usage:
   fetch_posting.py <posting-url> [--body-out FILE]
+  fetch_posting.py --supports <posting-url>       (exit 0 = served without a browser, 2 = needs one)
   fetch_posting.py --wrap TEXT_FILE --title "<header>" --body-out FILE
   fetch_posting.py --unavailable --body-out FILE
 
@@ -15,7 +16,7 @@ indented inside a synced block. --wrap does the same for text read elsewhere (a 
 --unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy,
-SmartRecruiters, Recruitee and
+SmartRecruiters, Recruitee, Workday and
 LinkedIn job pages (the logged-out jobs-guest endpoint). LinkedIn posts need a session and are
 not supported.
 """
@@ -237,6 +238,25 @@ def recruitee(url):
     }
 
 
+def workday(url):
+    match = re.search(r"https://([^./]+)\.(wd\d+)\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([^/]+)/(?:job|details)/(.+?)/?$", url)
+    if not match:
+        return None
+    tenant, pod, site, path = match.groups()
+    data = json.loads(get(f"https://{tenant}.{pod}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/job/{path}"))
+    job = data["jobPostingInfo"]
+    text = to_markdown(job.get("jobDescription", ""))
+    return {
+        "source": "workday",
+        "title": job.get("title"),
+        "location": job.get("location"),
+        "posted_at": job.get("startDate"),
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def approximate_date(relative):
     """Turns LinkedIn's '3 days ago' into a date; the result is approximate by nature."""
     match = re.match(r"(\d+)\s+(minute|hour|day|week|month)", relative)
@@ -278,7 +298,18 @@ def write_body(content):
             body.write(content)
 
 
+SUPPORTED = (
+    r"greenhouse\.io/[^/]+/jobs/\d+", r"/\d{7,}/?$", r"jobs\.lever\.co/", r"jobs\.ashbyhq\.com/",
+    r"linkedin\.com/jobs/view/", r"currentJobId=", r"\.gupy\.io/jobs/", r"jobs\.smartrecruiters\.com/",
+    r"\.recruitee\.com/o/", r"\.myworkdayjobs\.com/",
+)
+
+
 def main():
+    if "--supports" in sys.argv:
+        # Cheap preflight for the caller: exit 0 when a public endpoint can serve this URL.
+        target = option("--supports") or ""
+        sys.exit(0 if any(re.search(pattern, target) for pattern in SUPPORTED) else 2)
     if "--unavailable" in sys.argv:
         write_body("<synced_block>\n\t" + UNAVAILABLE + "\n</synced_block>\n")
         return
@@ -289,7 +320,7 @@ def main():
     if len(sys.argv) < 2 or sys.argv[1].startswith("--"):
         sys.exit("usage: fetch_posting.py <posting-url> [--body-out FILE]")
     url = sys.argv[1]
-    for fetcher in (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, greenhouse):
+    for fetcher in FETCHERS:
         try:
             result = fetcher(url)
         except Exception as error:  # a dead posting or a changed endpoint: try the next source
@@ -303,6 +334,9 @@ def main():
             return
     print(json.dumps({"url": url, "error": "unsupported source"}))
     sys.exit(2)
+
+
+FETCHERS = (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, workday, greenhouse)
 
 
 if __name__ == "__main__":
