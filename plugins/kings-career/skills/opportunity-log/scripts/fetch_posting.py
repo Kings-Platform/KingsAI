@@ -7,7 +7,7 @@ Prints JSON: {source, title, location, posted_at, poster, emails, text}. `text` 
 body as Notion-flavored markdown (bold section titles, "- " bullets). Exit code 2 when the URL
 belongs to no supported source: the caller falls back to reading the page in a browser.
 
-Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby and
+Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy and
 LinkedIn job pages (the logged-out jobs-guest endpoint). LinkedIn posts need a session and are
 not supported.
 """
@@ -143,6 +143,35 @@ def linkedin_job(url):
     }
 
 
+def gupy(url):
+    if not re.search(r"\.gupy\.io/jobs/\d+", url):
+        return None
+    page = get(url)
+    data = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', page, re.S)
+    if not data:
+        return None
+    job = json.loads(data.group(1))["props"]["pageProps"]["job"]
+    sections = [
+        ("", job.get("description")),
+        ("Responsabilidades e atribuições", job.get("responsibilities")),
+        ("Requisitos e qualificações", job.get("prerequisites")),
+        ("Informações adicionais", job.get("relevantExperiences")),
+    ]
+    text = "\n".join(
+        (f"**{title}**\n" if title else "") + to_markdown(body) for title, body in sections if body
+    )
+    place = ", ".join(part for part in (job.get("addressCity"), job.get("addressStateShortName")) if part)
+    return {
+        "source": "gupy",
+        "title": job.get("name"),
+        "location": place or job.get("workplaceType"),
+        "posted_at": (job.get("publishedAt") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def approximate_date(relative):
     """Turns LinkedIn's '3 days ago' into a date; the result is approximate by nature."""
     match = re.match(r"(\d+)\s+(minute|hour|day|week|month)", relative)
@@ -157,7 +186,7 @@ def main():
     if len(sys.argv) != 2:
         sys.exit("usage: fetch_posting.py <posting-url>")
     url = sys.argv[1]
-    for fetcher in (lever, ashby, linkedin_job, greenhouse):
+    for fetcher in (lever, ashby, linkedin_job, gupy, greenhouse):
         try:
             result = fetcher(url)
         except Exception as error:  # a dead posting or a changed endpoint: try the next source
