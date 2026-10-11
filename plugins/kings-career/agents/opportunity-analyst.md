@@ -65,6 +65,7 @@ Follow the profile's property rules and mapping rules, from evidence only:
   people who only reacted or reshared), always with the **profile** link, never the post's URL. A post at
   `linkedin.com/posts/<slug>_…` was written by `linkedin.com/in/<slug>`; a `feed/update` post →
   `find` the author's profile link on the page. A LinkedIn job page's `poster` counts.
+- No gap → the property stays empty (never "nenhum gap relevante").
 - Gaps are only what Gui lacks: check years and skills against `facts.md` before writing one
   (7+ years of iOS meets "4–5 years"; a requirement he meets is not a gap, not even as context).
 - Property text speaks of Gui, never of the files you read ("sem Objective-C", not "não está no
@@ -88,7 +89,9 @@ Follow the profile's property rules and mapping rules, from evidence only:
    only its empty properties and replace the body only if it holds just the "Vaga encerrada" note.
    Not found → `create-pages`.
 2. Content = the Overview and Contato sections + `## Descrição da vaga {color="blue_bg"}` + the
-   content of `OUT/body.md`, **copied exactly** — never retyped from memory, never translated.
+   content of `OUT/body.md`, **copied exactly** — never retyped from memory, never translated, no
+   emoji or label "cleaned up". Two posts of the same posting → the text of one of them, verbatim;
+   the other author goes to Contato.
 3. A select value that isn't an option yet (a new currency or sector) → leave that property out
    and put it in the plan's `deferred_properties`; the caller creates the option and the writer
    sets it.
