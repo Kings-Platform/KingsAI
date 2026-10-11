@@ -101,6 +101,7 @@ Follow the profile's property rules and mapping rules, from evidence only:
 Before writing the page, check the plan against this list — each item has gone wrong before:
 - Every gap is something `facts.md` doesn't support; a must-have the posting asks for and the
   candidate lacks (another platform, a stack) is listed; nothing they meet, no logistics, no "none".
+  A limit of the form or the posting (no field for your stack, no role listed) is not a gap.
 - Contato holds only people reachable about the role, each with a profile link when one exists.
 - Moeda follows the rule (the range's currency, else the job's country); Setor and Contrato only
   with evidence; Valor aprox. only from the posting's own text.
