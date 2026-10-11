@@ -104,6 +104,8 @@ Before writing the page, check the plan against this list — each item has gone
 - Contato holds only people reachable about the role, each with a profile link when one exists.
 - Moeda follows the rule (the range's currency, else the job's country); Setor and Contrato only
   with evidence; Valor aprox. only from the posting's own text.
+- Local and the country tags follow the profile's format; the work mode lives only in its own
+  property, never inside Local.
 
 You write only the Opportunities page. The Applications page is the writer's, even when it already
 exists: put its id and content in the plan.
