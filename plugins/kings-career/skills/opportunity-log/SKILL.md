@@ -1,6 +1,6 @@
 ---
 name: opportunity-log
-description: Saves job postings to the candidate's Notion pipeline — the shareable Opportunities page with the posting's own text, and the private Applications page when there was an application. Use when the user says "save this job to Notion", "add this posting for a friend", "log this application in Notion", "migrate my old applications to Notion", or when job-intake records an application and the profile's pipeline is in Notion. Hands each posting to the opportunity-analyst agent (decides) and then the opportunity-writer agent (writes), and reports the pages.
+description: Saves job postings to the candidate's Notion pipeline — the shareable Opportunities page with the posting's own text, and the private Applications page when there was an application. Use when the user says "save this job to Notion", "add this posting for a friend", "log this application in Notion", "migrate my old applications to Notion", or when job-intake records an application and the profile's pipeline is in Notion. Hands each posting to the opportunity-analyst agent (decides and writes the opportunity) and then the opportunity-writer agent (writes the application), and reports the pages.
 ---
 
 # Opportunity log
@@ -9,8 +9,8 @@ Two agents per posting, split by the kind of work:
 
 | Step | Agent | Model | Does |
 |---|---|---|---|
-| Decide | `opportunity-analyst` | Sonnet | Gets the literal text (script or its own tab), writes the description section ready to paste, decides every property, the overview, contact, gaps, status and answers → `plan.json` |
-| Write | `opportunity-writer` | Haiku | Copies the plan into Notion: duplicate check, missing select options, both pages, the relation |
+| Decide + opportunity | `opportunity-analyst` | Sonnet | Gets the literal text (script or its own tab), decides every property, the overview, contact, gaps, status and answers, and writes the Opportunities page itself (a faithful copy of the posting needs the model that read it) → `plan.json` |
+| Application | `opportunity-writer` | Haiku | From the plan: the Applications page, its relation to the opportunity, and the opportunity properties that waited for a new option |
 
 This skill decides **what** to send and in what batches.
 
@@ -41,7 +41,7 @@ Per posting, a scratch directory `OUT` of its own.
 1. **Analysts in parallel** (batches of 5–10, in the background, watched as the session's own
    rules say): `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT`
    (this skill's `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`,
-   `APPLICATION`, `OUT`, `BROWSER: no`.
+   `APPLICATION`, `OUT`, `OPPORTUNITIES` (the data source id from the profile), `BROWSER: no`.
 2. **Browser cases one at a time**, in parallel with step 1 (one browser agent at a time, any
    number of non-browser ones). Chrome's tabs are shared by every agent, so parallel browsing
    mixes pages. Each routed case and each `NEEDS_BROWSER` → the analyst call with
@@ -50,8 +50,8 @@ Per posting, a scratch directory `OUT` of its own.
    column (fetch it, resend every existing option plus the new ones), and append them to the
    profile's "Select options" list. Writers never touch a schema, so parallel writers can't erase
    each other's options.
-4. **Writers in parallel**: `opportunity-writer` with `OPPORTUNITIES` and `APPLICATIONS` (the data
-   source ids from the profile) and `PLAN`. They have no shell: follow them by their completion
+4. **Writers in parallel**: `opportunity-writer` with `APPLICATIONS` (the data source id from the
+   profile) and `PLAN`. A plan with no application and no deferred properties needs no writer. They have no shell: follow them by their completion
    notices, not by a done-file.
 
 - `NEEDS_TEXT` → nothing readable even in the browser: ask the user for the text (a paste becomes

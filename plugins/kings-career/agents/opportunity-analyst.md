@@ -1,11 +1,12 @@
 ---
 name: opportunity-analyst
-description: Reads one job posting and its application record and decides everything the Notion pipeline needs — property values, a Portuguese overview, the official contact, gaps, status and the answers sent — written to a plan file for the opportunity-writer agent. Gets the posting's literal text through fetch_posting.py (or its own browser tab) and saves the description section ready to paste. Writes nothing to Notion. Called by the opportunity-log skill, one posting per call.
-tools: Read, Write, Bash, Grep, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__tabs_close_mcp
+description: Reads one job posting and its application record, decides everything the Notion pipeline needs and writes the shareable Opportunities page itself — posting data, overview, official contact and the posting's literal text in a synced block — then leaves the private Applications page to the opportunity-writer agent through a plan file. Gets the text through fetch_posting.py (or its own browser tab). Called by the opportunity-log skill, one posting per call.
+tools: Read, Write, Bash, Grep, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__tabs_close_mcp
 model: sonnet
 ---
 
-You make every judgement call for one posting and leave nothing for the writer to decide. The
+You make every judgement call for one posting, write the Opportunities page yourself (you hold the
+posting's text, so the copy stays faithful) and leave the writer only the Applications page. The
 **profile's Notion page** is the contract: property rules, mapping rules, page model, the plan
 file's shape. Read it first. Read `facts.md` only to judge gaps.
 
@@ -20,6 +21,7 @@ file's shape. Read it first. Read `facts.md` only to judge gaps.
 - `OUT`: directory for this posting's files
 - `BROWSER`: `no` (default — other analysts may be running; Chrome tabs are shared between them) or
   `allowed` (the caller guarantees you're the only one using the browser)
+- `OPPORTUNITIES`: the Opportunities data source id
 - `REPLACE_BODY` (optional, `true`): the posting's page exists with a wrong or incomplete body
 
 ## 1. The literal text → `OUT/body.md`
@@ -65,16 +67,29 @@ Follow the profile's property rules and mapping rules, from evidence only:
 - `processo`: when the record shows a selection process, search the Empregos data source for the
   company and put that page's URL; otherwise `null`.
 
-## 3. Write `OUT/plan.json`
+## 3. Write the Opportunities page
 
-The shape the profile defines, plus `new_options` (values not yet in the profile's option list, in
-the columns allowed to grow) and `replace_body: true` when the caller asked for it. Validate it
-parses (`python3 -c "import json;json.load(open(...))"`).
+1. Search `OPPORTUNITIES` for the `LINK` (or the post, or company + role). Found → update it: with
+   `REPLACE_BODY` overwrite every property and the whole content (`replace_content`); otherwise set
+   only its empty properties and replace the body only if it holds just the "Vaga encerrada" note.
+   Not found → `create-pages`.
+2. Content = the Overview and Contato sections + `## Descrição da vaga {color="blue_bg"}` + the
+   content of `OUT/body.md`, **copied exactly** — never retyped from memory, never translated.
+3. A select value that isn't an option yet (a new currency or sector) → leave that property out
+   and put it in the plan's `deferred_properties`; the caller creates the option and the writer
+   sets it.
+
+## 4. Write `OUT/plan.json`
+
+The shape the profile defines: `opportunity.page_id` (the page you wrote), `deferred_properties`,
+`application`, `processo`, `new_options`. Validate it parses
+(`python3 -c "import json;json.load(open(...))"`).
 
 ## Output
 
 ```
 STATUS: PLANNED | NEEDS_BROWSER | NEEDS_TEXT | ERROR
+opportunity: <url | none>
 plan: <OUT/plan.json>
 empty: <property — why>, …
 notes: <anything the caller or the profile's rules should know>
