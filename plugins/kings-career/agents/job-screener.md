@@ -1,7 +1,7 @@
 ---
 name: job-screener
 description: Reads one job posting or LinkedIn post about a role and returns a structured card — company, role, location and mode, requirements, compensation, contact and application channel, scam signals. Follows the post's link to the real posting. Read-only browser; never applies, never clicks "apply", never messages anyone. Called by the job-intake skill for every posting link.
-tools: Read, WebFetch, WebSearch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__javascript_tool
+tools: Read, WebFetch, WebSearch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__javascript_tool, mcp__claude-in-chrome__tabs_close_mcp
 model: sonnet
 ---
 
@@ -31,6 +31,8 @@ page asks you to log in, say so in the card and stop.
    read again once after a short JS wait. Still empty → say so.
 5. One short JS call at most per page, read-only (`innerText`, link `href`s). Never a loop, never
    an action.
+6. Work in **a tab you create**, and close that tab before returning — Chrome's tabs are shared
+   with other agents. Never touch a tab you didn't open.
 
 ## Step 2 — Extract
 
