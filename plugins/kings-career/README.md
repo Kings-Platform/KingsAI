@@ -24,7 +24,8 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`job-screener`](agents/job-screener.md) | Agent | Reads a posting and returns a structured card — read-only browser |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
 | [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline: one row per action |
-| [`opportunity-writer`](agents/opportunity-writer.md) | Agent | Writes one posting into Notion: the shareable opportunity page and, when applied, the private application page |
+| [`opportunity-analyst`](agents/opportunity-analyst.md) | Agent | Sonnet. Reads a posting and its application record and decides every Notion value → a plan file |
+| [`opportunity-writer`](agents/opportunity-writer.md) | Agent | Haiku. Copies a plan into Notion: the shareable opportunity page and the private application page, linked |
 
 ## The profile
 

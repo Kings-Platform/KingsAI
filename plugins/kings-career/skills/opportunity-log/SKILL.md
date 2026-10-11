@@ -1,14 +1,18 @@
 ---
 name: opportunity-log
-description: Saves job postings to the candidate's Notion pipeline — the shareable Opportunities page with the posting's own text, and the private Applications page when there was an application. Use when the user says "save this job to Notion", "add this posting for a friend", "log this application in Notion", "migrate my old applications to Notion", or when job-intake records an application and the profile's pipeline is in Notion. Hands each posting to the opportunity-writer agent and reports the pages.
+description: Saves job postings to the candidate's Notion pipeline — the shareable Opportunities page with the posting's own text, and the private Applications page when there was an application. Use when the user says "save this job to Notion", "add this posting for a friend", "log this application in Notion", "migrate my old applications to Notion", or when job-intake records an application and the profile's pipeline is in Notion. Hands each posting to the opportunity-analyst agent (decides) and then the opportunity-writer agent (writes), and reports the pages.
 ---
 
 # Opportunity log
 
-The pages are written by the `opportunity-writer` agent, one posting per call. The agent gets the
-posting's text itself (script, then its own browser tab), reads the application record it's
-pointed at, and adds select options when needed. This skill decides **what** to send and in what
-batches.
+Two agents per posting, split by the kind of work:
+
+| Step | Agent | Model | Does |
+|---|---|---|---|
+| Decide | `opportunity-analyst` | Sonnet | Gets the literal text (script or its own tab), writes the description section ready to paste, decides every property, the overview, contact, gaps, status and answers → `plan.json` |
+| Write | `opportunity-writer` | Haiku | Copies the plan into Notion: duplicate check, missing select options, both pages, the relation |
+
+This skill decides **what** to send and in what batches.
 
 ## 1. Load
 
@@ -24,18 +28,22 @@ applications log. No Notion page in the profile → stop: this profile keeps its
 | `DESCRIPTION_FILE` | Only when the caller already holds the text (a post's body read earlier, a saved copy) |
 | `APPLICATION` | The run that just applied, or a pointer into the applications log: the Índice row and its detail section. None when the user saves a posting for someone else |
 
-Check the Opportunities data source for the company first: a posting already there is sent with
-`MODE: migrate` (or skipped), never created twice.
+The writer checks for duplicates; a posting already complete in Notion can simply be skipped.
 
 ## 3. Hand off
 
-Call `opportunity-writer` with `NOTION`, `SCRIPT` (this skill's `scripts/fetch_posting.py`),
-`LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`, `APPLICATION`, `MODE`. Several postings → parallel
-calls in batches of 5–10, run in the background and watched as the session's own rules say.
+Per posting, a scratch directory `OUT` of its own. Then:
 
-- `PARTIAL` → write the pending page yourself with the values the agent returned, once.
+1. `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT` (this skill's
+   `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`, `APPLICATION`, `OUT`.
+2. `PLANNED` → `opportunity-writer` with `NOTION` and `PLAN` (`OUT/plan.json`).
+
+Several postings → run the analysts in parallel (batches of 5–10, in the background, watched as
+the session's own rules say), and start each writer as soon as its analyst returns.
+
 - `NEEDS_TEXT` → the posting is gone and there was no application: tell the user, don't retry.
-- `ERROR` → report, don't retry.
+- `PARTIAL` or `ERROR` from the writer → report what was and wasn't written; the plan file stays,
+  so a second writer call can finish it once the cause is fixed.
 
 ## 4. Migrating the old log
 

@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 """Fetch a job posting's original text from public endpoints, without a browser.
 
-Usage: fetch_posting.py <posting-url>
+Usage:
+  fetch_posting.py <posting-url> [--body-out FILE]
+  fetch_posting.py --wrap TEXT_FILE --title "<header>" --body-out FILE
+  fetch_posting.py --unavailable --body-out FILE
 
 Prints JSON: {source, title, location, posted_at, poster, emails, text}. `text` is the posting
 body as Notion-flavored markdown (bold section titles, "- " bullets). Exit code 2 when the URL
 belongs to no supported source: the caller falls back to reading the page in a browser.
+
+--body-out writes the Notion "Descrição da vaga" content, ready to paste: the text escaped and
+indented inside a synced block. --wrap does the same for text read elsewhere (a browser, a post);
+--unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy and
 LinkedIn job pages (the logged-out jobs-guest endpoint). LinkedIn posts need a session and are
@@ -33,17 +40,26 @@ def get(url):
     return result.stdout.decode("utf-8", errors="replace")
 
 
+def bold(match):
+    # Whitespace inside <b>…</b> moves outside the markers: Notion doesn't render "**A: **B".
+    inner = re.sub(r"<[^>]+>", "", match.group(2))
+    if not any(char.isalnum() for char in inner):
+        return inner
+    lead = " " if inner[0].isspace() else ""
+    tail = " " if inner[-1].isspace() else ""
+    return f"{lead}**{inner.strip()}**{tail}"
+
+
 def to_markdown(markup):
     # Greenhouse double-encodes its content: one unescape yields tags, a second yields the text.
-    text = html.unescape(html.unescape(markup))
+    text = html.unescape(html.unescape(markup)).replace("\xa0", " ")
     text = re.sub(r"<br\s*/?>", "\n", text)
-    text = re.sub(r"<(h[1-6])[^>]*>\s*(.*?)\s*</\1>", r"\n**\2**\n", text, flags=re.S)
-    text = re.sub(r"<(strong|b)>\s*(.*?)\s*</\1>", r"**\2**", text, flags=re.S)
+    text = re.sub(r"<(h[1-6])[^>]*>(.*?)</\1>", lambda m: "\n" + bold(m) + "\n", text, flags=re.S)
+    text = re.sub(r"<(strong|b)\b[^>]*>(.*?)</\1>", bold, text, flags=re.S)
     text = re.sub(r"<li[^>]*>", "- ", text)
     text = re.sub(r"</(p|li|h\d|div|ul|ol)>", "\n", text)
     text = re.sub(r"<[^>]+>", "", text)
-    text = text.replace("\xa0", " ").replace("****", "")
-    lines = [line.strip() for line in text.splitlines()]
+    lines = [re.sub(r"[ \t]{2,}", " ", line).strip() for line in text.splitlines()]
     return "\n".join(line for line in lines if line and line != "**")
 
 
@@ -183,9 +199,47 @@ def approximate_date(relative):
     return (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
 
 
+NOTION_RESERVED = re.compile(r"([\\$\[\]<>{}|^~`])")
+UNAVAILABLE = (
+    '<callout icon="🚫" color="gray_bg">Vaga encerrada — o texto original não está mais disponível.</callout>'
+)
+
+
+def notion_line(line):
+    # Bold markers and "- " bullets are kept; every other reserved character is escaped.
+    return NOTION_RESERVED.sub(r"\\\1", line)
+
+
+def synced_block(title, text):
+    lines = [f"#### **{notion_line(title)}**"] if title else []
+    lines += [notion_line(line) for line in text.splitlines() if line.strip()]
+    return "<synced_block>\n" + "\n".join("\t" + line for line in lines) + "\n</synced_block>\n"
+
+
+def option(flag):
+    if flag not in sys.argv:
+        return None
+    index = sys.argv.index(flag)
+    return sys.argv[index + 1] if index + 1 < len(sys.argv) else None
+
+
+def write_body(content):
+    path = option("--body-out")
+    if path:
+        with open(path, "w") as body:
+            body.write(content)
+
+
 def main():
-    if len(sys.argv) != 2:
-        sys.exit("usage: fetch_posting.py <posting-url>")
+    if "--unavailable" in sys.argv:
+        write_body("<synced_block>\n\t" + UNAVAILABLE + "\n</synced_block>\n")
+        return
+    if "--wrap" in sys.argv:
+        with open(option("--wrap")) as source:
+            write_body(synced_block(option("--title"), source.read()))
+        return
+    if len(sys.argv) < 2 or sys.argv[1].startswith("--"):
+        sys.exit("usage: fetch_posting.py <posting-url> [--body-out FILE]")
     url = sys.argv[1]
     for fetcher in (lever, ashby, linkedin_job, gupy, greenhouse):
         try:
@@ -195,6 +249,8 @@ def main():
             continue
         if result:
             result["url"] = url
+            header = " — ".join(part.strip() for part in (result["title"], result["location"]) if part)
+            write_body(synced_block(header, result["text"]))
             print(json.dumps(result, ensure_ascii=False, indent=1))
             return
     print(json.dumps({"url": url, "error": "unsupported source"}))
