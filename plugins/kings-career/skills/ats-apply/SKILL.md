@@ -27,6 +27,7 @@ From the application URL:
 | `successfactors` | [successfactors](playbooks/successfactors.md) |
 | `oraclecloud.com` | [oracle-cloud](playbooks/oracle-cloud.md) |
 | `keka.com/careers` | [keka](playbooks/keka.md) |
+| `jobs.quickin.io` | [quickin](playbooks/quickin.md) |
 | `docs.google.com/forms` / `forms.gle` | [google-forms](playbooks/google-forms.md) |
 | `linkedin.com/jobs/view` with Easy Apply (only when the profile's rules allow it) | [linkedin-easy-apply](playbooks/linkedin-easy-apply.md) |
 | anything else | the profile's **site notes** (`Site notes` in the index) for that site, if any, plus [generic](playbooks/generic.md) |
