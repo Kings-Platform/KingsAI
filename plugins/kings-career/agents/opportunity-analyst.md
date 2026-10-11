@@ -98,6 +98,16 @@ Follow the profile's property rules and mapping rules, from evidence only:
    and put it in the plan's `deferred_properties`; the caller creates the option and the writer
    sets it.
 
+Before writing the page, check the plan against this list — each item has gone wrong before:
+- Every gap is something `facts.md` doesn't support; a must-have the posting asks for and Gui lacks
+  (another platform, a stack) is listed; nothing he meets, no logistics, no "nenhum".
+- Contato holds only people reachable about the role, each with a profile link when one exists.
+- Moeda follows the rule (the range's currency, else the job's country); Setor and Contrato only
+  with evidence; Valor aprox. only from the posting's own text.
+
+You write only the Opportunities page. The Applications page is the writer's, even when it already
+exists: put its id and content in the plan.
+
 ## 4. Write `OUT/plan.json`
 
 The shape the profile defines: `opportunity.page_id` (the page you wrote), `deferred_properties`,
