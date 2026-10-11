@@ -16,8 +16,8 @@ indented inside a synced block. --wrap does the same for text read elsewhere (a 
 --unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy,
-SmartRecruiters, Recruitee, Workday and
-LinkedIn job pages (the logged-out jobs-guest endpoint). LinkedIn posts need a session and are
+SmartRecruiters, Recruitee, Workday, LinkedIn job pages (the logged-out jobs-guest endpoint) and
+any page that embeds the posting as schema.org JSON-LD (Teamtailor, Michael Page…). LinkedIn posts need a session and are
 not supported.
 """
 
@@ -257,6 +257,36 @@ def workday(url):
     }
 
 
+def json_ld(url):
+    # Many careers pages (Teamtailor, Michael Page and others) embed the posting as schema.org JSON-LD.
+    page = get(url)
+    for block in re.findall(r"<script[^>]*application/ld\+json[^>]*>(.*?)</script>", page, re.S):
+        try:
+            data = json.loads(block, strict=False)
+        except ValueError:
+            continue
+        items = data if isinstance(data, list) else data.get("@graph", [data])
+        posting = next((item for item in items if isinstance(item, dict) and item.get("@type") == "JobPosting"), None)
+        if not posting or not posting.get("description"):
+            continue
+        text = to_markdown(posting["description"])
+        places = posting.get("jobLocation") or []
+        place = (places[0] if isinstance(places, list) and places else places or {}).get("address", {})
+        location = ", ".join(
+            part for part in (place.get("addressLocality"), place.get("addressCountry")) if isinstance(part, str)
+        )
+        return {
+            "source": "json-ld",
+            "title": html.unescape(posting.get("title", "")).strip() or None,
+            "location": location or None,
+            "posted_at": (posting.get("datePosted") or "")[:10] or None,
+            "poster": None,
+            "emails": sorted(set(EMAIL.findall(text))),
+            "text": text,
+        }
+    return None
+
+
 def approximate_date(relative):
     """Turns LinkedIn's '3 days ago' into a date; the result is approximate by nature."""
     match = re.match(r"(\d+)\s+(minute|hour|day|week|month)", relative)
@@ -298,18 +328,19 @@ def write_body(content):
             body.write(content)
 
 
-SUPPORTED = (
-    r"greenhouse\.io/[^/]+/jobs/\d+", r"/\d{7,}/?$", r"jobs\.lever\.co/", r"jobs\.ashbyhq\.com/",
-    r"linkedin\.com/jobs/view/", r"currentJobId=", r"\.gupy\.io/jobs/", r"jobs\.smartrecruiters\.com/",
-    r"\.recruitee\.com/o/", r"\.myworkdayjobs\.com/",
-)
-
-
 def main():
     if "--supports" in sys.argv:
-        # Cheap preflight for the caller: exit 0 when a public endpoint can serve this URL.
+        # Preflight for the caller, no tokens spent: exit 0 when some source serves this URL's text.
         target = option("--supports") or ""
-        sys.exit(0 if any(re.search(pattern, target) for pattern in SUPPORTED) else 2)
+        if "linkedin.com/posts/" in target or "linkedin.com/feed/" in target:
+            sys.exit(2)
+        for fetcher in FETCHERS:
+            try:
+                if fetcher(target):
+                    sys.exit(0)
+            except Exception:
+                continue
+        sys.exit(2)
     if "--unavailable" in sys.argv:
         write_body("<synced_block>\n\t" + UNAVAILABLE + "\n</synced_block>\n")
         return
@@ -336,7 +367,7 @@ def main():
     sys.exit(2)
 
 
-FETCHERS = (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, workday, greenhouse)
+FETCHERS = (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, workday, greenhouse, json_ld)
 
 
 if __name__ == "__main__":
