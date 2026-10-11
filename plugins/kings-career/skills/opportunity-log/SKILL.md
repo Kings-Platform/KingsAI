@@ -64,8 +64,9 @@ Per posting, a scratch directory `OUT` of its own.
 ## 4. Migrating the old log
 
 Count first (rows, how many have a Link, how many will need the browser) and agree the batch size
-with the user. Rows that are summaries of several events (returns, "profile completed") aren't
-postings: skip them. Each posting row → `APPLICATION` pointing at its row and detail section; the
+with the user. Rows that only report events (returns, "profile completed") aren't postings: skip
+them — but a row that lists several applications at once (a job board session: "sent: X, Y, Z")
+holds one posting per application; split it. Each posting row → `APPLICATION` pointing at its row and detail section; the
 latest event about it in the log (a rejection, a return) sets the status. The log is retired by
 the user, not by this skill.
 

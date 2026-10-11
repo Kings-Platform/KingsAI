@@ -53,7 +53,8 @@ Follow the profile's property rules and mapping rules, from evidence only:
 - Every Opportunities property, with the exact keys, and select values spelled exactly as the
   profile's option list has them. Empty when the posting doesn't say.
 - Overview (Portuguese, 2–3 sentences + **Obrigatório** list) and the Contato section — only an
-  official contact, always with the **profile** link, never the post's URL. A post at
+  official contact (the profile's contact rule: someone who can be reached about the role — not
+  people who only reacted or reshared), always with the **profile** link, never the post's URL. A post at
   `linkedin.com/posts/<slug>_…` was written by `linkedin.com/in/<slug>`; a `feed/update` post →
   `find` the author's profile link on the page. A LinkedIn job page's `poster` counts.
 - Property text speaks of Gui, never of the files you read ("sem Objective-C", not "não está no
