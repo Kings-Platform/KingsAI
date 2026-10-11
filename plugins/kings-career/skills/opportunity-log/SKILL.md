@@ -32,18 +32,29 @@ The writer checks for duplicates; a posting already complete in Notion can simpl
 
 ## 3. Hand off
 
-Per posting, a scratch directory `OUT` of its own. Then:
+Per posting, a scratch directory `OUT` of its own.
 
-1. `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT` (this skill's
-   `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`, `APPLICATION`, `OUT`.
-2. `PLANNED` → `opportunity-writer` with `NOTION` and `PLAN` (`OUT/plan.json`).
+1. **Analysts in parallel** (batches of 5–10, in the background, watched as the session's own
+   rules say): `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT`
+   (this skill's `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`,
+   `APPLICATION`, `OUT`, `BROWSER: no`.
+2. **Browser cases one at a time.** Chrome's tabs are shared by every agent, so parallel browsing
+   mixes pages. Each `NEEDS_BROWSER` → the same analyst call with `BROWSER: allowed`, waiting for
+   it to return before the next.
+3. **Options once.** Merge every plan's `new_options`, add them in one `update-data-source` per
+   column (fetch it, resend every existing option plus the new ones), and append them to the
+   profile's "Select options" list. Writers never touch a schema, so parallel writers can't erase
+   each other's options.
+4. **Writers in parallel**: `opportunity-writer` with `OPPORTUNITIES` and `APPLICATIONS` (the data
+   source ids from the profile) and `PLAN`. They have no shell: follow them by their completion
+   notices, not by a done-file.
 
-Several postings → run the analysts in parallel (batches of 5–10, in the background, watched as
-the session's own rules say), and start each writer as soon as its analyst returns.
-
-- `NEEDS_TEXT` → the posting is gone and there was no application: tell the user, don't retry.
-- `PARTIAL` or `ERROR` from the writer → report what was and wasn't written; the plan file stays,
-  so a second writer call can finish it once the cause is fixed.
+- `NEEDS_TEXT` → nothing readable even in the browser: ask the user for the text (a paste becomes
+  `DESCRIPTION_FILE`) or for confirmation that the posting is gone.
+- `PARTIAL` or `ERROR` from a writer → report what was and wasn't written; the plan file stays,
+  so a second writer call finishes it once the cause is fixed.
+- Fixing a page already written (wrong "taken down", an incomplete description) → analyst with
+  `REPLACE_BODY: true`, then the writer.
 
 ## 4. Migrating the old log
 
