@@ -24,3 +24,19 @@ the application email. Report the account before filling; switching accounts is 
 ## Submit
 
 - "Enviar"/"Submit" at the bottom. The user may want "send me a copy" off.
+
+## Account switch
+
+- "Mudar de conta" / "Switch account" opens the account chooser in a **new tab**. Picking an
+  account already signed in loads the form there as that account (`?pli=1`, submit goes to
+  `/forms/u/<n>/…`), no password asked. The original tab stays on the old account: fill and
+  submit in the new tab. A password, code or "add account" prompt → stop, it's the user's.
+
+## More field shapes
+
+- "Outros"/"Other" can be a plain option (`data-value="Outros"`) with no text box — only the
+  `__other_option__` type has one.
+- A single-choice question can be built with `[role=checkbox]` items (text in
+  `data-answer-value` / `aria-label`); each option may also show up as its own `[role=listitem]`,
+  so filter list items by heading.
+- Read-back: the hidden `input[name^=entry.]` fields hold exactly what will be submitted.
