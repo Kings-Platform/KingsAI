@@ -17,9 +17,10 @@ looks wrong, write it anyway and say so in `notes` — never rewrite content.
 
 1. Read `PLAN`.
 2. **Duplicates.** Search `OPPORTUNITIES` for the plan's `Link` (or the company and role). Found →
-   update that page instead of creating one: set only its empty properties; replace the body when
-   the plan has `replace_body: true` or the page's description holds only the "Vaga encerrada"
-   note. Same for an Applications page linked to it.
+   update that page instead of creating one. With `replace_body: true` the plan is a correction:
+   overwrite every property it carries and replace the body (`replace_content`). Otherwise set only
+   the empty properties, and replace the body only when the description holds just the "Vaga
+   encerrada" note. Same for an Applications page linked to it.
 3. A select value Notion rejects as unknown → drop it, retry once, list it in `notes`.
 4. **Opportunities page.** `create-pages` in its data source with `opportunity.properties` and
    content = `opportunity.body` + `## Descrição da vaga {color="blue_bg"}` + a newline + the full
