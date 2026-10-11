@@ -34,14 +34,15 @@ def get(url):
 
 
 def to_markdown(markup):
-    text = html.unescape(markup)
+    # Greenhouse double-encodes its content: one unescape yields tags, a second yields the text.
+    text = html.unescape(html.unescape(markup))
     text = re.sub(r"<br\s*/?>", "\n", text)
     text = re.sub(r"<(h[1-6])[^>]*>\s*(.*?)\s*</\1>", r"\n**\2**\n", text, flags=re.S)
     text = re.sub(r"<(strong|b)>\s*(.*?)\s*</\1>", r"**\2**", text, flags=re.S)
     text = re.sub(r"<li[^>]*>", "- ", text)
     text = re.sub(r"</(p|li|h\d|div|ul|ol)>", "\n", text)
     text = re.sub(r"<[^>]+>", "", text)
-    text = text.replace("\xa0", " ")
+    text = text.replace("\xa0", " ").replace("****", "")
     lines = [line.strip() for line in text.splitlines()]
     return "\n".join(line for line in lines if line and line != "**")
 
