@@ -4,6 +4,7 @@
 Usage:
   fetch_posting.py <posting-url> [--body-out FILE]
   fetch_posting.py --supports <posting-url>       (exit 0 = served without a browser, 2 = needs one)
+  fetch_posting.py --post-date <linkedin-post-url> (the post's exact creation date, from its id)
   fetch_posting.py --wrap TEXT_FILE --title "<header>" --body-out FILE
   fetch_posting.py --unavailable --body-out FILE
 
@@ -16,7 +17,7 @@ indented inside a synced block. --wrap does the same for text read elsewhere (a 
 --unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy,
-SmartRecruiters, Recruitee, Workday, LinkedIn job pages (the logged-out jobs-guest endpoint) and
+SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
 any page that embeds the posting as schema.org JSON-LD (Teamtailor, Michael Page…). LinkedIn posts need a session and are
 not supported.
 """
@@ -257,6 +258,73 @@ def workday(url):
     }
 
 
+def oracle_hcm(url):
+    match = re.search(r"https://([^/]+\.oraclecloud\.com)/hcmUI/CandidateExperience/[a-z-]+/sites/([^/]+)/job/(\d+)", url)
+    if not match:
+        return None
+    host, site, job_id = match.groups()
+    endpoint = (
+        f"https://{host}/hcmRestApi/resources/latest/recruitingCEJobRequisitionDetails"
+        f'?expand=all&onlyData=true&finder=ById;Id="{job_id}",siteNumber={site}'
+    )
+    items = json.loads(get(endpoint)).get("items") or []
+    if not items:
+        return None  # an empty answer is not proof the posting is gone: the caller checks the page
+    job = items[0]
+    sections = [
+        ("", job.get("ExternalDescriptionStr")),
+        ("Responsibilities", job.get("ExternalResponsibilitiesStr")),
+        ("Qualifications", job.get("ExternalQualificationsStr")),
+    ]
+    text = "\n".join((f"**{title}**\n" if title else "") + to_markdown(body) for title, body in sections if body)
+    return {
+        "source": "oracle-hcm",
+        "title": job.get("Title"),
+        "location": job.get("PrimaryLocation"),
+        "posted_at": (job.get("ExternalPostedStartDate") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def amazon_jobs(url):
+    match = re.search(r"amazon\.jobs/[a-z-]+/jobs/(\d+)", url)
+    if not match:
+        return None
+    jobs = json.loads(get(f"https://www.amazon.jobs/en/search.json?base_query={match.group(1)}")).get("jobs", [])
+    job = next((item for item in jobs if item.get("id_icims") == match.group(1)), None)
+    if not job:
+        return None
+    sections = [
+        ("", job.get("description")),
+        ("Basic qualifications", job.get("basic_qualifications")),
+        ("Preferred qualifications", job.get("preferred_qualifications")),
+    ]
+    text = "\n".join((f"**{title}**\n" if title else "") + to_markdown(body) for title, body in sections if body)
+    posted = None
+    if job.get("posted_date"):
+        posted = datetime.datetime.strptime(job["posted_date"], "%B %d, %Y").date().isoformat()
+    return {
+        "source": "amazon-jobs",
+        "title": job.get("title"),
+        "location": job.get("normalized_location") or job.get("location"),
+        "posted_at": posted,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def linkedin_post_date(url):
+    """A LinkedIn post or activity id carries its creation time in its top 41 bits (ms since epoch)."""
+    match = re.search(r"(?:activity[:-]|share-|ugcPost-)(\d{18,20})", url)
+    if not match:
+        return None
+    millis = int(match.group(1)) >> 22
+    return datetime.datetime.fromtimestamp(millis / 1000, datetime.UTC).date().isoformat()
+
+
 def json_ld(url):
     # Many careers pages (Teamtailor, Michael Page and others) embed the posting as schema.org JSON-LD.
     page = get(url)
@@ -329,6 +397,10 @@ def write_body(content):
 
 
 def main():
+    if "--post-date" in sys.argv:
+        date = linkedin_post_date(option("--post-date") or "")
+        print(date or "")
+        sys.exit(0 if date else 2)
     if "--supports" in sys.argv:
         # Preflight for the caller, no tokens spent: exit 0 when some source serves this URL's text.
         target = option("--supports") or ""
@@ -367,7 +439,7 @@ def main():
     sys.exit(2)
 
 
-FETCHERS = (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, workday, greenhouse, json_ld)
+FETCHERS = (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, greenhouse, json_ld)
 
 
 if __name__ == "__main__":

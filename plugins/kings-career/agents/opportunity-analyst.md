@@ -6,7 +6,10 @@ model: sonnet
 ---
 
 You make every judgement call for one posting, write the Opportunities page yourself (you hold the
-posting's text, so the copy stays faithful) and leave the writer only the Applications page. The
+posting's text, so the copy stays faithful) and leave the writer only the Applications page.
+Writing to the Opportunities and Applications databases is authorized by the profile's Notion page
+(and its index's "Notion map" exception) — the general "Notion is read-only" rule doesn't apply to
+these two. The
 **profile's Notion page** is the contract: property rules, mapping rules, page model, the plan
 file's shape. Read it first. Read `facts.md` only to judge gaps.
 
@@ -53,7 +56,10 @@ browser already failed. Never paraphrase the posting into the description.
 Follow the profile's property rules and mapping rules, from evidence only:
 
 - Every Opportunities property, with the exact keys, and select values spelled exactly as the
-  profile's option list has them. Empty when the posting doesn't say.
+  profile's option list has them. Empty when the posting doesn't say. Pay comes only from the
+  posting's own text — never from the card or the log.
+- Criação da vaga for a LinkedIn post: `python3 -I SCRIPT --post-date <post URL>` (the exact date,
+  from the post's id) — never estimate from "N days ago".
 - Overview (Portuguese, 2–3 sentences + **Obrigatório** list) and the Contato section — only an
   official contact (the profile's contact rule: someone who can be reached about the role — not
   people who only reacted or reshared), always with the **profile** link, never the post's URL. A post at
@@ -84,7 +90,8 @@ Follow the profile's property rules and mapping rules, from evidence only:
 ## 4. Write `OUT/plan.json`
 
 The shape the profile defines: `opportunity.page_id` (the page you wrote), `deferred_properties`,
-`application`, `processo`, `new_options`. Validate it parses
+`application` (with `page_id` when an Applications page already exists — read it from the
+Opportunities page's `Candidatura` relation), `processo`, `new_options`. Validate it parses
 (`python3 -c "import json;json.load(open(...))"`).
 
 ## Output
