@@ -27,8 +27,9 @@ is the contract: database ids, property rules, page model. Read it first; never 
 `location`, `posted_at`, `poster`, `emails`, `text`. Exit code 2 (unsupported source) and no
 `DESCRIPTION_FILE` → return `NEEDS_TEXT` with the URL; don't paraphrase the posting from the card.
 
-Use the script's `posted_at`, `poster` and `emails` to fill what the card lacks. A `poster` is the
-official contact only when the card or the caller says it's the person who posted the job.
+Use the script's `posted_at`, `poster` and `emails` to fill what the card lacks. A `poster` from a
+LinkedIn job page is the person LinkedIn shows as the job poster: an official contact (role
+"autora da vaga") unless the card says otherwise.
 
 ## 2. Find before writing
 
