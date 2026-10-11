@@ -1,6 +1,6 @@
 ---
 name: job-intake
-description: Entry point for any job posting the user shares — a LinkedIn post link, a job page, a recruiter's message with a role. Use whenever the user pastes a posting URL (lnkd.in, linkedin.com/posts, linkedin.com/jobs, a careers page, an ATS link) or says "look at this role", "new opening", "apply to this". Screens the posting through the job-screener agent, checks the pipeline for duplicates, measures fit against the profile's rules, and routes to ats-apply, application-email, linkedin-outreach or a discard — then records the outcome through pipeline-keeper.
+description: Entry point for any job posting the user shares — a LinkedIn post link, a job page, a recruiter's message with a role. Use whenever the user pastes a posting URL (lnkd.in, linkedin.com/posts, linkedin.com/jobs, a careers page, an ATS link) or says "look at this role", "new opening", "apply to this". Screens the posting through the job-screener agent, checks the pipeline for duplicates, measures fit against the profile's rules, and routes to ats-apply, application-email, linkedin-outreach or a discard — then records the outcome (opportunity-log for a Notion pipeline, pipeline-keeper otherwise).
 ---
 
 # Job intake
@@ -23,8 +23,9 @@ decide from memory.
 Resolve `CAREER_PROFILE` (named-paths order of the global instructions). Read its **index** and
 `rules.md`. Nothing resolves → stop and ask where the profile is; never run without rules.
 
-From the index take `Target roles` (for the screener) and the three pipeline paths
-(applications, outreach, queue) — each `pipeline-keeper` call gets the one for its event.
+From the index take `Target roles` (for the screener), the pipeline format (`notion` or
+markdown) and the outreach and queue paths — each `pipeline-keeper` call gets the one for its
+event.
 
 ## 2. Screen
 
@@ -36,7 +37,9 @@ more than once.
 
 ## 3. Duplicate check — before any judgement
 
-`grep` the pipeline for the company (and the client, when the card names one). Found with a
+Search the applications for the company (and the client, when the card names one): in a
+`notion` pipeline, query the Applications data source by title (`<Company> → <role>`); in a
+markdown one, `grep` the file. Found with a
 matching role → **stop for that link** and say so: "already applied on <date> via <channel>,
 status <status>". The user decides whether a second channel is wanted. Same posting re-shared
 by another recruiter of the same agency counts as a duplicate.
@@ -66,7 +69,7 @@ an essay; don't inflate.
 | `ats:<platform>` or `site` with a form | `ats-apply` |
 | `email` | `application-email` |
 | `dm` ("DM me your resume"), or no channel at all | `linkedin-outreach`: invitation to the author; the application goes by DM after the connection is accepted |
-| `easy-apply` | Tell the user: Easy Apply is theirs to click. Still do the outreach step |
+| `easy-apply` | `ats-apply` with the Easy Apply playbook when `rules.md` allows the AI to submit Easy Apply; otherwise tell the user it's theirs to click. Still do the outreach step |
 
 **And, for every route**, the outreach rule from `rules.md` ("a posting link always means…"):
 when the author is `2nd`/`3rd`, queue the invitation through `linkedin-outreach`; when `1st`,
@@ -74,8 +77,10 @@ nothing — they're already connected.
 
 ## 6. Record
 
-One `pipeline-keeper` call per posting with `EVENT: application` (or `queue`, when nothing could
-be sent), and one `EVENT: outreach` when an invitation went out or was queued.
+The application: in a `notion` pipeline, `opportunity-log` for the posting, with the screener's
+card and the application that was just sent; in a markdown one, a `pipeline-keeper` call with
+`EVENT: application`. Nothing could be sent → `pipeline-keeper` with `EVENT: queue`. One
+`EVENT: outreach` when an invitation went out or was queued.
 
 ## 7. Report — one line per link
 

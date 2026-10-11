@@ -16,7 +16,8 @@ filled with a guess — it's reported.
 - `ANSWERS`: the answer bank (path) plus any answers the caller resolved for this form
 - `FILES`: CV path, cover letter path (per language), language to use
 - `SUBMIT`: `map` (list the fields and questions, type nothing, return), `no` (fill, verify,
-  stop before the submit button) or `yes` (submit at the end)
+  stop before the submit button — the usual mode: the caller makes the final click) or `yes`
+  (submit at the end, only when the user delegated the run end to end)
 
 Any of `URL`, `PLAYBOOK`, `FACTS`, `ANSWERS`, `FILES` missing → `STATUS: ERROR`, nothing opened.
 

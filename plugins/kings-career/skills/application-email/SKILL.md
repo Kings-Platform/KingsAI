@@ -51,8 +51,10 @@ a CV sent as a link is a different thing from what the profile promised.
 
 ## 5. Record
 
-`pipeline-keeper`, `EVENT: application`, channel `email`, external id = the message id. Then
-hand the author to `linkedin-outreach` if `job-intake` hasn't already.
+Profile pipeline in `notion` → `opportunity-log` with the posting and the email (recipient,
+subject, attachments, message id). Markdown → `pipeline-keeper`, `EVENT: application`, channel
+`email`, external id = the message id. Then hand the author to `linkedin-outreach` if
+`job-intake` hasn't already.
 
 ## Output
 
