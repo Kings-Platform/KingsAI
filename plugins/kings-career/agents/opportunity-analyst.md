@@ -97,6 +97,9 @@ Follow the profile's property rules and mapping rules, from evidence only:
 3. A select value that isn't an option yet (a new currency or sector) → leave that property out
    and put it in the plan's `deferred_properties`; the caller creates the option and the writer
    sets it.
+   A new option for an **Applications** property (a new platform) stays in
+   `application.properties` with its value, and also goes to `new_options` — the caller creates
+   it before the writer runs, so the writer can set it.
 
 Before writing the page, check the plan against this list — each item has gone wrong before:
 - Every gap is something `facts.md` doesn't support; a must-have the posting asks for and the

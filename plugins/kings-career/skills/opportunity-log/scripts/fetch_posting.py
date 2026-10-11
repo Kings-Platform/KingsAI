@@ -16,7 +16,7 @@ belongs to no supported source: the caller falls back to reading the page in a b
 indented inside a synced block. --wrap does the same for text read elsewhere (a browser, a post);
 --unavailable writes the "posting taken down" note in its place.
 
-Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy, Comeet,
+Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy, Comeet, Personio,
 SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
 any page that embeds the posting as schema.org JSON-LD (Teamtailor and many careers sites). LinkedIn posts need a session and are
 not supported.
@@ -342,6 +342,32 @@ def comeet(url):
     }
 
 
+def personio(url):
+    match = re.search(r"https://([^./]+)\.jobs\.personio\.(?:com|de)/job/(\d+)", url)
+    if not match:
+        return None
+    page = get(f"https://{match.group(1)}.jobs.personio.com/job/{match.group(2)}?language=en")
+    # The page is server-rendered; each section is a jb-description-item with a title and rich text.
+    items = re.findall(
+        r'jb-description-item">\s*(?:<h2[^>]*>(.*?)</h2>)?\s*<div[^>]*rich-text-content[^>]*>(.*?)</div></div>',
+        page,
+        re.S,
+    )
+    if not items:
+        return None
+    text = "\n".join((f"**{html.unescape(title).strip()}**\n" if title else "") + to_markdown(body) for title, body in items)
+    title = re.search(r"<h1[^>]*>(.*?)</h1>", page, re.S)
+    return {
+        "source": "personio",
+        "title": html.unescape(re.sub(r"<[^>]+>", "", title.group(1))).strip() if title else None,
+        "location": None,
+        "posted_at": None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def linkedin_post_date(url):
     """A LinkedIn post or activity id carries its creation time in its top 41 bits (ms since epoch)."""
     match = re.search(r"(?:activity[:-]|share-|ugcPost-)(\d{18,20})", url)
@@ -465,7 +491,7 @@ def main():
     sys.exit(2)
 
 
-FETCHERS = (lever, ashby, linkedin_job, gupy, comeet, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, greenhouse, json_ld)
+FETCHERS = (lever, ashby, linkedin_job, gupy, comeet, personio, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, greenhouse, json_ld)
 
 
 if __name__ == "__main__":
