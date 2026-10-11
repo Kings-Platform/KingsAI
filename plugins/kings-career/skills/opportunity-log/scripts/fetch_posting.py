@@ -16,7 +16,7 @@ belongs to no supported source: the caller falls back to reading the page in a b
 indented inside a synced block. --wrap does the same for text read elsewhere (a browser, a post);
 --unavailable writes the "posting taken down" note in its place.
 
-Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy,
+Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy, Comeet,
 SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
 any page that embeds the posting as schema.org JSON-LD (Teamtailor and many careers sites). LinkedIn posts need a session and are
 not supported.
@@ -316,6 +316,32 @@ def amazon_jobs(url):
     }
 
 
+def comeet(url):
+    if "comeet.com/jobs/" not in url:
+        return None
+    page = get(url)
+    data = re.search(r"POSITION_DATA\s*=\s*(\{.*?\});\s*\n", page, re.S)
+    if not data:
+        return None
+    job = json.loads(data.group(1))
+    details = (job.get("custom_fields") or {}).get("details") or []
+    text = "\n".join(
+        (f"**{item['name']}**\n" if item.get("name") else "") + to_markdown(item.get("value") or "")
+        for item in details
+        if item.get("value")
+    )
+    place = job.get("location") or {}
+    return {
+        "source": "comeet",
+        "title": job.get("name"),
+        "location": ", ".join(part for part in (place.get("city"), place.get("country")) if part) or None,
+        "posted_at": None,  # only the last update time is published
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def linkedin_post_date(url):
     """A LinkedIn post or activity id carries its creation time in its top 41 bits (ms since epoch)."""
     match = re.search(r"(?:activity[:-]|share-|ugcPost-)(\d{18,20})", url)
@@ -439,7 +465,7 @@ def main():
     sys.exit(2)
 
 
-FETCHERS = (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, greenhouse, json_ld)
+FETCHERS = (lever, ashby, linkedin_job, gupy, comeet, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, greenhouse, json_ld)
 
 
 if __name__ == "__main__":
