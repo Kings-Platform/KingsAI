@@ -20,9 +20,11 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`reply-drafter`](skills/reply-drafter/SKILL.md) | Skill | Drafts a reply to a recruiter in the profile's tone — sent only after approval |
 | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Skill | Reads recent email, classifies it, updates the pipeline |
 | [`interview-prep`](skills/interview-prep/SKILL.md) | Skill | Topics, STAR stories, audio scripts — prepares, never impersonates |
+| [`opportunity-log`](skills/opportunity-log/SKILL.md) | Skill | Saves postings and applications to the profile's Notion pipeline; fetches the posting's literal text with [`fetch_posting.py`](skills/opportunity-log/scripts/fetch_posting.py) |
 | [`job-screener`](agents/job-screener.md) | Agent | Reads a posting and returns a structured card — read-only browser |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
-| [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the pipeline: one row per action |
+| [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline: one row per action |
+| [`opportunity-writer`](agents/opportunity-writer.md) | Agent | Writes one posting into Notion: the shareable opportunity page and, when applied, the private application page |
 
 ## The profile
 

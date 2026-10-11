@@ -77,6 +77,9 @@ nothing — they're already connected.
 One `pipeline-keeper` call per posting with `EVENT: application` (or `queue`, when nothing could
 be sent), and one `EVENT: outreach` when an invitation went out or was queued.
 
+When the profile keeps applications in Notion, also run `opportunity-log` for the posting, with
+the screener's card and the application that was just sent.
+
 ## 7. Report — one line per link
 
 ```
