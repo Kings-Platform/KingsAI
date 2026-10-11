@@ -14,7 +14,8 @@ belongs to no supported source: the caller falls back to reading the page in a b
 indented inside a synced block. --wrap does the same for text read elsewhere (a browser, a post);
 --unavailable writes the "posting taken down" note in its place.
 
-Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy and
+Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy,
+SmartRecruiters, Recruitee and
 LinkedIn job pages (the logged-out jobs-guest endpoint). LinkedIn posts need a session and are
 not supported.
 """
@@ -189,6 +190,53 @@ def gupy(url):
     }
 
 
+def smartrecruiters(url):
+    match = re.search(r"jobs\.smartrecruiters\.com/([^/]+)/(\d+)", url)
+    if not match:
+        return None
+    company, job_id = match.groups()
+    data = json.loads(get(f"https://api.smartrecruiters.com/v1/companies/{company}/postings/{job_id}"))
+    sections = (data.get("jobAd") or {}).get("sections", {})
+    parts = [
+        (f"**{section['title']}**\n" if section.get("title") else "") + to_markdown(section.get("text", ""))
+        for section in sections.values()
+        if section.get("text")
+    ]
+    text = "\n".join(parts)
+    location = data.get("location") or {}
+    return {
+        "source": "smartrecruiters",
+        "title": data.get("name"),
+        "location": ", ".join(part for part in (location.get("city"), location.get("country")) if part and part != "xx"),
+        "posted_at": (data.get("releasedDate") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def recruitee(url):
+    match = re.search(r"https?://([^.]+)\.recruitee\.com/o/([^/?#]+)", url)
+    if not match:
+        return None
+    company, slug = match.groups()
+    offer = json.loads(get(f"https://{company}.recruitee.com/api/offers/{slug}"))["offer"]
+    text = "\n".join(
+        part
+        for part in (to_markdown(offer.get("description", "")), to_markdown(offer.get("requirements", "")))
+        if part
+    )
+    return {
+        "source": "recruitee",
+        "title": offer.get("title"),
+        "location": offer.get("location"),
+        "posted_at": (offer.get("published_at") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def approximate_date(relative):
     """Turns LinkedIn's '3 days ago' into a date; the result is approximate by nature."""
     match = re.match(r"(\d+)\s+(minute|hour|day|week|month)", relative)
@@ -241,7 +289,7 @@ def main():
     if len(sys.argv) < 2 or sys.argv[1].startswith("--"):
         sys.exit("usage: fetch_posting.py <posting-url> [--body-out FILE]")
     url = sys.argv[1]
-    for fetcher in (lever, ashby, linkedin_job, gupy, greenhouse):
+    for fetcher in (lever, ashby, linkedin_job, gupy, smartrecruiters, recruitee, greenhouse):
         try:
             result = fetcher(url)
         except Exception as error:  # a dead posting or a changed endpoint: try the next source
