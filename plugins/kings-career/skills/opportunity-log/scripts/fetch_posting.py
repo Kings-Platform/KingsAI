@@ -18,7 +18,7 @@ indented inside a synced block. --wrap does the same for text read elsewhere (a 
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy,
 SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
-any page that embeds the posting as schema.org JSON-LD (Teamtailor, Michael Page…). LinkedIn posts need a session and are
+any page that embeds the posting as schema.org JSON-LD (Teamtailor and many careers sites). LinkedIn posts need a session and are
 not supported.
 """
 
@@ -78,7 +78,7 @@ def greenhouse(url):
     if not match:
         # Company careers pages often end in the Greenhouse job id; the board is the company name.
         tail = re.search(r"/(\d{7,})/?$", url)
-        # The company is the label before the TLD: careers.airbnb.com and www.sumup.com both work.
+        # The company is the label before the TLD: careers.example.com and www.example.com both work.
         host = re.search(r"https?://(?:[a-z0-9-]+\.)*?([a-z0-9-]+)\.[a-z]{2,}(?:\.[a-z]{2})?/", url)
         if not (tail and host):
             return None
@@ -326,7 +326,7 @@ def linkedin_post_date(url):
 
 
 def json_ld(url):
-    # Many careers pages (Teamtailor, Michael Page and others) embed the posting as schema.org JSON-LD.
+    # Many careers pages (Teamtailor and others) embed the posting as schema.org JSON-LD.
     page = get(url)
     for block in re.findall(r"<script[^>]*application/ld\+json[^>]*>(.*?)</script>", page, re.S):
         try:

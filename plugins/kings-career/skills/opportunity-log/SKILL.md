@@ -26,7 +26,7 @@ applications log. No Notion page in the profile → stop: this profile keeps its
 | `LINK`, `POST` | The user's link, the job-screener card, or the applications log's Link column. A LinkedIn post that links to the real posting: `LINK` is the posting, `POST` the post |
 | `CARD` | The job-screener card when job-intake ran; otherwise company, role, sector and anything the log says that the posting won't (a client name, a contact the log identified as the recruiter) |
 | `DESCRIPTION_FILE` | Only when the caller already holds the text (a post's body read earlier, a saved copy) |
-| `APPLICATION` | The run that just applied, or a pointer into the applications log: the Índice row and its detail section. None when the user saves a posting for someone else |
+| `APPLICATION` | The run that just applied, or a pointer into the applications log: its row and its detail section. None when the user saves a posting for someone else |
 
 The writer checks for duplicates; a posting already complete in Notion can simply be skipped.
 
@@ -68,7 +68,7 @@ Per posting, a scratch directory `OUT` of its own.
 Count first (rows, how many have a Link, how many will need the browser) and agree the batch size
 with the user. Rows that only report events (returns, "profile completed") aren't postings: skip
 them — but a row that lists several applications at once (a job board session: "sent: X, Y, Z")
-holds one posting per application; split it. Each posting row → `APPLICATION` pointing at its row and detail section; the
+holds one posting per application; split it. Each posting row → `APPLICATION` pointing at that row and its detail section; the
 latest event about it in the log (a rejection, a return) sets the status. The log is retired by
 the user, not by this skill.
 
