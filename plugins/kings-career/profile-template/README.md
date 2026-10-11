@@ -15,7 +15,8 @@ page it needs for the task. Every skill and agent of the plugin takes its facts,
 | [rules.md](rules.md) | How to present you, what never to say, who not to contact, red flags, and where you override the plugin's default autonomy | Everything, before acting |
 | [answers.md](answers.md) | Your answer bank for application forms: salary, work authorization, relocation, start date, degree… | `ats-apply`, `form-filler` |
 | [templates/](templates/) | Your approved texts — invitation note, DM, application email, cover letter, relocation sentence — in each language; its README says where each one lives (a file here, or another source) | `linkedin-outreach`, `application-email` |
-| [pipeline.md](pipeline.md) | Every application and contact, one row each — the single place the plugin checks "did I already apply?" | `job-intake`, `pipeline-keeper`, `linkedin-outreach` |
+| [pipeline.md](pipeline.md) | Outreach and queue, one row each — and the applications too, unless the pipeline format is `notion` | `job-intake`, `pipeline-keeper`, `linkedin-outreach` |
+| [notion.md](notion.md) | Only with `Pipeline format: notion`: the two databases (ids), property and mapping rules, page model, status updates, the options in use, the plan-file shape | `opportunity-log`, `opportunity-analyst`, `opportunity-writer`, `inbox-triage`, `reply-drafter` |
 
 ## Settings
 
@@ -35,7 +36,8 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Cover letter files, one per language | `en: ~/Documents/CV/CoverLetter-en.pdf` |
 | Public link to the CV (for messages that can't attach) | `https://…/CV-en.pdf` |
 | Pipeline format | `markdown table` (or `csv`, `notion`) |
-| Applications table | `pipeline.md` (or a pre-existing log; the keeper appends in its columns) |
+| Applications table | `pipeline.md` (or a pre-existing log; the keeper appends in its columns) — with `notion`: the Notion page below |
+| Notion page (with `Pipeline format: notion`) | `notion.md` |
 | Outreach table (the weekly budget is counted here) | `pipeline.md` |
 | Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
@@ -49,7 +51,10 @@ posting link ─► job-screener ─► job-intake ─┬─► ats-apply (form-
                                               ├─► linkedin-outreach
                                               └─► discard, with the reason
                                                         │
-                                              pipeline-keeper ─► one row in pipeline.md
+                                   ┌────────────────────┴────────────────────┐
+                                   │ markdown                                │ notion
+                        pipeline-keeper ─► one row in pipeline.md    opportunity-log ─► opportunity page
+                                                                                     + application page
 ```
 
 Each skill reads **rules.md first**, then only the page it needs. Nothing is sent that the
