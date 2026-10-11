@@ -58,7 +58,8 @@ def greenhouse(url):
     if not match:
         # Company careers pages often end in the Greenhouse job id; the board is the company name.
         tail = re.search(r"/(\d{7,})/?$", url)
-        host = re.search(r"https?://(?:www\.)?([a-z0-9-]+)\.", url)
+        # The company is the label before the TLD: careers.airbnb.com and www.sumup.com both work.
+        host = re.search(r"https?://(?:[a-z0-9-]+\.)*?([a-z0-9-]+)\.[a-z]{2,}(?:\.[a-z]{2})?/", url)
         if not (tail and host):
             return None
         board, job_id = host.group(1), tail.group(1)
