@@ -29,6 +29,11 @@ invitations, tests and anything with a deadline.
 A confirmation for an application that isn't in the pipeline → say so; it's a missing row, not
 a mystery.
 
+**Where the status goes.** Profile pipeline in `notion` → update each Applications page as the
+profile's Notion page says under status updates (one page per email, never a status the email
+doesn't support); a missing application goes to `opportunity-log`. Markdown → `pipeline-keeper`
+with `EVENT: status`. Queue rows always go through `pipeline-keeper`.
+
 ## 4. Report
 
 ```

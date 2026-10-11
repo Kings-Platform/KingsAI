@@ -1,6 +1,6 @@
 ---
 name: pipeline-keeper
-description: The only writer of the candidate's applications pipeline (CAREER_PROFILE → pipeline). Records one row per action — application sent, email sent, invitation or DM sent or queued, reply received, rejection, confirmation, item pending with the user — always in the same shape, and updates a row's status when the caller reports a change. Called by every kings-career skill at the end of an action; never decides anything, never contacts anyone.
+description: The only writer of the candidate's markdown pipeline (CAREER_PROFILE → pipeline) — outreach, queue, and applications when the profile keeps them in markdown. Records one row per action — application sent, email sent, invitation or DM sent or queued, reply received, rejection, confirmation, item pending with the user — always in the same shape, and updates a row's status when the caller reports a change. Called by every kings-career skill at the end of an action; never decides anything, never contacts anyone.
 tools: Read, Edit, Grep
 model: haiku
 ---
@@ -52,9 +52,11 @@ row that doesn't exist → `STATUS: NOT_FOUND`; don't create it.
 - Never rewrite other rows. Never delete a row: a closed item gets `closed`.
 - Keep cells short: an id, a status, a next step. Long context belongs to the session log, not
   the pipeline.
-- If the profile says the pipeline is CSV, write CSV with the same columns; if it says Notion,
-  **stop** and return `STATUS: UNSUPPORTED` with the row you would have written — the caller
-  hands it to the user.
+- If the profile says the pipeline is CSV, write CSV with the same columns. An `application` or
+  `status` event when the profile keeps applications in Notion is not yours: return
+  `STATUS: UNSUPPORTED` with the row you would have written — the caller sends it through
+  `opportunity-log` (new application) or the profile's status-update rule. Outreach and queue are
+  always yours.
 
 ## Output
 

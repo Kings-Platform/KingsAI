@@ -73,8 +73,12 @@ hand over the tab with the form filled as far as it went.
 
 ## 4. Record and learn
 
-`pipeline-keeper`, `EVENT: application`, channel `<platform>`, status `sent` or
-`pending-user: <what>`, external id = the confirmation or requisition id.
+Where the application goes depends on the profile's pipeline format:
+
+- `notion` → `opportunity-log` with the posting, the card and this run's answers. Something left
+  for the user (`pending-user: <what>`) → a `pipeline-keeper` call with `EVENT: queue`
+- markdown → `pipeline-keeper`, `EVENT: application`, channel `<platform>`, status `sent` or
+  `pending-user: <what>`, external id = the confirmation or requisition id
 
 The agent's `notes` are kept so the next application is cheaper. Where they go:
 

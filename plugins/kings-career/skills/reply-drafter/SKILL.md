@@ -41,5 +41,7 @@ LinkedIn: the DM procedure in `linkedin-outreach/scripts/dm.md`, in the existing
 the profile's send command (or a reply through the connector **only** when no attachment is
 needed and the profile allows it). Read the sent message back and quote its time.
 
-`pipeline-keeper`, `EVENT: status` on the application row (`in-process`, with the next step), or
-`EVENT: outreach` kind `reply` — each with the file the profile index names for that table.
+The application's new status (`in-process`, with the next step): in a `notion` pipeline, update
+the Applications page as the profile's Notion page says under status updates; in a markdown one,
+`pipeline-keeper` with `EVENT: status`. A reply to an invitation or DM: `pipeline-keeper`,
+`EVENT: outreach` kind `reply`. Each with the file or page the profile index names.

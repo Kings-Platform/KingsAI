@@ -23,7 +23,7 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`opportunity-log`](skills/opportunity-log/SKILL.md) | Skill | Saves postings and applications to the profile's Notion pipeline; fetches the posting's literal text with [`fetch_posting.py`](skills/opportunity-log/scripts/fetch_posting.py) |
 | [`job-screener`](agents/job-screener.md) | Agent | Reads a posting and returns a structured card — read-only browser |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
-| [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline: one row per action |
+| [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline (outreach, queue; applications when not in Notion): one row per action |
 | [`opportunity-analyst`](agents/opportunity-analyst.md) | Agent | Sonnet. Reads a posting and its application record, decides every Notion value and writes the opportunity page → a plan file |
 | [`opportunity-writer`](agents/opportunity-writer.md) | Agent | Haiku. From the plan: the private application page, linked to the opportunity |
 
