@@ -65,6 +65,8 @@ Follow the profile's property rules and mapping rules, from evidence only:
   people who only reacted or reshared), always with the **profile** link, never the post's URL. A post at
   `linkedin.com/posts/<slug>_…` was written by `linkedin.com/in/<slug>`; a `feed/update` post →
   `find` the author's profile link on the page. A LinkedIn job page's `poster` counts.
+- Talent pools and Gui's own notes: follow the profile's talent-pool rule — nothing he wrote or was
+  told goes on the shareable Opportunities page.
 - No gap → the property stays empty (never "nenhum gap relevante").
 - Gaps are only what Gui lacks: check years and skills against `facts.md` before writing one
   (7+ years of iOS meets "4–5 years"; a requirement he meets is not a gap, not even as context).
