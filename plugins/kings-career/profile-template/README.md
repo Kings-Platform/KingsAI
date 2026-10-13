@@ -16,6 +16,7 @@ page it needs for the task. Every skill and agent of the plugin takes its facts,
 | [answers.md](answers.md) | Your answer bank for application forms: salary, work authorization, relocation, start date, degree… | `ats-apply`, `form-filler` |
 | [templates/](templates/) | Your approved texts — invitation note, DM, application email, cover letter, relocation sentence — in each language; its README says where each one lives (a file here, or another source) | `linkedin-outreach`, `application-email` |
 | [pipeline.md](pipeline.md) | Outreach and queue, one row each — and the applications too, unless the pipeline format is `notion` | `job-intake`, `pipeline-keeper`, `linkedin-outreach` |
+| [sources.md](sources.md) | The job sources you sweep: search terms, frequency, the catalog sources you use, your own sources (company boards, people's lists) and companies to watch | `job-sweep` |
 | [notion.md](notion.md) | Only with `Pipeline format: notion`: the two databases (ids), property and mapping rules, page model, status updates, the options in use, the plan-file shape | `opportunity-log`, `opportunity-analyst`, `opportunity-writer`, `inbox-triage`, `reply-drafter` |
 
 ## Settings
@@ -41,6 +42,7 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Outreach table (the weekly budget is counted here) | `pipeline.md` |
 | Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
+| Sources page (job sources to sweep and how often) | `sources.md` |
 | Site notes (selectors, traps and quirks of specific job sites and company careers pages) | `sites.md` (or any notes file) |
 
 ## How the plugin uses this profile
