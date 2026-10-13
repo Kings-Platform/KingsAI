@@ -4,6 +4,8 @@
 
 - **Focus first:** in a new tab, typing registers nothing until the tab has real focus. Click
   one visible field by screen coordinates, check `document.hasFocus()` and one value, then go.
+  With several agents in one Chrome window this gets worse — ref clicks and typing can silently
+  not register — so always read every value back.
 - **Text fields:** JS `focus()` + keyboard `type` does **not** register — the values read back
   empty. What works: a **real click on the field by ref** (`find` → ref), then `type`. Verify
   with one JS read of all `input[type=text]` values at the end.
@@ -15,15 +17,16 @@
   change month, click the day; reads back as MM/DD/YYYY.
 - **Radio questions** (relocation, visa, language, privacy consent) can be real
   `input[type=radio]` named `<uuid>_<suffix>`: click by ref, check `input[type=radio]:checked`.
-- **Yes/No questions** may also be two `button`s; find them by text with the question as context
-  (`find "Yes button for <question>"`) and click by ref. The underlying checkbox reports the
-  state: read `input[type=checkbox]` values to confirm.
+- **Yes/No questions** may also be two `button`s (`ashby-application-form-input-yesno-option`,
+  the chosen one carries an `_active_` class); find them by text with the question as context
+  (`find "Yes button for <question>"`) and click by ref. A hidden checkbox backs them:
+  unchecked means No **or** unanswered, so confirm with the `_active_` class.
 - **Files:** the CV folder must be shared with the session, or the upload is refused
   ("only files this session is allowed to read"). `file_upload` on the "Resume" / "Cover Letter" file inputs (found by `find`). Both
   names appear in the page text once uploaded.
 - "Autofill from resume" exists; not needed — the fields are few.
 - **Submit:** "Submit Application" → a green "Success" box with the company's text. A
-  confirmation email follows.
+  confirmation email follows. An invisible reCAPTCHA may appear on submit.
 - Some companies allow **one application per year**; the posting says so. Check the pipeline.
 - Scanning without a browser: `api.ashbyhq.com/posting-api/job-board/<company>?includeCompensation=true`
-  (includes the salary range).
+  (includes the salary range). On the page, compensation data is in `window.__appData`.

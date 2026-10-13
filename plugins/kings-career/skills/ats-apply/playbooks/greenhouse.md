@@ -17,6 +17,11 @@
   they're logged in to MyGreenhouse. Some boards autofill from it ("Autofilled from
   MyGreenhouse") — check nothing was overwritten.
 - Public API for scanning without a browser: `boards-api.greenhouse.io/v1/boards/<company>/jobs`.
+- **Closed job:** the posting URL silently redirects to the company's careers list. Before
+  filling, check `boards-api.greenhouse.io/v1/boards/<company>/jobs/<id>` — 404 means closed.
+- MyGreenhouse lists every application as "Applied", rejected ones included: useless for status.
+- "Autofilled from MyGreenhouse" can fire mid-fill without a click and re-render the education
+  fields with new ids: re-query them after it.
 
 ## Fields
 
@@ -46,9 +51,9 @@
   Closes the menu and persists; reliable across many selects in a row.
 - Scroll each select to ~300 px from the top (`window.scrollTo({top: scrollY + rect.top - 300,
   behavior: 'instant'})`), compute all coordinates after scrolling, then click. Near the end of
-  the page the page can't scroll further and heights vary.
+  the page the page can't scroll further and heights vary: re-measure after scrolling.
 - **Phone country** (combobox next to the phone field) is required even without an asterisk:
-  click, type the country, Enter.
+  click, type the country, Enter. It is either intl-tel-input or a react-select (id `country`).
 - **Location** (`candidate-location`): Google autocomplete — type, wait, click the suggestion.
   The list can open off-screen if the page scrolled; the least stable step. Verify the value.
 
@@ -59,7 +64,8 @@
 ## Checkboxes
 
 Required consent checkboxes: real click. If it already shows ticked but the form says required,
-click twice (untick, tick).
+click twice (untick, tick). Some forms add a separate required "demographic data processing"
+consent.
 
 ## Submit
 

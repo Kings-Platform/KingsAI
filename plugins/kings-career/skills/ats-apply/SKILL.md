@@ -30,6 +30,10 @@ From the application URL:
 | `comeet.com/jobs` / `comeet.co` | [comeet](playbooks/comeet.md) |
 | `jobs.personio.com` / `jobs.personio.de` | [personio](playbooks/personio.md) |
 | `jobs.quickin.io` | [quickin](playbooks/quickin.md) |
+| `/apply?jobSeqNo=` on a careers site (Phenom) | [phenom](playbooks/phenom.md) |
+| `icims.com` | [icims](playbooks/icims.md) |
+| `/careers/apply?pid=` on `explore.jobs.*` / `careers.*` (Eightfold) | [eightfold](playbooks/eightfold.md) |
+| `people-ksa.com` | [people-ksa](playbooks/people-ksa.md) |
 | `docs.google.com/forms` / `forms.gle` | [google-forms](playbooks/google-forms.md) |
 | `linkedin.com/jobs/view` with Easy Apply (only when the profile's rules allow it) | [linkedin-easy-apply](playbooks/linkedin-easy-apply.md) |
 | anything else | the profile's **site notes** (`Site notes` in the index) for that site, if any, plus [generic](playbooks/generic.md) |
