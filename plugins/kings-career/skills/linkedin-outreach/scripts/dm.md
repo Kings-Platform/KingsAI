@@ -12,8 +12,14 @@
    with the recipient set — use it only when step 3 can't find the name (the visit is shown).
 5. In `.msg-form__contenteditable`, insert the template **paragraph by paragraph**:
    `insertText` for a line, `insertParagraph` between lines (an empty line = two
-   `insertParagraph`). When the editor isn't found by JS right after opening, click inside the
+   `insertParagraph`). Every line is its own paragraph, list items included: never
+   `insertLineBreak` — the composer shows the break, but the sent message glues the lines
+   together. When the editor isn't found by JS right after opening, click inside the
    message box once and use real keyboard `type` with `shift+Return` for line breaks.
+   `execCommand` returns `false` and inserts nothing in a tab Chrome keeps frozen in the
+   background — open the thread in a new tab and insert there.
+7. After sending, read the new message back and check every line is still on its own line
+   before reporting it as sent.
 6. Confirm the recipient pill, then click `button.msg-form__send-button`. The URL becomes
    `/messaging/thread/2-…`; the sent text appears at the end of `.msg-s-message-list`.
 
