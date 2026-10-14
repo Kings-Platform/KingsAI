@@ -63,7 +63,8 @@ The imported rows must match the facts page's experience list, one row per real 
 ## Before submit
 
 - Skip "Marcar vaga como preferencial" (monthly quota).
-- "Siga a empresa …" on the review page is ticked by default when present. It is **not** a
+- "Siga a empresa …" on the review page is ticked by default when present (Lever-fed forms may not show it; then the only box is "Marcar vaga como preferencial" — never tick/untick by index) — **untick it**
+  (an opt-in like any marketing box) and read `checked === false` before submitting. It is **not** a
   `label` element: click the box itself (left edge, +8 px) after `scrollIntoView` and a 1 s wait;
   it survives "Editar". Don't confuse it with "Marcar vaga como preferencial", which comes first
   in the DOM.

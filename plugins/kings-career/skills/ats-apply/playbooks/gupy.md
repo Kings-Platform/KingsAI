@@ -13,8 +13,9 @@ base data come from the Gupy profile, which the user maintains.
 
 ## Steps and traps
 
+- **Closed check first:** a job page with the "Candidaturas encerradas" badge / "Inscrições encerradas" and a greyed "Candidatar-se" is closed — return closed before checking login.
 - **Finding the job:** the company page loads only ~10 jobs; use the "Digite o nome da vaga"
-  search (real click, type, Enter). "Candidatar-se" → `/candidates/jobs/<id>/apply`, which
+  search (real click, type, Enter). On some company pages the search doesn't filter (and `?jobName=` does nothing): page through with a real click on the page buttons (10 per page, alphabetical) and read `a[href*="/job"]`. "Candidatar-se" → `/candidates/jobs/<id>/apply`, which
   redirects to `/candidates/applications/<appId>/steps/<stepId>/curriculum`.
 - **Order:** "vamos continuar sua candidatura?" → Continuar → "Dados adicionais" → "Perguntas
   criadas pela empresa" ("Responder agora") → the questions → the optional "Apresente-se!" modal,
