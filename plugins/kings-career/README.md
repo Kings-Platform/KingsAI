@@ -19,9 +19,11 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`linkedin-outreach`](skills/linkedin-outreach/SKILL.md) | Skill | Invitation with note or DM, from the templates, within the weekly budget |
 | [`reply-drafter`](skills/reply-drafter/SKILL.md) | Skill | Drafts a reply to a recruiter in the profile's tone — sent only after approval |
 | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Skill | Reads recent email, classifies it, updates the pipeline |
+| [`job-sweep`](skills/job-sweep/SKILL.md) | Skill | Sweeps the profile's job sources (aggregators, lists, talent platforms, company boards, ATS-domain search), keeps what is open, new and fits; the public sources ship in a [catalog](skills/job-sweep/sources-catalog.md) |
 | [`interview-prep`](skills/interview-prep/SKILL.md) | Skill | Topics, STAR stories, audio scripts — prepares, never impersonates |
 | [`opportunity-log`](skills/opportunity-log/SKILL.md) | Skill | Saves postings and applications to the profile's Notion pipeline; fetches the posting's literal text with [`fetch_posting.py`](skills/opportunity-log/scripts/fetch_posting.py) |
 | [`job-screener`](agents/job-screener.md) | Agent | Reads a posting and returns a structured card — read-only browser |
+| [`source-sweeper`](agents/source-sweeper.md) | Agent | Sonnet. Reads a group of sources, confirms each role is open through the ATS API, applies the targeting, returns cards |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
 | [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline (outreach, queue; applications when not in Notion): one row per action |
 | [`opportunity-analyst`](agents/opportunity-analyst.md) | Agent | Sonnet. Reads a posting and its application record, decides every Notion value and writes the opportunity page → a plan file |
