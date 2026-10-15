@@ -27,12 +27,16 @@ You know **only** what the artifacts you're given show. Nothing else exists:
 
 ## Reading
 
-**A profile URL.** Open it in a tab of your own and read it as a recruiter would scroll: the top
+**A profile URL.** Open it exactly as given — it may carry `?locale=<code>`, which renders the
+profile's content in that language even when the browser's interface is in another; keep that
+parameter on every "see all" page too. Read it as a recruiter would scroll: the top
 card, About, Featured, Experience, Projects, Skills, Education, and the "see all" pages of the
 long sections (`/details/experience/`, `/details/projects/`, `/details/skills/`,
 `/details/education/`). The browser may be logged in as the profile's owner: ignore everything
 only the owner sees (edit buttons, analytics, profile views, visibility settings, suggestions to
-the owner). Note which language the page rendered in. Only read: never click connect, follow,
+the owner). Note which language the **content** rendered in (the interface labels don't count); when it
+isn't the language of the `TARGET` market, say so at the top of the report — the review is then
+of the wrong version. Only read: never click connect, follow,
 like, message, edit or any button that changes something. Close your tab at the end.
 
 **A CV file.** Read it whole, every page. Note format problems a parser (ATS) would have.

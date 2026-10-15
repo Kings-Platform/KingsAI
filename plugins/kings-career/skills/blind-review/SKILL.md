@@ -31,6 +31,11 @@ The agent gets exactly four things: `TARGET`, `SOURCES`, `REPORT_LANG` (the user
 session's scratchpad). **Never** pass the candidate's facts, rules, previous reviews, notes about
 what changed, or what the user hopes to hear — that would teach the reviewer what to look for.
 
+A profile URL goes with `?locale=<code>` for the language a recruiter of `TARGET` reads
+(international → `en_US`; a local market → its language, e.g. `pt_BR`). The browser is logged in
+as the owner, and without it LinkedIn renders the owner's language, not the recruiter's. A target
+covering two markets → one review per locale.
+
 Calls, in parallel:
 - one per artifact (the profile URL; each CV file);
 - one cross-check with the profile URL **and** the main CV together, when both are in scope.
