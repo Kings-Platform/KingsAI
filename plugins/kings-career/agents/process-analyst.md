@@ -40,7 +40,7 @@ send, draft, label or archive anything.
      when a source or the profile's records give the url, Tags/Cargos from the profile's options),
      and relate them to the process and the meeting. The contact page body stays blank. Never invent an email or a url.
    - Meetings: a meeting page outside the meetings database → move it there; set its date,
-     relation to the process and participants.
+     relation to the process and participants; title and icon as the profile's meeting pattern says.
    - History rows: one per new event (an interview, a mail with substance, a schedule change),
      `{date, text}` in the date and cell format the profile defines, oldest to newest.
    - The user's pending items (what the company asked for, with the exact fields requested).
