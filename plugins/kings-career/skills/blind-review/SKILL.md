@@ -1,6 +1,6 @@
 ---
 name: blind-review
-description: Gets a cold, honest read of the candidate's LinkedIn profile and/or CV from a recruiter's point of view — a reviewer agent that knows nothing about the candidate beyond the page, scores it against the target role and lists red flags, questionable claims and fixes by impact. Use when the user says "review my LinkedIn", "what would a recruiter think of my CV", "blind review", "run the blind analysis again", or after a profile or CV rewrite. Hands each artifact to the blind-reviewer agent; never edits the profile itself.
+description: Gets a cold, honest read from a recruiter's point of view — of the candidate's LinkedIn profile and CV, or of the messages they send (connection note, DM, reply to a recruiter, application email, and the templates behind them). A reviewer agent that knows nothing about the candidate beyond what's in front of it scores the artifact against the target role and lists red flags, questionable claims and fixes by impact. Use when the user says "review my LinkedIn", "what would a recruiter think of my CV", "review my templates", "would a recruiter answer this?", "blind review", or after a profile, CV or template rewrite. Hands each artifact to the blind-reviewer agent; never edits anything itself.
 ---
 
 # Blind review
@@ -53,6 +53,32 @@ Now, with the profile's `facts.md` open, read each report and sort every finding
 
 Compare with the previous review in the same folder, when there is one: score moved, what was
 fixed, what's new.
+
+## Messages
+
+Same blindness, a different artifact: what a recruiter **receives**.
+
+**Which messages:** the profile's templates (`templates/README.md` → each text and language, read
+the way its row says), or one message the user or another skill hands over (a reply drafted by
+`reply-drafter`, an email about to go out).
+
+**Make it arrive as it would.** Fill every placeholder with a plausible value — a first name, a
+role, a company, the CV link the profile index gives — so the reviewer reads a message, not a
+template. Drop the optional paragraphs a real send would drop (a relocation paragraph only for a
+posting abroad). Say in the report which values were invented.
+
+**Hand-off** — one `blind-reviewer` call per message, in parallel, with `KIND: message`, the
+message as `SOURCES`, `CHANNEL`, and a `CONTEXT` that holds only what the recipient has:
+- `invite` / `dm`: the recipient's title (a tech recruiter, unless the user says otherwise);
+- `reply`: the recipient's own message the text answers;
+- `email`: the posting (a real recent one from the pipeline, or a sample of the target role) and
+  which attachments go with it;
+- optionally the candidate's profile URL with the locale of the message's language.
+
+`TARGET`, `REPORT_LANG` and `OUT` as above; `OUT` is `blind-review-<text>-<lang>-<date>.md`.
+
+**Reconcile** the same way (real problem · true but not shown · misread · not a fit). A fix to a
+template goes to the user as a proposal: the templates are the user's to edit.
 
 ## Output
 
