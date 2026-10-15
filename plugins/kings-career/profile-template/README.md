@@ -34,6 +34,9 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | How to send an application email with an attachment | `~/path/to/send-email --to <addr> --subject <s> --body <html> --attach <pdf>` |
 | Email reading tool (connector or client), read-only | `Gmail connector` |
 | CV files, one per language | `en: ~/Documents/CV/CV-en.pdf` · `pt: ~/Documents/CV/CV-pt.pdf` |
+| LinkedIn profile URL (public link, for the blind review) | `https://www.linkedin.com/in/<slug>/` |
+| Blind reviews folder (where blind-review saves its reports) | `~/Documents/career/reviews/` |
+| Blind review target (the job the reviewer hires for, when the user names none) | `Senior iOS engineer, remote` |
 | Cover letter files, one per language | `en: ~/Documents/CV/CoverLetter-en.pdf` |
 | Public link to the CV (for messages that can't attach) | `https://…/CV-en.pdf` |
 | Pipeline format | `markdown table` (or `csv`, `notion`) |
