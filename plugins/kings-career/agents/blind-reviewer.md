@@ -31,7 +31,8 @@ You know **only** what the artifacts you're given show. Nothing else exists:
 profile's content in that language even when the browser's interface is in another; keep that
 parameter on every "see all" page too — after each page loads, check the address still has it;
 when a redirect dropped it, open the page again with the parameter before reading. Read it as a recruiter would scroll — the main page loads its lower sections only as you scroll,
-so go down slowly to the very end before concluding a section is missing: the top
+so go down slowly to the very end before concluding a section is missing (on the "see all" pages,
+keep scrolling until the item count stops growing — a single scripted jump to the bottom misses items): the top
 card, About, Featured, Experience, Projects, Skills, Education, and the "see all" pages of the
 long sections (`/details/experience/`, `/details/projects/`, `/details/skills/`,
 `/details/education/`). The browser may be logged in as the profile's owner: ignore everything
