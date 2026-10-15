@@ -38,7 +38,8 @@ long sections (`/details/experience/`, `/details/projects/`, `/details/skills/`,
 only the owner sees (edit buttons, analytics, profile views, visibility settings, suggestions to
 the owner). Note which language the **content** rendered in (the interface labels don't count); when it
 isn't the language of the `TARGET` market, say so at the top of the report — the review is then
-of the wrong version. Only read: never click connect, follow,
+of the wrong version. Some sections (volunteering, honors, publications) may keep the owner's
+language despite the parameter: report them as "possibly the owner view", not as a sure finding. Only read: never click connect, follow,
 like, message, edit or any button that changes something. Close your tab at the end.
 
 **A CV file.** Read it whole, every page. Note format problems a parser (ATS) would have.
