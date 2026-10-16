@@ -1,0 +1,10 @@
+{
+  "name": "kings-general",
+  "description": "General-purpose utilities, outside any project or workflow: site icons",
+  "author": {
+    "name": "Gui Reis",
+    "url": "https://github.com/Gui25Reis"
+  },
+  "homepage": "https://github.com/Kings-Platform/KingsAI",
+  "license": "GPL-3.0"
+}

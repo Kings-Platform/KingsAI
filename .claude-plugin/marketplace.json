@@ -14,6 +14,11 @@
       "description": "Agents and skills that work in any project: living docs, style review, code review rounds, new demands, README style, Figma files"
     },
     {
+      "name": "kings-general",
+      "source": "./plugins/kings-general",
+      "description": "General-purpose utilities, outside any project or workflow: site icons"
+    },
+    {
       "name": "kings-swift",
       "source": "./plugins/kings-swift",
       "description": "Swift and iOS: code style and unit tests, following the SWIFT_STYLE_GUIDE and SWIFT_UNIT_TESTS named paths"
