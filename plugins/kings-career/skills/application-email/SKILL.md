@@ -35,6 +35,9 @@ international project → attach **both** CVs.
   short block** with those answers, taken from `answers.md`. A requirement the candidate lacks
   and the posting marks as mandatory: name it honestly in one sentence, or leave it out — never
   claim it.
+- A line the template notes mark as **dynamic** (e.g. the stack line): keep its default and add
+  the posting's required skills the candidate has according to `facts.md`, in the posting's own
+  words. A skill the facts don't support never goes in — that's the honest-gap rule above.
 - When the posting **dictates a subject line**, use it verbatim.
 - A source in plain paragraphs becomes HTML: one `<p>` per paragraph, `<br>` for a line break
   inside one, links as `<a>`. Write the HTML to the scratchpad (never inside the profile or a
