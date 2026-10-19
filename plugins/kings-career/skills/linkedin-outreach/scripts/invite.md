@@ -14,9 +14,12 @@ regex so either interface works; adjust the patterns if yours differs.
 1. Navigate to `https://www.linkedin.com/preload/custom-invite/?vanityName=<slug>`
    (the slug is the `/in/<slug>` part; accents stay URL-encoded, e.g. `%C3%AD`).
 2. The modal "Add a note to your invitation?" opens. Click **Add a note**.
-3. Focus the dialog's `textarea` and insert the note with `document.execCommand('insertText')`
-   — keyboard `type` drops characters on this page.
-4. Click **Send**. Read the recipient's name from the dialog text before it closes, to log it.
+3. Focus the note field inside the dialog (`[role=dialog] textarea#custom-message`) and insert the
+   note with `document.execCommand('insertText')` — keyboard `type` drops characters on this page.
+   A bare `textarea` selector can match a hidden reCAPTCHA field on the same page, and the note
+   then goes nowhere.
+4. Check that the field holds exactly the note, then click **Send**. Read the recipient's name
+   from the dialog text before it closes, to log it.
 5. If the modal never appears, the person is already connected, already invited, or the slug is
    wrong — report, don't retry.
 
@@ -33,14 +36,20 @@ else {
   const dialog = document.querySelector('[role=dialog]').innerText;
   const name = (dialog.match(/invitation to ([^.\n]+)\.|convite a ([^.\n]+)\./) || []).slice(1).find(Boolean) || '';
   add.click();
-  let ta; for (let i = 0; i < 20 && !(ta = document.querySelector('textarea')); i++) await sl(200);
+  let ta; for (let i = 0; i < 20 && !(ta = document.querySelector('[role=dialog] textarea#custom-message')); i++) await sl(200);
   const note = `…`;                       // rendered template, {first_name} already replaced
-  ta.focus(); document.execCommand('insertText', false, note);
-  await sl(400);
-  const send = [...document.querySelectorAll('button')]
-    .find(b => /^Send$|^Enviar$/.test(b.innerText.trim()) || /Send invitation|Enviar convite/.test(b.getAttribute('aria-label') || ''));
-  send.click(); await sl(1500);
-  name + ' | ' + ta.value.length + ' | sent';
+  if (!ta) { 'NO NOTE FIELD'; }
+  else {
+    ta.focus(); document.execCommand('insertText', false, note);
+    await sl(400);
+    if (ta.value !== note) { 'NOTE MISMATCH, not sent: ' + ta.value.length + '/' + note.length; }
+    else {
+      const send = [...document.querySelectorAll('[role=dialog] button')]
+        .find(b => /^Send$|^Enviar$/.test(b.innerText.trim()) || /Send invitation|Enviar convite/.test(b.getAttribute('aria-label') || ''));
+      send.click(); await sl(1500);
+      name + ' | ' + ta.value.length + ' | sent';
+    }
+  }
 }
 ```
 
