@@ -78,3 +78,17 @@ entity", contract notices.
 The browser extension may deny `job-boards.greenhouse.io` ("Permission denied for reading /
 JavaScript on this domain"). Nothing to work around: the user allows the site in the
 extension, or fills the form themselves.
+
+## Field traps (20/10/2026)
+
+- **Phone country** is a react-select whose options read like "Brazil+55"; an option filter on
+  `/\+\d+$/` hides exactly those. Real click on the control, type the country name, real click on
+  the single filtered option. **Never press Enter** in it: it triggers form validation and leaves
+  stale red errors ("Select a country", "Please enter your location") that don't block the submit.
+  Check values through `.select__single-value`, not the error text.
+- "Autofilled from MyGreenhouse" can fire mid-fill with no button; re-read the fields after it.
+- Some boards add a **diversity questionnaire** with required selects (and a privacy-notice
+  select inside it): answer by the profile's diversity rule.
+- Watch for **inverted consent checkboxes** ("I do NOT authorize sharing with group companies"):
+  ticking it is the privacy-preserving choice. Read the label, not the checkbox state.
+- A failed `file_upload` inside `browser_batch` aborts the whole batch: keep uploads out of batches.

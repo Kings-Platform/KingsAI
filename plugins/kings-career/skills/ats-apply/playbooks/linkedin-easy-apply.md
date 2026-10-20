@@ -84,3 +84,15 @@ The imported rows must match the facts page's experience list, one row per real 
 - JS results truncate around 1,000 characters and are blocked when they contain `?`, `=`, `&` or
   `#`: stash text in `window.__k` and read it in slices; reduce the 250-option country select to a
   count.
+
+## Traps seen 19–20/10/2026
+
+- **Phone:** LinkedIn pre-fills the account's phone, which may not be the application phone.
+  Always overwrite it with the profile's application number.
+- **Resume:** the list shows several saved CVs; the pre-selected one can be the wrong language.
+  Click the radio of the right file (newest upload of the right language) and check it via
+  `input:checked`.
+- **Pages:** contact → resume → (optional "mark as preferred", leave unticked) → questions →
+  review. On review, untick "Follow <company>" and read back `checked === false`.
+- Numeric "years of experience" fields may come pre-filled with LinkedIn's guess; overwrite them
+  from the answer bank.
