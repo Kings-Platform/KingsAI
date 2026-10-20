@@ -30,7 +30,7 @@ pieces fit.
 | Plugin | Scope | Documentation |
 |---|---|---|
 | [`kings-core`](plugins/kings-core/) | Any project: living docs, style review, code review rounds, new demands, README style, Figma files | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-core) |
-| [`kings-general`](plugins/kings-general/) | General-purpose utilities, outside any project or workflow: site icons | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-general) |
+| [`kings-general`](plugins/kings-general/) | General-purpose utilities, outside any project or workflow: site icons, remote Claude Code sessions | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-general) |
 | [`kings-swift`](plugins/kings-swift/) | Swift and iOS: code style and unit tests, driven by the `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS` named paths | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-swift) |
 | [`kings-career`](plugins/kings-career/) | Job search as an operation, driven by the `CAREER_PROFILE` named path | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-career) |
 

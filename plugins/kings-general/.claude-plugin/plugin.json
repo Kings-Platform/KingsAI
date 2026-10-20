@@ -1,6 +1,6 @@
 {
   "name": "kings-general",
-  "description": "General-purpose utilities, outside any project or workflow: site icons",
+  "description": "General-purpose utilities, outside any project or workflow: site icons, remote Claude Code sessions",
   "author": {
     "name": "Gui Reis",
     "url": "https://github.com/Gui25Reis"

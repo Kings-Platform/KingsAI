@@ -16,7 +16,7 @@
     {
       "name": "kings-general",
       "source": "./plugins/kings-general",
-      "description": "General-purpose utilities, outside any project or workflow: site icons"
+      "description": "General-purpose utilities, outside any project or workflow: site icons, remote Claude Code sessions"
     },
     {
       "name": "kings-swift",
