@@ -30,3 +30,11 @@
 - Some companies allow **one application per year**; the posting says so. Check the pipeline.
 - Scanning without a browser: `api.ashbyhq.com/posting-api/job-board/<company>?includeCompensation=true`
   (includes the salary range). On the page, compensation data is in `window.__appData`.
+
+- **Multiple-choice questions** sit in `fieldset`s with radios named `<formUuid>_<8hex>`; the
+  `.ashby-application-form-field-entry` query doesn't reach them. Yes/No questions are buttons
+  backed by a hidden checkbox. Labels with the `_required_` class mark required fields.
+- Some forms have **no cover-letter field** and some an optional **video upload** (file input
+  with a UUID name). Check before planning uploads.
+- Location is an autocomplete: type the city, real click on the suggestion; the field may decide
+  tax residence and pay.

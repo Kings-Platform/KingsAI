@@ -29,3 +29,6 @@ base data come from the Gupy profile, which the user maintains.
   `performance.getEntriesByType('resource')`) before saving. Answers can't be edited after
   saving, so never save blanks when the endpoint lists questions.
 - Reloading a step returns to the "continuar" screen and keeps what was saved.
+- With a logged-in session, Gupy fills the application from the candidate's Gupy profile: no file
+  input. An optional "Apresente-se!" modal follows; "Finalizar candidatura" is the submit and
+  shows "Candidatura finalizada!" on the same URL.

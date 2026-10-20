@@ -74,6 +74,16 @@ agent's report — so the user's approval (the profile's autonomy, or a per-clic
 prompt) applies to that one action. An agent relayed a "submit" by the caller may refuse it, and
 it should. `SUBMIT: yes` stays available for runs the user explicitly delegates end to end.
 
+- **Never message a running agent to "click submit now".** Under Claude Code's auto mode, a bare
+  submit relayed to a subagent is the action most likely to be classified as a real-world
+  transaction and blocked; and once an agent is blocked, the main session must not redo the same
+  action for it — it goes back to the user. Make the click here, naming the role and the user's
+  request for it.
+- **Unmatched questions don't need a separate map run.** With `SUBMIT: no` the agent fills
+  everything the profile covers and lists the unmatched questions. Show only those to the user,
+  type the approved answers here in the same tab, then submit.
+- **Diversity / EEO questions** follow the profile's rule; with no rule, "prefer not to answer".
+
 Blocked platform (the browser tool reports "permission denied" on the domain, or a CAPTCHA, or
 a login): the agent returns `PENDING`. Don't retry around it; tell the user what to unblock and
 hand over the tab with the form filled as far as it went.
