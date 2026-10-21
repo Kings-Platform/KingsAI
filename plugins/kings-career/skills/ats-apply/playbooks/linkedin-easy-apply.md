@@ -8,6 +8,11 @@ work experience (imported from the LinkedIn profile) and education.
 
 ## Opening and finding the modal
 
+- **Check it is Easy Apply at all.** The button must read "Candidatura simplificada" / "Easy Apply".
+  "Candidatar-se" with an external-link icon, or the text "Respostas gerenciadas fora do LinkedIn", means
+  the application happens on the employer's ATS: route to that ATS's playbook, and open it by clicking
+  once (the destination opens in a new tab; JS can't return the URL, the tool blocks it). The click
+  marks the job "Em andamento" on LinkedIn and the page asks "Concluiu sua candidatura?": answer neither.
 - **Before anything**, read the job page for "Candidatura enviada" under "Status da candidatura"
   (already applied) or "Não aceita mais candidaturas" / "Não aceita candidaturas agora" (closed — match "Não aceita" + "candidaturas"). Either one: stop and report.
 
@@ -58,7 +63,15 @@ The imported rows must match the facts page's experience list, one row per real 
 - No `input[type=file]` until "Carregar currículo", which opens the system picker (not usable).
   Saved CVs are radios with name and date; the newest is pre-selected. Pick the language by
   clicking the radio; check which is selected by walking up from `input:checked` to the ancestor
-  whose text contains "pdf". A new file has to be uploaded once by hand.
+  whose text contains "pdf".
+- **A new file can be uploaded without the picker** (tested 21/10/2026): patch
+  `HTMLInputElement.prototype.click` so a click on a type=file input is captured into `window.__fi` and
+  the native picker never opens; click "Carregar currículo" through JS; add a temporary
+  `input[type=file]` to the top document and run `file_upload` on it (`find` lists two file refs: the
+  temporary one is the second); copy its `files` into `window.__fi` and dispatch `input` and `change`;
+  remove the temporary input. LinkedIn shows "Upload do currículo concluído" and selects the new file
+  at the top of the list — read it back. LinkedIn keeps every upload (the list grows), so a CV named per
+  company (`GuiReis_CV_<Company>.pdf`) keeps the list readable.
 
 ## Before submit
 

@@ -34,6 +34,7 @@ From the application URL:
 | `/apply?jobSeqNo=` on a careers site (Phenom) | [phenom](playbooks/phenom.md) |
 | `icims.com` | [icims](playbooks/icims.md) |
 | `/careers/apply?pid=` on `explore.jobs.*` / `careers.*` (Eightfold) | [eightfold](playbooks/eightfold.md) |
+| `*.homerun.co` | [homerun](playbooks/homerun.md) |
 | `people-ksa.com` | [people-ksa](playbooks/people-ksa.md) |
 | `docs.google.com/forms` / `forms.gle` | [google-forms](playbooks/google-forms.md) |
 | `linkedin.com/jobs/view` with Easy Apply (only when the profile's rules allow it) | [linkedin-easy-apply](playbooks/linkedin-easy-apply.md) |
