@@ -17,7 +17,7 @@ indented inside a synced block. --wrap does the same for text read elsewhere (a 
 --unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy, Comeet, Personio,
-SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
+SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, Eightfold, JazzHR (applytojob.com), Himalayas, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
 any page that embeds the posting as schema.org JSON-LD (Teamtailor and many careers sites). LinkedIn posts need a session and are
 not supported.
 """
@@ -63,7 +63,14 @@ def to_markdown(markup):
     text = re.sub(r"</(p|li|h\d|div|ul|ol)>", "\n", text)
     text = re.sub(r"<[^>]+>", "", text)
     lines = [re.sub(r"[ \t]{2,}", " ", line).strip() for line in text.splitlines()]
-    return "\n".join(line for line in lines if line and line != "**")
+    merged = []
+    for line in (line for line in lines if line and line != "**"):
+        # A <li> that wraps its text in another block leaves a bare "-": join it with the next line.
+        if merged and merged[-1] == "-":
+            merged[-1] = f"- {line}"
+        else:
+            merged.append(line)
+    return "\n".join(merged)
 
 
 def iso_from_ms(value):
@@ -368,6 +375,75 @@ def personio(url):
     }
 
 
+def eightfold(url):
+    match = re.search(r"https?://((?:[a-z0-9-]+\.)+[a-z]{2,})/careers/job/(\d+)", url)
+    if not match:
+        return None
+    host, job_id = match.groups()
+    # The tenant domain is the host without its subdomain: apply.starbucks.com -> starbucks.com
+    domain = ".".join(host.split(".")[-2:])
+    data = json.loads(get(f"https://{host}/api/apply/v2/jobs/{job_id}?domain={domain}"))
+    text = to_markdown(data.get("job_description", ""))
+    created = data.get("t_create")
+    return {
+        "source": "eightfold",
+        "title": data.get("name"),
+        "location": data.get("location"),
+        "posted_at": datetime.datetime.fromtimestamp(created, datetime.UTC).date().isoformat() if created else None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def jazzhr(url):
+    if ".applytojob.com/apply/" not in url:
+        return None
+    page = get(url)
+    body = re.search(r'id="job-description"[^>]*>(.*?)</div>', page, re.S)
+    if not body:
+        return None
+    # The page title reads "<job> - <company> - Career Page".
+    title = re.search(r'<meta property="og:title" content="([^"]*)"', page)
+    name = re.sub(r"\s+-\s+[^-]+\s+-\s+Career Page$", "", html.unescape(title.group(1))).strip() if title else None
+    text = to_markdown(body.group(1))
+    return {
+        "source": "jazzhr",
+        "title": name,
+        "location": None,
+        "posted_at": None,  # the page does not publish a date
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def himalayas(url):
+    match = re.search(r"himalayas\.app/companies/([^/]+)/jobs/([^/?#]+)", url)
+    if not match:
+        return None
+    company, slug = match.groups()
+    # The job pages sit behind a bot wall; the public search API returns the same posting with its text.
+    words = re.sub(r"-?\d{6,}$", "", slug).replace("-", "+")
+    for page in range(1, 6):
+        data = json.loads(get(f"https://himalayas.app/jobs/api/search?q={words}&company={company}&page={page}"))
+        job = next((item for item in data.get("jobs", []) if f"/jobs/{slug}" in item.get("applicationLink", "")), None)
+        if job:
+            text = to_markdown(job.get("description", ""))
+            return {
+                "source": "himalayas",
+                "title": job.get("title"),
+                "location": ", ".join(job.get("locationRestrictions") or []) or None,
+                "posted_at": datetime.datetime.fromtimestamp(job["pubDate"], datetime.UTC).date().isoformat() if job.get("pubDate") else None,
+                "poster": None,
+                "emails": sorted(set(EMAIL.findall(text))),
+                "text": text,
+            }
+        if len(data.get("jobs", [])) < 20:
+            break
+    return None
+
+
 def linkedin_post_date(url):
     """A LinkedIn post or activity id carries its creation time in its top 41 bits (ms since epoch)."""
     match = re.search(r"(?:activity[:-]|share-|ugcPost-)(\d{18,20})", url)
@@ -491,7 +567,7 @@ def main():
     sys.exit(2)
 
 
-FETCHERS = (lever, ashby, linkedin_job, gupy, comeet, personio, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, greenhouse, json_ld)
+FETCHERS = (lever, ashby, linkedin_job, gupy, comeet, personio, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, himalayas, jazzhr, eightfold, greenhouse, json_ld)
 
 
 if __name__ == "__main__":
