@@ -19,15 +19,23 @@ From the sources page take:
 
 - **Search terms** — the words a source's search URL is filled with (`{query}`), and the
   location terms (`{location}`).
-- **Frequency** and each source's **last run**.
+- **Frequency** and each source's **last run** — or an **activation** column (on / off per source):
+  when the page has one, it replaces both (see step 2).
 - **Enabled catalog sources**, **disabled** ones, and the **profile-only sources** (company
   boards, recruiters' lists, anything the catalog can't name).
 
 ## 2. Pick what is due
 
-A source is due when `today − last run ≥ its frequency` (the source's own, else the page's). The
-user can override: "all sources", "only the aggregators", "only <name>". Say in one line what
-will run and what is skipped as not due.
+**With an activation column** (a source is on or off): every source that is **on** runs, on every
+run; frequency and last run gate nothing, and an off source is skipped without a mention. This is
+what a scheduled run wants: the page decides what is swept, and a daily run that finds nothing
+"due" because a person already swept by hand is not a sweep.
+
+**Without one**, a source is due when `today − last run ≥ its frequency` (the source's own, else
+the page's).
+
+Either way the user can override: "all sources", "only the aggregators", "only <name>". Say in one
+line what will run and what is skipped.
 
 ## 3. Sweep — in parallel
 
@@ -48,8 +56,11 @@ their own, so a login problem doesn't stall the rest.
 
 1. Merge the cards; the same role reached through two sources is one role (keep both sources).
 2. Check every card against the pipeline — Notion opportunities when the pipeline format is
-   `notion` (search by company and role), the markdown applications otherwise — and against the
-   Outreach table. Already there → "already in the pipeline", not new.
+   `notion`, the markdown applications otherwise — and against the Outreach table. Match by the
+   **posting's own id** (the job id inside the link, tracking stripped) or by role + country + city,
+   **never by the company name alone**: aggregators and recruiters republish the same role under
+   another company name. Prefer a script over a search for this, one lookup per card. Already there →
+   "already in the pipeline", not new.
 3. Apply `rules.md` once more: a card the sweeper marked "for the user" stays that way; anything
    on the exclusion list goes.
 
