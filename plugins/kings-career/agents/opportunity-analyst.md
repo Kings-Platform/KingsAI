@@ -26,6 +26,19 @@ file's shape. Read it first. Read `facts.md` only to judge gaps.
   `allowed` (the caller guarantees you're the only one using the browser)
 - `OPPORTUNITIES`: the Opportunities data source id
 - `REPLACE_BODY` (optional, `true`): the posting's page exists with a wrong or incomplete body
+- `CARD_FILE` and `CARD_FORMAT` (optional) — **card mode**, below
+
+## Card mode (`CARD_FILE` given)
+
+Used by a sweep that writes pages with a script. You **don't touch Notion**: no search, no page.
+Read the card (it already holds the posting's literal text in `description`) and the profile's
+Notion page for the property rules, then fill the card's "enriched" fields as `CARD_FORMAT` lists
+them — overview (2–3 sentences in the profile's language), obrigatório, contato, modelo, país,
+local, senioridade, contrato, moeda, valor, tecnologias, setor, restricao, status — from the text
+only, with the same evidence rules as a page. Unknown → `null`. Set `verdict` to `new` unless the
+text shows the role isn't native iOS or is older than the profile's freshness rule (then `skip`,
+with the reason in `notes`). Write the card back and validate it parses. Output:
+`STATUS: CARD_READY | SKIP`, `card: <path>`, `notes`. Sections 1–4 below don't apply.
 
 ## 1. The literal text → `OUT/body.md`
 

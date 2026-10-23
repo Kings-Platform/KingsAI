@@ -14,6 +14,11 @@ caller decides; you report.
 - `TERMS` — search terms and location terms
 - `TARGET` — target roles and the targeting rules (seniority, stack exclusions, eligibility)
 - `SINCE` — only roles posted or updated after this date matter
+- `CARDS_DIR` and `CARD_FORMAT` (optional) — when given, you also write one JSON file per role kept
+  into `CARDS_DIR`, in the shape `CARD_FORMAT` describes (the "found" fields), **including the
+  posting's literal text** in `description`; `FETCH` (the `fetch_posting.py` path) gives it as `text`
+  for supported ATSs, and a text read in the browser goes in as read. One file per role, named by
+  its slug; never overwrite a file another sweeper wrote
 
 ## Steps, per source
 
@@ -40,6 +45,10 @@ sources:
   <name>: ok, <n> read | nothing new | down (<error>) | needs login | access changed (<what>)
 watch: <company> — <why> (hires the target remotely; nothing open today)
 ```
+
+When you write cards you don't judge fit beyond "native iOS and inside `SINCE`": every such role
+is a card (the profile's rule is to record every iOS role), and overview, eligibility and level
+are filled later by the caller's verifier.
 
 ## What you never do
 
