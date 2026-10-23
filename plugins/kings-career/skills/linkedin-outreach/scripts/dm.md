@@ -23,6 +23,20 @@
 6. Confirm the recipient pill, then click `button.msg-form__send-button`. The URL becomes
    `/messaging/thread/2-…`; the sent text appears at the end of `.msg-s-message-list`.
 
+## Replying in an existing thread (re-approach, follow-up)
+
+- Open `https://www.linkedin.com/messaging/thread/new/?searchTerm=<name>`: the list shows only the
+  matching threads and no thread is opened (`/messaging/` alone opens the newest one and marks it
+  read). Match the list item by first + last name (normalize accents), click it, then insert as
+  above. Read the last lines before writing: skip a thread whose last message closed the door
+  ("continue with X") and hold a thread written in English for the EN text.
+- One `javascript_tool` call per person, batched 4–5 per `browser_batch` (navigate + script);
+  store the helper in `localStorage` and `eval` it after each navigate, delete it at the end.
+- **InMail threads take one reply only:** after the candidate answered once, the composer is gone
+  (`.msg-form__contenteditable` missing) — skip and report; a connection invite is the way back.
+- An attachment (the CV) goes through `find` "Anexar arquivo" → `file_upload` on that input; the
+  file name appears in the composer and the send button stays enabled.
+
 ## Reading before writing
 
 - The **thread list** preview (name, time, last line) is enough to know who replied — no need

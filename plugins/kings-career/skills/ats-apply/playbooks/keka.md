@@ -22,10 +22,15 @@ with the user (CAPTCHA, consent checkbox, "Apply Now").
 
 ## Files
 
-- **Don't upload the CV first.** Both resume inputs (`#resume-upload` and the one inside "Upload
-  Resume/CV") start a resume parser that froze the page for good on a 2.5 MB PDF (3 attempts),
-  and a working parse can overwrite filled fields. Fill everything, then leave the CV to the user
-  (or try it last and re-check every field).
+- **Upload the CV first, but a small one.** Both resume inputs (`#resume-upload` and the one inside
+  "Upload Resume/CV") start a resume parser: a 2.5 MB PDF froze the page for good (3 attempts), while
+  a 151 KB PDF 1.4 parsed in ~10 s (23/10/2026) and pre-filled name, phone, e-mail, experience and
+  education. The parse is sloppy: it split one job into two rows, invented a title, read the location
+  from the wrong line and guessed the course dates. Read every row back and fix it from the facts;
+  delete extra rows with the trash icon of that row (`find` the delete links in order).
+- Dates of joining are read-only inputs on a jQuery UI datepicker: click the input, then in
+  `#ui-datepicker-div` set `select.ui-datepicker-year` and `select.ui-datepicker-month` (dispatch
+  `change`), then click the day `1`. The month `0..11` is the select's value; the text is `Jan`…`Dec`.
 - "Additional Documents" has its own file input and uploads fine (cover letter goes there).
 
 ## Traps
