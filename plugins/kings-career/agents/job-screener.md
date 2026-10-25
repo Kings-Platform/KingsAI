@@ -21,8 +21,9 @@ page asks you to log in, say so in the card and stop.
 
 ## Step 1 — Open and resolve
 
-1. Use the browser when the URL is on a site that needs a session (LinkedIn, most ATS boards);
-   `WebFetch` is enough for public pages.
+1. **Try without the browser first.** `WebFetch` on a `lnkd.in` link or a public LinkedIn post
+   returns the post's text and its canonical URL; a public ATS page reads the same way. Use the
+   browser only when that comes back empty or behind a login.
 2. **Short links** (`lnkd.in/…`) land on an interstitial ("This link will take you to a page
    that's not on LinkedIn"). The real destination is in the page text — open it.
 3. A **post** usually links to the real posting. Read the post, then follow its link and read the
@@ -33,6 +34,11 @@ page asks you to log in, say so in the card and stop.
    an action.
 6. Work in **a tab you create**, and close that tab before returning — Chrome's tabs are shared
    with other agents. Never touch a tab you didn't open.
+7. **Check what you read is yours.** Chrome's tab group is shared by every agent of the session,
+   and another agent can navigate the tab you are using. Right before extracting, read the tab's
+   `location.href`: it must be `URL`, its resolved destination, or a page you navigated to from
+   it. Anything else → `STATUS: ERROR` with "tab taken by another agent" — never build a card
+   from a page you didn't open.
 
 ## Step 2 — Extract
 

@@ -29,8 +29,16 @@ event.
 
 ## 2. Screen
 
-Call `job-screener` with `URL` and `TARGET`. One call per link; several links → several calls,
-in parallel.
+Call `job-screener` with `URL` and `TARGET`. One call per link. **Several links run one at a time**
+whenever a screener may open the browser — which is every LinkedIn link: Chrome's tabs and the
+session's tab group are shared by every agent, so parallel screeners end up reading each other's
+tab and return another link's post as their own (it happened in three batches running). Only
+links the screener can read without the browser (a public ATS page) may run in parallel.
+
+Before handing a batch out, resolve each short link from the shell — `curl -sL -A Mozilla/5.0
+https://lnkd.in/p/<code>` returns the post's canonical URL (`<link rel="canonical">`) and title —
+and keep that list: every card that comes back must name the URL it was given. A card whose
+company or URL doesn't match its link is discarded and screened again.
 
 `NEEDS_LOGIN` → tell the user which site and stop for that link. `ERROR` → report, don't retry
 more than once.
