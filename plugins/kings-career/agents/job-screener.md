@@ -32,13 +32,9 @@ page asks you to log in, say so in the card and stop.
    read again once after a short JS wait. Still empty → say so.
 5. One short JS call at most per page, read-only (`innerText`, link `href`s). Never a loop, never
    an action.
-6. Work in **a tab you create**, and close that tab before returning — Chrome's tabs are shared
-   with other agents. Never touch a tab you didn't open.
-7. **Check what you read is yours.** Chrome's tab group is shared by every agent of the session,
-   and another agent can navigate the tab you are using. Right before extracting, read the tab's
-   `location.href`: it must be `URL`, its resolved destination, or a page you navigated to from
-   it. Anything else → `STATUS: ERROR` with "tab taken by another agent" — never build a card
-   from a page you didn't open.
+6. **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. A `location.href` that is not `URL`, its resolved destination
+   or a page you navigated to from it → `STATUS: ERROR` ("tab taken by another agent"); never build a
+   card from a page you didn't open.
 
 ## Step 2 — Extract
 

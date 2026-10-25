@@ -42,10 +42,8 @@ Per posting, a scratch directory `OUT` of its own.
    rules say): `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT`
    (this skill's `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`,
    `APPLICATION`, `OUT`, `OPPORTUNITIES` (the data source id from the profile), `BROWSER: no`.
-2. **Browser cases one at a time**, in parallel with step 1 (one browser agent at a time, any
-   number of non-browser ones). Chrome's tabs are shared by every agent, so parallel browsing
-   mixes pages. Each routed case and each `NEEDS_BROWSER` → the analyst call with
-   `BROWSER: allowed`, waiting for it to return before the next.
+2. **Browser cases**, in parallel with step 1: each routed case and each `NEEDS_BROWSER` → the
+   analyst call with `BROWSER: allowed`. **Browser agents that only read run in parallel**, each in its own tab (tested 25/10/2026). Before the batch, open an anchor tab (`tabs_context_mcp` with `createIfEmpty`) and keep it open until the last agent returns: the tab group belongs to the session and Chrome removes it as soon as it is empty, so without the anchor the first agent to close its tab dissolves the group under the others. Agents that click or type (`form-filler`, Easy Apply) work on the window's active tab and run one at a time.
 3. **Options once.** Merge every plan's `new_options`, add them in one `update-data-source` per
    column (fetch it, resend every existing option plus the new ones), and append them to the
    profile's "Select options" list. Writers never touch a schema, so parallel writers can't erase
