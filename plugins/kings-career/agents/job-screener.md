@@ -21,8 +21,9 @@ page asks you to log in, say so in the card and stop.
 
 ## Step 1 — Open and resolve
 
-1. Use the browser when the URL is on a site that needs a session (LinkedIn, most ATS boards);
-   `WebFetch` is enough for public pages.
+1. **Try without the browser first.** `WebFetch` on a `lnkd.in` link or a public LinkedIn post
+   returns the post's text and its canonical URL; a public ATS page reads the same way. Use the
+   browser only when that comes back empty or behind a login.
 2. **Short links** (`lnkd.in/…`) land on an interstitial ("This link will take you to a page
    that's not on LinkedIn"). The real destination is in the page text — open it.
 3. A **post** usually links to the real posting. Read the post, then follow its link and read the
@@ -31,8 +32,9 @@ page asks you to log in, say so in the card and stop.
    read again once after a short JS wait. Still empty → say so.
 5. One short JS call at most per page, read-only (`innerText`, link `href`s). Never a loop, never
    an action.
-6. Work in **a tab you create**, and close that tab before returning — Chrome's tabs are shared
-   with other agents. Never touch a tab you didn't open.
+6. **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. A `location.href` that is not `URL`, its resolved destination
+   or a page you navigated to from it → `STATUS: ERROR` ("tab taken by another agent"); never build a
+   card from a page you didn't open.
 
 ## Step 2 — Extract
 

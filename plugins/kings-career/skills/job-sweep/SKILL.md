@@ -40,7 +40,7 @@ line what will run and what is skipped.
 ## 3. Sweep — in parallel
 
 Group the due sources (4–6 per group, similar access method together) and call
-`source-sweeper` once per group, **in parallel**, with:
+`source-sweeper` once per group, **in parallel**. **Browser agents that only read run in parallel**, each in its own tab (tested 25/10/2026). Before the batch, open an anchor tab (`tabs_context_mcp` with `createIfEmpty`) and keep it open until the last agent returns: the tab group belongs to the session and Chrome removes it as soon as it is empty, so without the anchor the first agent to close its tab dissolves the group under the others. Agents that click or type (`form-filler`, Easy Apply) work on the window's active tab and run one at a time. Then call each with:
 
 ```
 SOURCES:   <the rows of this group, with URL templates already filled>

@@ -29,8 +29,13 @@ event.
 
 ## 2. Screen
 
-Call `job-screener` with `URL` and `TARGET`. One call per link; several links → several calls,
-in parallel.
+Call `job-screener` with `URL` and `TARGET`. One call per link; several links → several calls, in
+parallel. **Browser agents that only read run in parallel**, each in its own tab (tested 25/10/2026). Before the batch, open an anchor tab (`tabs_context_mcp` with `createIfEmpty`) and keep it open until the last agent returns: the tab group belongs to the session and Chrome removes it as soon as it is empty, so without the anchor the first agent to close its tab dissolves the group under the others. Agents that click or type (`form-filler`, Easy Apply) work on the window's active tab and run one at a time.
+
+Before handing a batch out, resolve each short link from the shell — `curl -sL -A Mozilla/5.0
+https://lnkd.in/p/<code>` returns the post's canonical URL (`<link rel="canonical">`) and title —
+and keep that list: every card that comes back must name the URL it was given. A card whose
+company or URL doesn't match its link is discarded and screened again.
 
 `NEEDS_LOGIN` → tell the user which site and stop for that link. `ERROR` → report, don't retry
 more than once.

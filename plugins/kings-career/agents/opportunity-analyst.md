@@ -51,8 +51,7 @@ In order, stopping at the first that works:
 4. A public JSON endpoint the script doesn't know yet (an ATS's own API) is fine through `curl`:
    save the text to `OUT/raw.txt` and wrap it as in step 1; name the endpoint in `notes` so it can
    join the script.
-5. Browser, only with `BROWSER: allowed`: a **new tab you create**, `get_page_text`, close **only
-   that tab**. A cookie or privacy modal in the way → `find` its decline/reject button and click it
+5. Browser, only with `BROWSER: allowed`: **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. Read with `get_page_text`. A cookie or privacy modal in the way → `find` its decline/reject button and click it
    (`computer`); never accept, never click anything else. Check the page is this posting (company
    and title) before using it. Save the text
    without page chrome to `OUT/raw.txt`, then step 1 with it. With `BROWSER: no` → stop and return
