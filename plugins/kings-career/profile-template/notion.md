@@ -56,20 +56,35 @@ Property keys are the database's names as-is. Values are plain text: no markdown
 ## Opportunities — page body
 
 ```
-## Overview {color="blue_bg"}
+<h2 color="blue_bg">
+Overview
+</h2>
+
 <2–3 sentences: what the product/team is, mode and place>
+
 **Must-haves**
+
 - <the 3–5 must-haves, short>
-<empty-block/>
-## Contact {color="blue_bg"}            ← only when an official contact is tied to the posting
+
+<h2 color="blue_bg">
+Contact
+</h2>
+
 - <Name> — <role: recruiter / hiring manager / post author> — [LinkedIn](<url>) · <email>
-<empty-block/>
-## Job description {color="blue_bg"}
-<synced_block>
-	#### **<Title — location · type, as the posting header shows>**
-	<the posting's own text, literal, in its own language: bold section titles, "- " bullets>
-</synced_block>
+
+<h2 color="blue_bg">
+Job description
+</h2>
+
+<synced-block>
+#### **<Title — location · type, as the posting header shows>**
+
+<the posting's own text, literal, in its own language: bold section titles, "- " bullets>
+</synced-block>
 ```
+
+Blank line between blocks; the Contact section only when an official contact is tied to the
+posting.
 
 - **Description is literal.** Copy the posting's text; don't summarize, translate or reorder. Drop
   only page chrome (Apply buttons, cookie notes, duplicated footers) and lines made only of
@@ -85,7 +100,7 @@ Property keys are the database's names as-is. Values are plain text: no markdown
   what you were told, pay discussed) never go on the Opportunities page: they belong on the
   Applications page, which is private.
 - **Posting taken down** and there was an application: keep the section, and inside the synced
-  block write only `<callout icon="🚫" color="gray_bg">Posting closed — the original text is no longer available.</callout>`,
+  block write only the "posting closed" callout (`fetch_posting.py --unavailable` writes it),
   dated in the Overview. The Overview then comes from the screener's card.
 
 ## Applications — properties
@@ -106,11 +121,20 @@ Property keys are the database's names as-is. Values are plain text: no markdown
 ## Applications — page body
 
 ```
-## Answers sent {color="blue_bg"}
+<h2 color="blue_bg">
+Answers sent
+</h2>
+
 <confirmation text in one line>
-<table header-row="true"> Field | Answer </table>       ← form answers as sent
+
+| Field | Answer |                                  ← form answers as sent
+| --- | --- |
+
 **<free-text question>**
-> <answer as sent>
+
+<quote>
+<answer as sent>
+</quote>
 ```
 
 E-mail applications: recipient, subject, attachment and the gap sentence, quoted.
@@ -143,15 +167,11 @@ stays within the list — a technology that isn't here is simply not tagged.
 - **Status:** Applied, Confirmed, In progress, Rejected, No return, Closed · **Channel:** ATS, Easy Apply, E-mail, DM, Site · **Language:** `<…>`
 - **Platform:** `<…>`
 
-## Notion markdown — the only syntax these pages use
+## Notion syntax
 
-- Heading with color: `## Overview {color="blue_bg"}`
-- Bold `**text**`; bullets `- item`; empty line `<empty-block/>` on its own line
-- Link `[LinkedIn](https://…)`
-- Synced block: `<synced_block>` … `</synced_block>`, every child line indented with one tab
-- Callout: `<callout icon="🚫" color="gray_bg">text</callout>`
-- Table: `<table header-row="true">` with `<tr>` / `<td>` rows, children tab-indented
-- Escape with a backslash, in page content only: `$ [ ] < > { } | ^ ~` and backtick
+The syntax every page here uses — colored headings, synced blocks, callouts, tables, escapes — and
+the read-back check after each write live in the `kings-general:notion-manage` skill. Load it
+before writing; the page models above are written in that syntax.
 
 The description section never needs hand-written syntax: `fetch_posting.py --body-out` (or
 `--wrap` / `--unavailable`) writes it ready to paste.
@@ -166,7 +186,7 @@ JSON file:
 {
   "opportunity": {"page_id": "…", "url": "https://www.notion.so/…"},
   "deferred_properties": {"Currency": "JPY"},
-  "application": {"properties": {"Title": "…", "Status": "Applied", "date:Sent on:start": "2026-10-07", "date:Sent on:is_datetime": 0, "…": "…"}, "body": "## Answers sent {color=\"blue_bg\"}\n…"},
+  "application": {"properties": {"Title": "…", "Status": "Applied", "date:Sent on:start": "2026-10-07", "date:Sent on:is_datetime": 0, "…": "…"}, "body": "<h2 color=\"blue_bg\">\nAnswers sent\n</h2>\n\n…"},
   "processo": null,
   "new_options": [{"database": "applications", "column": "Platform", "option": "Recruitee"}],
   "replace_body": false
