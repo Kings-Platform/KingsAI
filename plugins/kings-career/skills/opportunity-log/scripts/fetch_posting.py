@@ -12,8 +12,8 @@ Prints JSON: {source, title, location, posted_at, poster, emails, text}. `text` 
 body as Notion-flavored markdown (bold section titles, "- " bullets). Exit code 2 when the URL
 belongs to no supported source: the caller falls back to reading the page in a browser.
 
---body-out writes the Notion "Descrição da vaga" content, ready to paste: the text escaped and
-indented inside a synced block. --wrap does the same for text read elsewhere (a browser, a post);
+--body-out writes the Notion "Descrição da vaga" content, ready to paste: the text escaped, one
+block per line, inside a synced block (Notion connector syntax: kings-general's notion-manage skill). --wrap does the same for text read elsewhere (a browser, a post);
 --unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy, Comeet, Personio,
@@ -494,9 +494,7 @@ def approximate_date(relative):
 
 
 NOTION_RESERVED = re.compile(r"([\\$\[\]<>{}|^~`])")
-UNAVAILABLE = (
-    '<callout icon="🚫" color="gray_bg">Vaga encerrada — o texto original não está mais disponível.</callout>'
-)
+UNAVAILABLE = '<callout icon="🚫" color="gray_bg">\nVaga encerrada — o texto original não está mais disponível.\n</callout>'
 
 
 def notion_line(line):
@@ -507,7 +505,12 @@ def notion_line(line):
 def synced_block(title, text):
     lines = [f"#### **{notion_line(title)}**"] if title else []
     lines += [notion_line(line) for line in text.splitlines() if line.strip()]
-    return "<synced_block>\n" + "\n".join("\t" + line for line in lines) + "\n</synced_block>\n"
+    return synced(lines)
+
+
+def synced(lines):
+    # Blank lines keep each line its own block; without them the connector merges lines into one paragraph.
+    return "<synced-block>\n" + "\n\n".join(lines) + "\n</synced-block>\n"
 
 
 def option(flag):
@@ -542,7 +545,7 @@ def main():
                 continue
         sys.exit(2)
     if "--unavailable" in sys.argv:
-        write_body("<synced_block>\n\t" + UNAVAILABLE + "\n</synced_block>\n")
+        write_body(synced([UNAVAILABLE]))
         return
     if "--wrap" in sys.argv:
         with open(option("--wrap")) as source:
