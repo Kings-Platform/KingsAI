@@ -62,6 +62,7 @@ company's board through the ATS's public API.
 | Teamtailor | `<company>.teamtailor.com` | `https://<company>.teamtailor.com/jobs` |
 | Breezy | `<company>.breezy.hr` | The posting page |
 | Gupy | `<company>.gupy.io` | The posting page (status shown); mostly Brazil |
+| Cornerstone | `<tenant>.csod.com` | Guest token from the careers page, then `POST <cloud>rec-job-search/external/jobs` — see the [cornerstone playbook](../ats-apply/playbooks/cornerstone.md) |
 | InHire | `<tenant>.inhire.app` | `https://api.inhire.app/job-posts/public/pages` with header `X-Tenant: <tenant>` |
 
 ## Lists from people (curated, posted on LinkedIn or a blog)
