@@ -87,6 +87,10 @@ card and the application that was just sent; in a markdown one, a `pipeline-keep
 `EVENT: application`. Nothing could be sent → `pipeline-keeper` with `EVENT: queue`. One
 `EVENT: outreach` when an invitation went out or was queued.
 
+**A new board.** When the profile keeps a sources page and the posting's board (its ATS board, the
+company's careers page or the aggregator it came from) has no row there, hand it to `source-check`
+— in the background, after the route; the intake never waits for it.
+
 ## 7. Report — one line per link
 
 ```

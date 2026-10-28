@@ -46,6 +46,7 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
 | Sources page (job sources to sweep and how often) | `sources.md` |
+| Sources command (creates and updates sources, used by `source-check`; leave empty to edit the sources page by hand) | `none` (e.g. a script that takes a JSON list with `access`, `how`, `notes`, `create`) |
 | Site notes (selectors, traps and quirks of specific job sites and company careers pages) | `sites.md` (or any notes file) |
 
 ## How the plugin uses this profile
