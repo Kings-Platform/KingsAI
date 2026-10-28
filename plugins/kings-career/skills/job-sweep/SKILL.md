@@ -78,6 +78,8 @@ Companies worth watching: <name> — <why> (hire the target remotely, no open ro
 
 Then update each swept source's **last run** on the sources page, and note sources whose access
 changed (a URL that moved, an API that started failing) right there — the next run depends on it.
+A source a sweeper couldn't read (empty without a browser, blocked, moved) goes to `source-check`,
+which finds the cheapest way to read it and records it before the next run.
 
 ## 6. Hand off
 
