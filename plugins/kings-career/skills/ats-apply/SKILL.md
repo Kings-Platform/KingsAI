@@ -28,6 +28,7 @@ From the application URL:
 | `successfactors` | [successfactors](playbooks/successfactors.md) |
 | `oraclecloud.com` | [oracle-cloud](playbooks/oracle-cloud.md) |
 | `keka.com/careers` | [keka](playbooks/keka.md) |
+| `csod.com` (Cornerstone) | [cornerstone](playbooks/cornerstone.md) |
 | `comeet.com/jobs` / `comeet.co` | [comeet](playbooks/comeet.md) |
 | `jobs.personio.com` / `jobs.personio.de` | [personio](playbooks/personio.md) |
 | `jobs.quickin.io` | [quickin](playbooks/quickin.md) |
