@@ -35,6 +35,11 @@ must not leak), `answers.md` (if they ask salary, availability, authorization).
 Show the draft. The user may rewrite it entirely — send **their** text, verbatim, no
 "improvements".
 
+- Liking the text is not a go to send: after showing it, ask whether to send and wait for an
+  explicit yes.
+- After each change, show the **whole** text again, never only the edited part — the user
+  approves what will actually go out.
+
 ## 5. Send and record
 
 LinkedIn: the DM procedure in `linkedin-outreach/scripts/dm.md`, in the existing thread. Email:

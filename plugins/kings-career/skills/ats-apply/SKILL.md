@@ -87,7 +87,9 @@ it should. `SUBMIT: yes` stays available for runs the user explicitly delegates 
 - **Diversity / EEO questions** follow the profile's rule; with no rule, "prefer not to answer".
 
 Blocked platform (the browser tool reports "permission denied" on the domain, or a CAPTCHA, or
-a login): the agent returns `PENDING`. Don't retry around it; tell the user what to unblock and
+a login): the agent returns `PENDING`. A "permission denied … on this domain" comes from Claude
+Code's own per-domain list, not from the site: the user allows the domain (a
+`ClaudeInChromeDomain(<host>)` rule in the settings' `permissions.allow`), then the form runs again. Don't retry around it; tell the user what to unblock and
 hand over the tab with the form filled as far as it went.
 
 ## 4. Record and learn

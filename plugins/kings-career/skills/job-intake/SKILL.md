@@ -99,6 +99,9 @@ company's careers page or the aggregator it came from) has no row there, hand it
 
 Then, separately, the items that are the user's: accounts, CAPTCHAs, tests with deadlines.
 
+A batch of links ends with **one** status table — done, waiting for the user (and for what
+exactly), not started — so nothing that was planned is silently left out.
+
 ## What this skill never does
 
 - Decide a route without the rules page open

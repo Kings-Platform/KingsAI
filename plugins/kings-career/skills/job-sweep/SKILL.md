@@ -52,9 +52,15 @@ SINCE:     <date of the previous run, or 8 days ago>
 Sources that need the user's logged-in browser (talent platforms, paid lists) go in a group of
 their own, so a login problem doesn't stall the rest.
 
+When every sweeper is in, the sources a sweeper **without** the browser couldn't read (a JS-only
+page, empty HTML, a 403 or a bot challenge) go to one more browser sweeper **in the same run**, so
+today's roles aren't lost; `source-check` then finds a cheaper access for the next run.
+
 ## 4. Merge and dedupe
 
 1. Merge the cards; the same role reached through two sources is one role (keep both sources).
+   Copies of one role per country or city (same text, each with its own job id) are also one
+   role, with every country and link kept.
 2. Check every card against the pipeline — Notion opportunities when the pipeline format is
    `notion`, the markdown applications otherwise — and against the Outreach table. Match by the
    **posting's own id** (the job id inside the link, tracking stripped) or by role + country + city,

@@ -32,7 +32,7 @@ pieces fit.
 | [`kings-core`](plugins/kings-core/) | Any project: living docs, style review, code review rounds, new demands, README style, Figma files | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-core) |
 | [`kings-general`](plugins/kings-general/) | General-purpose utilities, outside any project or workflow: site icons, remote Claude Code sessions, handling Notion pages and databases | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-general) |
 | [`kings-swift`](plugins/kings-swift/) | Swift and iOS: code style and unit tests, driven by the `SWIFT_STYLE_GUIDE` and `SWIFT_UNIT_TESTS` named paths | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-swift) |
-| [`kings-career`](plugins/kings-career/) | Job search as an operation, driven by the `CAREER_PROFILE` named path | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-career) |
+| [`kings-career`](plugins/kings-career/) | Job search as an operation: find roles, screen a posting, apply through an ATS or by email, reach out on LinkedIn, triage the inbox, prepare for interviews — with the human approving what goes out. Driven by the `CAREER_PROFILE` named path | [wiki](https://github.com/Kings-Platform/KingsAI/wiki/kings-career) · [getting started](https://github.com/Kings-Platform/KingsAI/wiki/kings-career-getting-started) |
 
 Company-specific plugins live in their own private marketplaces, installed next to this one.
 
