@@ -11,6 +11,8 @@ Rules that hold on every platform. The per-platform playbooks add to these.
   browser tool. Strip `?=&#` from what you return (`.replace(/[?=&#]/g,' ')`), return
   `location.pathname` instead of `location.href`.
 - Long output is truncated (~1,000 characters from JS). Stash in `window.__k` and read slices.
+- Keep each JS call short: a loop with many clicks or awaits can pass ~45 s and time out the
+  browser connection. A few cycles per call, then call again.
 
 ## Typing
 

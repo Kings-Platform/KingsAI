@@ -54,7 +54,7 @@ What a posting must be, or must not be, for the plugin to act on it:
 
 ## Autonomy overrides
 
-The plugin's defaults are in its README. Override here only what differs for you.
+The plugin's defaults are in the wiki's kings-career page, "AI autonomy". Override here only what differs for you.
 
 | Action | Your setting |
 |---|---|

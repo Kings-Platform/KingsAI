@@ -1,6 +1,6 @@
 # Tracker RMS
 
-URL shape: `https://<host>.tracker-rms.com/<Db>/apply?jobcode=<N>` (e.g. `evoportalus`).
+URL shape: `https://<host>.tracker-rms.com/<Db>/apply?jobcode=<N>`.
 
 ## Gate — the user's
 
