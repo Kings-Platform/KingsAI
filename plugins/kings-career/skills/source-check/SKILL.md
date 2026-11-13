@@ -60,8 +60,11 @@ board when they belong to different units — each named after its unit, and two
 the company's name when their links differ.
 
 **Not a tech employer is still a source.** The search terms change (another stack, another area,
-another person), so a company whose listing exists but holds no tech roles is recorded **turned
-off** (the profile's "off" activation), with its method tested like any other — ready to switch on.
+another person), so a company whose listing exists but holds no tech roles is still recorded, with
+its method tested like any other. Through a public API it stays **on** (in a batched sweep it costs
+almost nothing); through a page or the browser it is recorded **off** (the profile's "off"
+activation), ready to switch on. A tech employer stays on even when it has no opening for the
+user's target today.
 
 Merge the agents' files into one list for the sources command:
 
@@ -70,7 +73,7 @@ Merge the agents' files into one list for the sources command:
 | `api`, `page-ok`, `browser-only` | `access`, `how` (the method, verbatim), `notes`; a new source also `create`, `name`, `url`, `type`, `region` |
 | `login` | access `Navegador logado`; the user decides whether it stays enabled |
 | `dead` | An existing row: status off (the profile's "down" status) with the note. A new one: not created — report it |
-| `not-tech` with a listing | Created **turned off**, with its tested method |
+| `not-tech` with a listing | Created with its tested method — on through a public API, off through a page or the browser |
 | `no-listing`, `not-tech` without a listing | Not created — reported back to the caller with what was tried |
 
 Run the command, then the profile's pull (when it keeps a mirror) so the next sweep reads the new
