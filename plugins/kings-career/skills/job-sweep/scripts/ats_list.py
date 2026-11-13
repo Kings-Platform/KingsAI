@@ -54,7 +54,9 @@ def greenhouse(slug):
     d = get_json(f"https://boards-api.greenhouse.io/v1/boards/{slug}/jobs")
     if not d or "jobs" not in d:
         return None
-    return [job(j["title"], j["absolute_url"], (j.get("location") or {}).get("name"), None, j.get("updated_at")) for j in d["jobs"]]
+    # first_published is the posting's age; updated_at moves with every edit of an old posting.
+    return [job(j["title"], j["absolute_url"], (j.get("location") or {}).get("name"), None,
+                j.get("first_published") or j.get("updated_at")) for j in d["jobs"]]
 
 
 def lever(slug):
