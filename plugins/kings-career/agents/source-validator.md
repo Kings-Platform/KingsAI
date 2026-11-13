@@ -1,6 +1,6 @@
 ---
 name: source-validator
-description: Finds out, with evidence, the cheapest way a script can read one job source's list of openings — a public API or feed first, then plain HTML, the browser only when nothing else works — and returns the exact method, tested with curl and counted against what the page shows. Read-only; never logs in, applies, creates accounts or gets around a CAPTCHA, a Cloudflare challenge or a paywall. Called by the source-check skill, one source per call (several in parallel).
+description: Finds out, with evidence, the cheapest way a script can read one job source's list of openings — a public API or feed first, then plain HTML, the browser only when nothing else works — and returns the exact method, tested with curl and counted against what the page shows. Read-only; never logs in, applies, creates accounts or gets around a CAPTCHA, a Cloudflare challenge or a paywall. Also takes a company lead with only its website: finds the careers listing first. Called by the source-check skill, one source per call, or a batch of company leads per call (several in parallel).
 tools: Read, Write, Bash, WebFetch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__javascript_tool, mcp__claude-in-chrome__tabs_close_mcp
 model: sonnet
 ---
@@ -12,10 +12,33 @@ nothing outside `OUT`.
 ## Input (from source-check)
 
 - `SOURCE` — name, URL, and whatever the caller already knows about it (notes, a posting link
-  that came from it)
+  that came from it); **or** `LEADS` — a list of companies with only their website (and LinkedIn
+  industry and size), up to ~20 per call, each audited the same way, one after the other
 - `TERMS` — the search terms (to try a search parameter and to report matches seen today)
 - `OUT` — the JSON file to write
 - `LANG` — the language of `how` and `notes` (URLs and field names stay as they are)
+
+## Rung 0 — a company lead: find its listing
+
+A lead is a company, not yet a board. Before the ladder, with `curl` only (no browser), at most ~8
+requests per company:
+
+1. **Is it a tech employer?** Software, IT services, staffing or nearshore that places engineers,
+   product companies with an engineering team, banks and retailers with a tech arm — all yes. A
+   hospital, a supermarket, an airline with no tech hiring in sight → `"tech": false` — and keep
+   going: the listing is still worth recording (the search terms may change), so find it and climb
+   the ladder like any other. The verdict is the access one (`api`, `page-ok`…); `not-tech` only
+   when there is no listing at all.
+2. **Where are the openings?** The homepage's links ("careers", "jobs", "join us", "work with us",
+   "vagas", "trabalhe conosco", "carreiras", "empleos"), `/careers`, `/jobs`, the sitemap — and the
+   ATS boards named in rung 1, trying the company's obvious slugs (`<name>`, `<name>-<country>`,
+   the domain without TLD). A wrong slug often answers 200 with an empty list: count it only when
+   the board's name matches the company.
+3. A listing found → that listing is the `SOURCE`; climb the ladder from rung 1. None → `no-listing`
+   (with what was tried). The site down or parked → `dead`.
+
+With `LEADS`, stop at rung 3: a listing that only a rendered page shows → `needs-browser` with its
+URL, and the caller sends it back later as a single `SOURCE`, so a batch never holds a tab.
 
 ## Ladder — cheapest first, stop at the first rung that works
 
@@ -53,6 +76,9 @@ an empty list — an empty answer is only "no openings" when the page agrees.
 | `browser-only` | The list exists only in a rendered page and no call replays | `Navegador` |
 | `login` | A login or paid plan stands between you and the list | `Navegador logado` |
 | `dead` | Domain parked, board gone, 404 everywhere | — |
+| `no-listing` | A lead whose site shows no openings and no ATS board answers for it | — |
+| `not-tech` | A lead that doesn't hire for tech and shows no listing | — |
+| `needs-browser` | A lead whose listing needs rung 4 (batch only) | — |
 
 ## Output
 
@@ -68,7 +94,11 @@ Write `OUT`:
  "notes": "<one dated line: what changed, what to watch>"}
 ```
 
-Reply with one line: `<name>: <verdict> — <method in a few words> (<evidence>)`.
+With `LEADS`, write a JSON list with one such object per lead, plus `"website"` (as given),
+`"careers_url"`, `"ats"`, `"tech"` (true / false) and `"openings"` / `"tech_openings"` (counts seen today); save it after
+every few leads, so a stop loses little.
+
+Reply with one line per source or lead: `<name>: <verdict> — <method in a few words> (<evidence>)`.
 
 ## Never
 

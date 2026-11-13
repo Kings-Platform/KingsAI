@@ -21,6 +21,7 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Skill | Reads recent email, classifies it, updates the pipeline |
 | [`job-sweep`](skills/job-sweep/SKILL.md) | Skill | Sweeps the profile's job sources (aggregators, lists, talent platforms, company boards, ATS-domain search), keeps what is open, new and fits; the public sources ship in a [catalog](skills/job-sweep/sources-catalog.md) |
 | [`source-check`](skills/source-check/SKILL.md) | Skill | Validates a job source before it enters the sweep (and re-validates the ones on the browser): API or feed first, plain HTML next, the browser last; records the source with the tested method |
+| [`source-discovery`](skills/source-discovery/SKILL.md) | Skill | Finds new sources through the recruiters in the user's network: every company they worked at, deduped against a log and the sources page, website read, then handed to `source-check` |
 | [`interview-prep`](skills/interview-prep/SKILL.md) | Skill | Topics, STAR stories, audio scripts — prepares, never impersonates |
 | [`blind-review`](skills/blind-review/SKILL.md) | Skill | A recruiter's cold read of the LinkedIn profile, the CV and the outreach messages (templates included): score or would-reply verdict, red flags, questionable claims, fixes by impact — reconciled with the facts, never applied alone |
 | [`opportunity-log`](skills/opportunity-log/SKILL.md) | Skill | Saves postings and applications to the profile's Notion pipeline; fetches the posting's literal text with [`fetch_posting.py`](skills/opportunity-log/scripts/fetch_posting.py) |
@@ -29,6 +30,7 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`blind-reviewer`](agents/blind-reviewer.md) | Agent | Opus. Reviews one profile, CV or message as a stranger recruiter would — knows only what is in front of it; read-only browser |
 | [`source-sweeper`](agents/source-sweeper.md) | Agent | Sonnet. Reads a group of sources, confirms each role is open through the ATS API, applies the targeting, returns cards |
 | [`source-validator`](agents/source-validator.md) | Agent | Sonnet. One source: climbs the ladder ATS API → feed / embedded data → HTML → the page's own calls, tests the method with curl and counts it against the page |
+| [`linkedin-reader`](agents/linkedin-reader.md) | Agent | Sonnet. Read-only LinkedIn pages for `source-discovery`: recruiter connections, every employer of a recruiter, a company's website |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
 | [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline (outreach, queue; applications when not in Notion): one row per action |
 | [`opportunity-analyst`](agents/opportunity-analyst.md) | Agent | Sonnet. Reads a posting and its application record, decides every Notion value and writes the opportunity page → a plan file |

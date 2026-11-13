@@ -1,6 +1,6 @@
 ---
 name: source-check
-description: Validates a job source before it enters the sweep, and re-validates the ones already there — finds whether a script can read its openings through a public API or feed, plain HTML, or only a browser (API first, browser last), tests it, and records the source with that access and the exact method. Use when the user says "add this source", "new job board", "here's a site with jobs", "check if this site has an API", "revalidate the sources", "can we read X without the browser"; when job-intake gets a posting from a site that isn't a source yet; and when job-sweep finds a source it couldn't read.
+description: Validates a job source before it enters the sweep, and re-validates the ones already there — finds whether a script can read its openings through a public API or feed, plain HTML, or only a browser (API first, browser last), tests it, and records the source with that access and the exact method. Use when the user says "add this source", "new job board", "here's a site with jobs", "check if this site has an API", "revalidate the sources", "can we read X without the browser"; when job-intake gets a posting from a site that isn't a source yet; when job-sweep finds a source it couldn't read; and when source-discovery hands over the companies it found.
 ---
 
 # Source check
@@ -23,6 +23,7 @@ index → stop and say the profile can't record sources yet.
 | `job-intake` screened a posting | The posting's board, **only when** the sources page has no row for it (match by domain and by company) |
 | `job-sweep` couldn't read a source | That source |
 | "Revalidate" | Every enabled source whose access is not the API (or the ones the user lists) |
+| `source-discovery` hands over company leads | Each lead is a company with only its website: the validator first finds its listing (rung 0) |
 
 Already a source with an API that works → say so in one line and stop. A source that is only a
 social network post or a person's profile is not a board: skip it.
@@ -35,7 +36,32 @@ that open the browser each use their own tab; before the batch, open an **anchor
 (`tabs_context_mcp` with `createIfEmpty`) and keep it until the last agent returns — Chrome removes
 an empty tab group, and with it the tabs of the agents still running.
 
+**Company leads go in batches**: one validator per ~20 leads (`LEADS`, curl only), not one per
+company — a lead is mostly a few requests, and a batch of 100 one-company agents would cost several
+times more. A lead that comes back `needs-browser` is validated again on its own, as a `SOURCE`.
+
 ## 4. Record
+
+**One source per company, named after it.** A company board is a row of its own, titled with the
+company's name as the company writes it (an aggregator, a list or a talent platform: its own
+name). Never a group row ("Brazilian product companies (Gupy)", "Nearshore LATAM (Greenhouse)")
+holding several companies, and never two rows for one company that differ only in a detail —
+the ATS, the region, a note — that belongs in the row's fields. A company with two boards keeps
+one row with both methods.
+
+**No duplicates.** Before creating, look the company up on the sources page by name (ignoring
+case, accents and suffixes such as Inc or Ltda) and by the board's domain or ATS slug. Found →
+update that row instead; found inside a group row → create the company's own row and tell the
+user the group row still lists it.
+
+**Two boards, one company.** Compare their titles today. The same postings on both → one row,
+the cheaper method. Different postings → both are read: one row with both methods, or one row per
+board when they belong to different units — each named after its unit, and two rows may even share
+the company's name when their links differ.
+
+**Not a tech employer is still a source.** The search terms change (another stack, another area,
+another person), so a company whose listing exists but holds no tech roles is recorded **turned
+off** (the profile's "off" activation), with its method tested like any other — ready to switch on.
 
 Merge the agents' files into one list for the sources command:
 
@@ -44,6 +70,8 @@ Merge the agents' files into one list for the sources command:
 | `api`, `page-ok`, `browser-only` | `access`, `how` (the method, verbatim), `notes`; a new source also `create`, `name`, `url`, `type`, `region` |
 | `login` | access `Navegador logado`; the user decides whether it stays enabled |
 | `dead` | An existing row: status off (the profile's "down" status) with the note. A new one: not created — report it |
+| `not-tech` with a listing | Created **turned off**, with its tested method |
+| `no-listing`, `not-tech` without a listing | Not created — reported back to the caller with what was tried |
 
 Run the command, then the profile's pull (when it keeps a mirror) so the next sweep reads the new
 access. A method the agent couldn't test (blocked by a permission, a key it wasn't allowed to use)
