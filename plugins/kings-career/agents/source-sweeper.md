@@ -34,20 +34,33 @@ browser, no WebFetch, no judgement beyond what each step says.
      Still no reader → run the method text yourself with `curl` (browser User-Agent, `-m 25`) and
      filter the titles by the terms as whole words; then step 2.
    - `"error": "the board didn't answer"` → the source line is `down (<error>)`; next source.
+   - A list with pages (`page`, `offset`, "load more", a sitemap) is read to its **last** page for
+     every term, never only the first.
+   - Run each source's request on its own, one `curl` per call. A single script that loops over
+     many sites gets blocked by the permission check, and a blocked group reads nothing.
 2. **Keep the candidates.** From `jobs`, drop a title that is clearly another platform only
    (Android-only, React Native, Flutter, Kotlin Multiplatform, "Xamarin") — keep it when it also
    names native iOS work (Swift, UIKit, SwiftUI, "iOS and Android" native). Drop QA, support,
    sales, design and management titles that merely mention the platform ("iOS QA", "Mobile
    Product Manager") unless the caller's terms ask for them.
-3. **Known links.** Run the caller's known-link command on every remaining link, all at once.
-   `KNOWN` → count it, no card. Only `NEW` links go on.
+3. **Real link, then known links.** An aggregator (a job board that lists other companies'
+   openings) gives its own link: find the posting's **ATS link** (Greenhouse, Lever, Ashby,
+   Workable, Gupy, InHire, the company's careers page…) in the list's data or in the posting's
+   page, and use it as the card's link and for this check. Run the caller's known-link command on
+   every remaining link, all at once, quoting each one. `KNOWN` → count it, no card. Only `NEW`
+   links go on. Two links of the same posting (the aggregator and the ATS) are one card.
 4. **Text.** For each `NEW` link run `FETCH` (`fetch_posting.py <link>`). Its `text` is the card's
-   `description`, literal. No text (an error, an empty page) → no card; count it with the reason.
-5. **Date.** The posting's date (from the list or from the fetched text). Older than the caller's
-   window (about two months) → drop. No date anywhere → keep.
+   `description`, literal: the posting's own words, never an aggregator's summary. No text (an
+   error, an empty page) → no card; count it with the reason and the link, so the caller can read
+   it another way. A posting whose company is hidden or whose text is a placeholder ("lorem
+   ipsum", a paywall teaser) is not a card.
+5. **Date.** The posting's **first publication** date: `posted_at` from the fetched text wins over
+   the list's date, which is often the last update. Older than the caller's window (about two
+   months) → drop, even when the list shows a recent update. No date anywhere → keep, and say so.
 6. **Card.** Write one file per posting into `CARDS_DIR`, with the "found" fields of `CARD_FORMAT`:
-   company = the source's company name; role = the title as written; link = the posting link
-   from the list. Never overwrite a file that already exists.
+   company = the employer named in the posting (the source's company for a company board; never
+   the aggregator's name); role = the title as written; link = the ATS link from step 3;
+   date = the date from step 5. Never overwrite a file that already exists.
 7. **Source line.** `ok, <total> read, <n> matched, <n> cards` — or `nothing new` / `down (<why>)`.
 
 ## Steps, per source (any other access)

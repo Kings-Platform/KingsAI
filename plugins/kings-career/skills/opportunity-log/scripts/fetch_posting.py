@@ -16,12 +16,14 @@ belongs to no supported source: the caller falls back to reading the page in a b
 block per line, inside a synced block (Notion connector syntax: kings-general's notion-manage skill). --wrap does the same for text read elsewhere (a browser, a post);
 --unavailable writes the "posting taken down" note in its place.
 
-Supported: Greenhouse (boards and company pages that carry the gh job id), Lever, Ashby, Gupy, Comeet, Personio,
+Supported: Greenhouse (boards, and company pages that carry the job id as ?gh_jid= or at the end of the path), Lever, Ashby,
+Gupy (job pages and the portal's /job/<base64> links), InHire, Capgemini, GitHub issues, Hacker News comments, Comeet, Personio,
 SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, Eightfold, JazzHR (applytojob.com), Himalayas, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
 any page that embeds the posting as schema.org JSON-LD (Teamtailor and many careers sites). LinkedIn posts need a session and are
 not supported.
 """
 
+import base64
 import datetime
 import html
 import json
@@ -33,10 +35,11 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 
 
-def get(url):
+def get(url, *headers):
     # curl uses the system trust store; python.org builds of Python often ship without one.
+    extra = [arg for header in headers for arg in ("-H", header)]
     result = subprocess.run(
-        ["curl", "-sSfL", "--max-time", "20", "-A", USER_AGENT, url],
+        ["curl", "-sSfL", "--max-time", "20", "-A", USER_AGENT, *extra, url],
         capture_output=True,
         check=True,
     )
@@ -79,18 +82,44 @@ def iso_from_ms(value):
     return datetime.datetime.fromtimestamp(value / 1000, datetime.UTC).date().isoformat()
 
 
+def greenhouse_boards(url):
+    """Board names to try for a company page that carries a Greenhouse job id."""
+    boards = []
+    try:
+        # The page embeds its board ("job_app?for=<board>", "boards.greenhouse.io/<board>"): the
+        # board name often differs from the domain (navan.com -> tripactions).
+        page = html.unescape(get(url))
+        boards += re.findall(r"greenhouse\.io/embed/job_(?:app|board)[^\"']*?[?&]for=([\w-]+)", page)
+        boards += re.findall(r"(?:job-boards|boards)(?:\.eu)?\.greenhouse\.io/(?!embed)([\w-]+)", page)
+    except Exception:
+        pass
+    # The company is the label before the TLD: careers.example.com and www.example.com both work.
+    host = re.search(r"https?://(?:[a-z0-9-]+\.)*?([a-z0-9-]+)\.[a-z]{2,}(?:\.[a-z]{2})?(?:/|$)", url)
+    if host:
+        boards.append(host.group(1))
+    return list(dict.fromkeys(boards))
+
+
 def greenhouse(url):
     match = re.search(r"greenhouse\.io/([^/]+)/jobs/(\d+)", url)
-    board, job_id = (match.group(1), match.group(2)) if match else (None, None)
-    if not match:
-        # Company careers pages often end in the Greenhouse job id; the board is the company name.
-        tail = re.search(r"/(\d{7,})/?$", url)
-        # The company is the label before the TLD: careers.example.com and www.example.com both work.
-        host = re.search(r"https?://(?:[a-z0-9-]+\.)*?([a-z0-9-]+)\.[a-z]{2,}(?:\.[a-z]{2})?/", url)
-        if not (tail and host):
+    if match:
+        boards, job_id = [match.group(1)], match.group(2)
+    else:
+        # Company careers pages carry the Greenhouse job id as ?gh_jid=<id> or at the end of the path.
+        tail = re.search(r"[?&]gh_jid=(\d+)", url) or re.search(r"/(\d{7,})/?(?:[?#]|$)", url)
+        if not tail:
             return None
-        board, job_id = host.group(1), tail.group(1)
-    data = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{board}/jobs/{job_id}"))
+        job_id = tail.group(1)
+        boards = greenhouse_boards(url)
+    data = None
+    for board in boards:
+        try:
+            data = json.loads(get(f"https://boards-api.greenhouse.io/v1/boards/{board}/jobs/{job_id}"))
+            break
+        except Exception:
+            continue
+    if not data:
+        return None
     text = to_markdown(data["content"])
     return {
         "source": "greenhouse",
@@ -171,6 +200,15 @@ def linkedin_job(url):
 
 
 def gupy(url):
+    # Links from the Gupy portal read /job/<base64 of {"jobId": …}>: turn them into /jobs/<id>.
+    encoded = re.search(r"https://([\w-]+)\.gupy\.io/job/([A-Za-z0-9+/=_-]+)", url)
+    if encoded:
+        try:
+            raw = encoded.group(2).replace("-", "+").replace("_", "/")
+            job_id = json.loads(base64.b64decode(raw + "=" * (-len(raw) % 4)))["jobId"]
+            url = f"https://{encoded.group(1)}.gupy.io/jobs/{job_id}"
+        except Exception:
+            return None
     if not re.search(r"\.gupy\.io/jobs/\d+", url):
         return None
     page = get(url)
@@ -444,6 +482,89 @@ def himalayas(url):
     return None
 
 
+def inhire(url):
+    match = re.search(r"https://([\w-]+)\.inhire\.app/vagas/([0-9a-f-]{36})", url)
+    if not match:
+        return None
+    tenant, job_id = match.groups()
+    data = json.loads(get(f"https://api.inhire.app/job-posts/public/pages/{job_id}", f"X-Tenant: {tenant}"))
+    text = to_markdown(data.get("description", ""))
+    if not text:
+        return None
+    return {
+        "source": "inhire",
+        "title": (data.get("displayName") or "").strip() or None,
+        "location": ", ".join(part for part in (data.get("workplaceType"), data.get("location")) if part) or None,
+        "posted_at": (data.get("publishedAt") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def capgemini(url):
+    match = re.search(r"capgemini\.com/(?:[a-z-]+/)?jobs/([^/?#]+)", url)
+    if not match:
+        return None
+    data = json.loads(get(f"https://www.capgemini.com/wp-json/llm/v1/jobs/{match.group(1)}"))
+    sections = data.get("sections") or []
+    text = "\n".join(
+        (f"**{part['heading']}**\n" if part.get("heading") else "") + (part.get("content") or "") for part in sections
+    ).strip() or data.get("content") or ""
+    if not text:
+        return None
+    return {
+        "source": "capgemini",
+        "title": data.get("title"),
+        "location": data.get("location"),
+        "posted_at": (data.get("date_published") or data.get("last_updated") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def github_issue(url):
+    # Community job boards kept as GitHub issues (one posting per issue).
+    match = re.search(r"github\.com/([^/]+)/([^/]+)/issues/(\d+)", url)
+    if not match:
+        return None
+    data = json.loads(get(f"https://api.github.com/repos/{match.group(1)}/{match.group(2)}/issues/{match.group(3)}"))
+    text = (data.get("body") or "").strip()
+    if not text or data.get("state") != "open":
+        return None
+    return {
+        "source": "github-issue",
+        "title": data.get("title"),
+        "location": None,
+        "posted_at": (data.get("created_at") or "")[:10] or None,
+        "poster": (data.get("user") or {}).get("login"),
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
+def hacker_news(url):
+    # A comment of the "Who is hiring" thread is the posting.
+    match = re.search(r"news\.ycombinator\.com/item\?id=(\d+)", url)
+    if not match:
+        return None
+    data = json.loads(get(f"https://hacker-news.firebaseio.com/v0/item/{match.group(1)}.json"))
+    text = to_markdown((data or {}).get("text", ""))
+    if not text or data.get("deleted") or data.get("dead"):
+        return None
+    first = text.splitlines()[0]
+    return {
+        "source": "hacker-news",
+        "title": first[:120],
+        "location": None,
+        "posted_at": datetime.datetime.fromtimestamp(data["time"], datetime.UTC).date().isoformat(),
+        "poster": data.get("by"),
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def linkedin_post_date(url):
     """A LinkedIn post or activity id carries its creation time in its top 41 bits (ms since epoch)."""
     match = re.search(r"(?:activity[:-]|share-|ugcPost-)(\d{18,20})", url)
@@ -456,7 +577,7 @@ def linkedin_post_date(url):
 def json_ld(url):
     # Many careers pages (Teamtailor and others) embed the posting as schema.org JSON-LD.
     page = get(url)
-    for block in re.findall(r"<script[^>]*application/ld\+json[^>]*>(.*?)</script>", page, re.S):
+    for block in re.findall(r"<script[^>]*application/ld(?:\+|&#x2B;|&#43;)json[^>]*>(.*?)</script>", page, re.S | re.I):
         try:
             data = json.loads(block, strict=False)
         except ValueError:
@@ -570,7 +691,8 @@ def main():
     sys.exit(2)
 
 
-FETCHERS = (lever, ashby, linkedin_job, gupy, comeet, personio, smartrecruiters, recruitee, workday, oracle_hcm, amazon_jobs, himalayas, jazzhr, eightfold, greenhouse, json_ld)
+FETCHERS = (lever, ashby, linkedin_job, gupy, inhire, capgemini, github_issue, hacker_news, comeet, personio, smartrecruiters,
+            recruitee, workday, oracle_hcm, amazon_jobs, himalayas, jazzhr, eightfold, greenhouse, json_ld)
 
 
 if __name__ == "__main__":
