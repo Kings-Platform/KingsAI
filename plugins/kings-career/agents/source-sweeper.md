@@ -55,7 +55,11 @@ browser, no WebFetch, no judgement beyond what each step says.
 1. **Read the list** the cheapest way that works: the API or `curl` first, `WebFetch` next, the
    browser last. **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. Logged-in platforms: the browser, reading only.
 2. **Keep the candidates**: title matches a term, posted/updated after `SINCE` when the source
-   gives a date.
+   gives a date. **Read the whole list, every page.** A listing with pages, a "load more", a
+   `?page=N` / `offset` parameter or a sitemap is read to its last page (until a page comes back
+   empty or repeats the previous one), for every term. The first page alone is not a sweep: a
+   source with 150 openings read 20 at a time is 8 requests, not 1. Note in the source line how
+   many pages and openings were read.
 3. **Confirm open** for each candidate with the method in the row (ATS API, page status).
    Closed, 404, "no longer accepting" → drop, count it.
 4. **Read the role** (description or API content): location and eligibility, seniority, stack,
