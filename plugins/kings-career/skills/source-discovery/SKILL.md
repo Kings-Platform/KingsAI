@@ -64,7 +64,8 @@ whether the role was recruiting. Opens nothing but the experience pages.
 Before the batch, open an **anchor tab** (`tabs_context_mcp` with `createIfEmpty`) and keep it until
 the last reader returns: Chrome removes an empty tab group, and with it the readers' tabs. Watch
 the readers as the session's own rules say (done files, an idle alert). A reader that reports a
-LinkedIn warning → stop every reader, don't start the next stage that day.
+LinkedIn warning → stop every reader and open no LinkedIn page again that day (the web route in §5
+still runs).
 
 ## 4. Dedupe
 
@@ -81,11 +82,18 @@ the counts it prints.
 ## 5. Websites
 
 Groups of ~25 links from `companies-new.json`, one `linkedin-reader` per group, `MODE: company`,
-in parallel (same anchor-tab rule). Then:
+**at most 4 readers at a time** (same anchor-tab rule): nine company readers in parallel got HTTP 429
+from LinkedIn after two pages each (13/11/2026). Then:
 
 ```bash
 python3 -I scripts/discovery_log.py sites "$LOG" comp-*.json --sources <sources page> --out leads.json
 ```
+
+**When LinkedIn stops the stage** (a 429 or any warning): don't read company pages again that day.
+The companies left can still go on without LinkedIn — hand them to `source-check` as leads with only
+the name and the company link (`website: null`): the validator finds the official site on the web,
+confirming the homepage names the company, and goes on from rung 0. Search engines also throttle
+bursts, so expect `no-site` for small companies whose domain can't be guessed.
 
 A company whose domain is already on the sources page becomes `known`. `leads.json` is the list of
 new companies with their website.

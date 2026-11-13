@@ -23,6 +23,10 @@ nothing outside `OUT`.
 A lead is a company, not yet a board. Before the ladder, with `curl` only (no browser), at most ~8
 requests per company:
 
+0. **No website given** (`website: null`) → find the official site first: a web search for the name
+   (or a guessed domain), accepted only when the homepage loads and names the same company (country
+   and industry consistent). Never open linkedin.com for it. Nothing confirmed → `no-site`, with what
+   was tried.
 1. **Is it a tech employer?** Software, IT services, staffing or nearshore that places engineers,
    product companies with an engineering team, banks and retailers with a tech arm — all yes. A
    hospital, a supermarket, an airline with no tech hiring in sight → `"tech": false` — and keep
