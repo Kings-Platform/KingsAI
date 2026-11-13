@@ -33,9 +33,9 @@ One row per catalog source you sweep. `Frequency` empty = the default above.
 
 Company boards, recruiters' lists, communities — anything the catalog doesn't name.
 
-| Source | URL | Access (API, page, browser, members-only) | Frequency | Last run | Notes |
-|---|---|---|---|---|---|
-| | | | | | |
+| Source | URL | Access (API, page, browser, members-only) | Category (ATS or feed, for batching) | Frequency | Last run | Notes |
+|---|---|---|---|---|---|---|
+| | | | | | | |
 
 ## Companies to watch
 
