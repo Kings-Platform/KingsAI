@@ -39,8 +39,18 @@ line what will run and what is skipped.
 
 ## 3. Sweep — in parallel
 
-Group the due sources (4–6 per group, similar access method together) and call
-`source-sweeper` once per group, **in parallel**. **Browser agents that only read run in parallel**, each in its own tab (tested 25/10/2026). Before the batch, open an anchor tab (`tabs_context_mcp` with `createIfEmpty`) and keep it open until the last agent returns: the tab group belongs to the session and Chrome removes it as soon as it is empty, so without the anchor the first agent to close its tab dissolves the group under the others. Agents that click or type (`form-filler`, Easy Apply) work on the window's active tab and run one at a time. Then call each with:
+Group the due sources and call `source-sweeper` once per group, **in parallel**:
+
+| Access | Group by | Group size | Model |
+|---|---|---|---|
+| Public API or feed | The source's **category** (its ATS or feed: every board of one ATS differs only in its slug) — a big category split into chunks, small ones packed together | up to ~30 | `haiku` (the Agent tool's model override): fetch, filter the title, check the date, write the card |
+| Page | Similar pages together | 4–6 | the agent's own |
+| Browser | — | 4–6 | the agent's own |
+
+API groups also get `ATS_LIST` (this skill's `scripts/ats_list.py`), which reads the common ATS
+boards the same way and returns their jobs normalized; the sweeper follows its "API sources"
+procedure. One source per company keeps the sources page flexible (other terms, other people); the category,
+not the row, does the batching — so more sources don't mean more agents. **Browser agents that only read run in parallel**, each in its own tab (tested 25/10/2026). Before the batch, open an anchor tab (`tabs_context_mcp` with `createIfEmpty`) and keep it open until the last agent returns: the tab group belongs to the session and Chrome removes it as soon as it is empty, so without the anchor the first agent to close its tab dissolves the group under the others. Agents that click or type (`form-filler`, Easy Apply) work on the window's active tab and run one at a time. Then call each with:
 
 ```
 SOURCES:   <the rows of this group, with URL templates already filled>
