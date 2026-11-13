@@ -17,7 +17,8 @@ block per line, inside a synced block (Notion connector syntax: kings-general's 
 --unavailable writes the "posting taken down" note in its place.
 
 Supported: Greenhouse (boards, and company pages that carry the job id as ?gh_jid= or at the end of the path), Lever, Ashby,
-Gupy (job pages and the portal's /job/<base64> links), InHire, Capgemini, GitHub issues, Hacker News comments, Comeet, Personio,
+Gupy (job pages and the portal's /job/<base64> links), InHire, Capgemini, Phenom job pages, GitHub issues, Hacker News comments,
+Comeet, Personio,
 SmartRecruiters, Recruitee, Workday, Oracle Cloud HCM, Eightfold, JazzHR (applytojob.com), Himalayas, amazon.jobs, LinkedIn job pages (the logged-out jobs-guest endpoint) and
 any page that embeds the posting as schema.org JSON-LD (Teamtailor and many careers sites). LinkedIn posts need a session and are
 not supported.
@@ -565,6 +566,30 @@ def hacker_news(url):
     }
 
 
+def phenom(url):
+    # Phenom careers sites embed the posting in the page as phApp.ddo (jobDetail.data.job): the job
+    # page answers without a browser even when the apply link goes to a JS-only portal.
+    if "/job/" not in url:
+        return None
+    page = get(url)
+    match = re.search(r"phApp\.ddo\s*=\s*(\{.*?\});\s*phApp\.", page, re.S)
+    if not match:
+        return None
+    job = ((json.loads(match.group(1)).get("jobDetail") or {}).get("data") or {}).get("job") or {}
+    text = to_markdown(job.get("description") or "")
+    if not text:
+        return None
+    return {
+        "source": "phenom",
+        "title": job.get("title"),
+        "location": job.get("cityStateCountry") or job.get("location"),
+        "posted_at": (job.get("postedDate") or "")[:10] or None,
+        "poster": None,
+        "emails": sorted(set(EMAIL.findall(text))),
+        "text": text,
+    }
+
+
 def linkedin_post_date(url):
     """A LinkedIn post or activity id carries its creation time in its top 41 bits (ms since epoch)."""
     match = re.search(r"(?:activity[:-]|share-|ugcPost-)(\d{18,20})", url)
@@ -692,7 +717,7 @@ def main():
 
 
 FETCHERS = (lever, ashby, linkedin_job, gupy, inhire, capgemini, github_issue, hacker_news, comeet, personio, smartrecruiters,
-            recruitee, workday, oracle_hcm, amazon_jobs, himalayas, jazzhr, eightfold, greenhouse, json_ld)
+            recruitee, workday, oracle_hcm, amazon_jobs, himalayas, jazzhr, eightfold, greenhouse, phenom, json_ld)
 
 
 if __name__ == "__main__":
