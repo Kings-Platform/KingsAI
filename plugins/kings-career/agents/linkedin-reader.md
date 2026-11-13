@@ -59,20 +59,26 @@ links and names by their order on the page. A starting point (adapt it; the DOM 
 
 ```js
 await new Promise(r => setTimeout(r, 5000));
+// Entries are no longer always <li> (seen 13/11/2026): climb to the nearest block that holds a date range.
+const dated = el => /\b(19|20)\d{2}\b/.test(el.innerText || '');
+const item = a => { let el = a; for (let i = 0; i < 10 && el; i++, el = el.parentElement) if (el.tagName === 'LI' || (i > 1 && dated(el))) return el; return null; };
 const seen = new Set(), rows = [];
 for (const a of document.querySelectorAll('main a[href*="/company/"]')) {
   const id = (a.href.match(/\/company\/([^/?#]+)/) || [])[1];
-  const li = a.closest('li');
-  if (!id || !li || seen.has(id)) continue;
+  const box = item(a);
+  if (!id || !box || seen.has(id)) continue;
   seen.add(id);
-  rows.push(id + ' | ' + li.innerText.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 8).join(' · '));
+  const name = a.querySelector('img')?.alt?.replace(/^(Logo|Logotipo) (de |of )?/i, '') || '';
+  rows.push(id + ' | ' + name + ' | ' + box.innerText.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 8).join(' · '));
 }
 JSON.stringify({path: location.pathname, title: document.title, n: rows.length, rows})
 ```
 
-An employer that grouped several roles shows them inside the same item: record each role with its
-dates. An entry without a company page (its link goes to a search) → `linkedin: null`, name only.
+Entries without a company page have no `/company/` link and the script skips them: read the page
+text (`get_page_text`) and add them with `linkedin: null`, so the employer list is complete.
 
+An employer that grouped several roles shows them inside the same item: record each role with its
+dates. 
 For each entry decide `recruiting`: `true` when the role is recruiting, talent acquisition,
 sourcing, people/HR or hiring; `false` otherwise (the recruiter's earlier career in another field).
 Mark `skip` with the reason for schools, "Freelance", "Self-employed", "Autônomo" and the person's

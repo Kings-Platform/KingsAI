@@ -204,9 +204,12 @@ def cmd_verdicts(a):
     tally = {}
     for data in read_json(a.files):
         for v in data if isinstance(data, list) else data.get("sources") or data.get("companies") or [data]:
-            row = by_site.get(domain(v.get("website") or v.get("url")))
+            # A lead whose website was found by the validator (not on LinkedIn) is matched by its company link
+            row = companies.get(company_id(v.get("linkedin"))) or by_site.get(domain(v.get("website") or v.get("url")))
             if not row:
                 continue
+            if v.get("website") and not row.get("website"):
+                row["website"] = v["website"]
             verdict = v.get("verdict", "")
             row["stage"] = "source" if verdict in ("api", "page-ok", "browser-only", "source", "known") else verdict
             row["note"] = (v.get("careers_url") or v.get("url") or row["note"])[:300]
