@@ -63,6 +63,26 @@ profile's site notes for that specific site.
 5. Autofill platforms (Workday, SuccessFactors, Lever): tell the agent which experiences and
    dates are correct, so it can fix what the parser breaks.
 
+## 2b. Tailored CV — when the profile asks for one
+
+Only when the profile's rules say an application sends a CV tailored to the posting, and its index
+names the **CV match command** and the **tailored CV build**. Save the posting's text to a file
+first (`OUT/posting.txt`).
+
+1. **Base report.** Run the match command on the base CV in the posting's language →
+   `OUT/match-base.md`. This is the guide, not a verdict.
+2. **Tailor.** `cv-tailor` (Sonnet) with `POSTING`, `MASTER` (a fresh copy of the master CV source
+   in `OUT`), `FACTS`, `RULES` (the profile's tailored-CV rule, verbatim), `REPORT`, `BUILD`,
+   `MATCH`, `OUT`, `LANG`. It builds the PDF and runs the match again.
+3. **Review.** `cv-match-reviewer` (Haiku) with `POSTING`, `FACTS`, `CV` (the edited copy),
+   `BEFORE`, `AFTER`, `OUT/review.json`. Verdict `another-round` → `cv-tailor` once more with
+   `FEEDBACK` = its `add` items, then the match again; never a third round.
+4. The reviewer's `gap` terms go to the application's gaps (honest-gap sentence, the record's
+   gaps field) — never into the CV.
+
+Show the user the CV's changes, the coverage before → after and the reviewer's table **with the
+form draft**, before the final click. The PDF that goes into `FILES` is the tailored one.
+
 ## 3. Hand off
 
 **Platforms whose playbook says "account required"** (Workday, Gupy, SuccessFactors, Oracle

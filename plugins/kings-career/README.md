@@ -32,6 +32,8 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`source-validator`](agents/source-validator.md) | Agent | Sonnet. One source: climbs the ladder ATS API → feed / embedded data → HTML → the page's own calls, tests the method with curl and counts it against the page |
 | [`linkedin-reader`](agents/linkedin-reader.md) | Agent | Sonnet. Read-only LinkedIn pages for `source-discovery`: recruiter connections, every employer of a recruiter, a company's website |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
+| [`cv-tailor`](agents/cv-tailor.md) | Agent | Sonnet. Tailors the CV to one posting from the base CV's keyword report — only facts already in the master CV or the facts file; builds and re-checks the PDF |
+| [`cv-match-reviewer`](agents/cv-match-reviewer.md) | Agent | Haiku. Final check of a tailored CV: each missing or near term → add (where, which fact), ignore (context only) or honest gap |
 | [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline (outreach, queue; applications when not in Notion): one row per action |
 | [`opportunity-analyst`](agents/opportunity-analyst.md) | Agent | Sonnet. Reads a posting and its application record, decides every Notion value and writes the opportunity page → a plan file |
 | [`opportunity-writer`](agents/opportunity-writer.md) | Agent | Haiku. From the plan: the private application page, linked to the opportunity |

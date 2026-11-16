@@ -19,6 +19,9 @@ so; never write the email from memory.
 `rules.md` → Presentation decides. A recruiter in the candidate's own language with an
 international project → attach **both** CVs.
 
+**Tailored CV:** when the profile's rules ask for a CV tailored to the posting, build it first the way
+`ats-apply` → "2b. Tailored CV" says, and attach that PDF.
+
 ## 2. Red flags — before writing
 
 `rules.md` → Red flags. A personal mailbox, no company, a mismatch between role and company →
