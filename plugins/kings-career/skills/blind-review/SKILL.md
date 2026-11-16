@@ -24,6 +24,11 @@ From `CAREER_PROFILE` → index: `Target roles`, `LinkedIn profile URL`, `CV fil
   international"). It describes the **job**, never the candidate.
 - Missing URL or CV path → ask; never guess one.
 
+**No profile.** The review works without one: when `CAREER_PROFILE` doesn't resolve (someone
+who only wants the review), ask in one message for the target role, the LinkedIn profile URL
+and the CV file path(s) — any of them may be left out, the review covers what is given. Reports
+go to the session's scratchpad. Step 3 then reconciles with the user instead of `facts.md`.
+
 ## 2. Hand off — blind by construction
 
 The agent gets exactly four things: `TARGET`, `SOURCES`, `REPORT_LANG` (the user's language) and
@@ -50,6 +55,10 @@ Now, with the profile's `facts.md` open, read each report and sort every finding
 | True but not shown | The facts support it; the page doesn't make it visible | A fix: show it |
 | Reviewer misread | The page is right; the reviewer read it wrong | Nothing — but note it: a recruiter may misread the same way |
 | Asks for something the candidate lacks | A keyword or claim the facts don't support | Never a fix — the profile doesn't claim what isn't true |
+
+Without a profile there is no `facts.md`: sort what the reports alone can settle, and ask the
+user, in one list, about the findings only they can answer (is this claim true? do you have
+this skill?). Never turn an unconfirmed item into a fix.
 
 Compare with the previous review in the same folder, when there is one: score moved, what was
 fixed, what's new.
