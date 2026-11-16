@@ -37,6 +37,8 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | LinkedIn profile URL (public link, for the blind review) | `https://www.linkedin.com/in/<slug>/` |
 | Blind reviews folder (where blind-review saves its reports) | `~/Documents/career/reviews/` |
 | Blind review target (the job the reviewer hires for, when the user names none) | `Senior iOS engineer, remote` |
+| CV match command (keyword report of a CV against a posting; used for tailored CVs) | `none` (e.g. `python3 cv/match.py --posting <posting> --cv <cv> --master <master>`) |
+| Tailored CV build (master CV source and the command that prints a PDF from a copy of it) | `none` (e.g. `source: cv/master.md` · `build: python3 cv/build.py --from <md> --out <out>`) |
 | Cover letter files, one per language | `en: ~/Documents/CV/CoverLetter-en.pdf` |
 | Public link to the CV (for messages that can't attach) | `https://…/CV-en.pdf` |
 | Pipeline format | `markdown table` (or `csv`, `notion`) |
