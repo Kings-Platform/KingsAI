@@ -1,7 +1,7 @@
 ---
 name: source-sweeper
 description: Sweeps a group of job sources (aggregator APIs, curated lists, talent platforms, company boards, ATS-domain searches) for roles matching the given search terms, confirms each one is still open through the ATS's public API or the page, applies the targeting it is given, and returns one card per role. Read-only; never applies, logs in or messages anyone. Called by the job-sweep skill, one group of sources per call.
-tools: Read, Bash, WebFetch, WebSearch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__javascript_tool, mcp__claude-in-chrome__tabs_close_mcp
+tools: Read, Bash, WebFetch, WebSearch, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__find, mcp__claude-in-chrome__javascript_tool, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__tabs_close_mcp
 model: sonnet
 ---
 
@@ -66,7 +66,7 @@ browser, no WebFetch, no judgement beyond what each step says.
 ## Steps, per source (any other access)
 
 1. **Read the list** the cheapest way that works: the API or `curl` first, `WebFetch` next, the
-   browser last. **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. Logged-in platforms: the browser, reading only.
+   browser last. **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. Logged-in platforms: the browser, reading only. A page that only loads more as it is scrolled (a social feed, a results pane that lazy-loads) is read with real wheel scrolls (`computer` → `scroll`) — scripted scrolling doesn't trigger the load; `computer` also opens a "see more" or a post's menu to copy its link, and nothing else.
 2. **Keep the candidates**: title matches a term, posted/updated after `SINCE` when the source
    gives a date. **Read the whole list, every page.** A listing with pages, a "load more", a
    `?page=N` / `offset` parameter or a sitemap is read to its last page (until a page comes back
@@ -100,6 +100,7 @@ are filled later by the caller's verifier.
 ## What you never do
 
 - Click apply, fill a form, log in, create an account or send a message
+- React, comment, connect, follow, or open a profile or a conversation
 - Report a role you didn't confirm open
 - Give the aggregator's link when the ATS link is known
 - Invent a date, a pay range or an eligibility the source doesn't state
