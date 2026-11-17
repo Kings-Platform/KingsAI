@@ -1,6 +1,6 @@
 ---
 name: blind-review
-description: Gets a cold, honest read from a recruiter's point of view — of the candidate's LinkedIn profile and CV, or of the messages they send (connection note, DM, reply to a recruiter, application email, and the templates behind them). A reviewer agent that knows nothing about the candidate beyond what's in front of it scores the artifact against the target role and lists red flags, questionable claims and fixes by impact. Use when the user says "review my LinkedIn", "what would a recruiter think of my CV", "review my templates", "would a recruiter answer this?", "blind review", or after a profile, CV or template rewrite. Hands each artifact to the blind-reviewer agent; never edits anything itself.
+description: Gets a cold, honest read from a recruiter's point of view — of the candidate's LinkedIn profile and CV, or of the messages they send (connection note, DM, reply to a recruiter, application email, and the templates behind them). A reviewer agent that knows nothing about the candidate beyond what's in front of it scores the artifact against the target role and lists red flags, questionable claims and fixes by impact. Use when the user says "review my LinkedIn", "what would a recruiter think of my CV", "review my templates", "would a recruiter answer this?", "blind review", or after a profile, CV or template rewrite. Hands each artifact to the blind-reviewer agent, then the reports to the profile-coach agent, which knows the candidate and turns them into an improvement plan (score now → after, fixes with ready-to-paste text); never edits anything itself.
 ---
 
 # Blind review
@@ -12,7 +12,8 @@ stranger does. Everything this skill hands it must keep it that way.
 |---|---|
 | Resolve what to review and for which role | This session |
 | Read and judge, one artifact per call | `blind-reviewer` agent (Opus) |
-| Reconcile the findings with the facts, build the plan | This session |
+| Reconcile the findings with what is known, score, write the fixes | `profile-coach` agent (Opus) |
+| Show the plan, ask the coach's questions | This session |
 
 ## 1. Load
 
@@ -27,7 +28,7 @@ From `CAREER_PROFILE` → index: `Target roles`, `LinkedIn profile URL`, `CV fil
 **No profile.** The review works without one: when `CAREER_PROFILE` doesn't resolve (someone
 who only wants the review), ask in one message for the target role, the LinkedIn profile URL
 and the CV file path(s) — any of them may be left out, the review covers what is given. Reports
-go to the session's scratchpad. Step 3 then reconciles with the user instead of `facts.md`.
+go to the session's scratchpad. The coach then works from the CV, the LinkedIn and the user's answers instead of `facts.md`.
 
 ## 2. Hand off — blind by construction
 
@@ -45,23 +46,25 @@ Calls, in parallel:
 - one per artifact (the profile URL; each CV file);
 - one cross-check with the profile URL **and** the main CV together, when both are in scope.
 
-## 3. Reconcile — here, not in the agent
+## 3. Coach — after the blind reviews, never before
 
-Now, with the profile's `facts.md` open, read each report and sort every finding:
+The reviewers stay blind; the coach is the one that knows the candidate. It runs only once every
+report is in, and nothing it knows ever goes back to a reviewer.
 
-| Kind | Meaning | Becomes |
-|---|---|---|
-| Real problem | The page shows something wrong or confusing | A fix |
-| True but not shown | The facts support it; the page doesn't make it visible | A fix: show it |
-| Reviewer misread | The page is right; the reviewer read it wrong | Nothing — but note it: a recruiter may misread the same way |
-| Asks for something the candidate lacks | A keyword or claim the facts don't support | Never a fix — the profile doesn't claim what isn't true |
+One `profile-coach` call for all the profile artifacts, with:
+- `TARGET`, `REPORTS` (every report path, the cross-check included), `ARTIFACTS` (the URL and the
+  CV paths that were reviewed), `REPORT_LANG`;
+- `KNOWN`: the profile's `facts.md`; without a profile, the user's answers given so far (empty on
+  the first run);
+- `PREVIOUS`: the last `improvement-plan-*.md` in the same folder, when there is one;
+- `OUT`: `<Blind reviews folder>/improvement-plan-<yyyy-mm-dd>.md` (no folder → the scratchpad).
 
-Without a profile there is no `facts.md`: sort what the reports alone can settle, and ask the
-user, in one list, about the findings only they can answer (is this claim true? do you have
-this skill?). Never turn an unconfirmed item into a fix.
+It sorts every finding (real problem · true but not shown · reviewer misread · lacks it · can't
+tell), scores each artifact now and after the fixes, and writes each fix with the current text and
+a ready-to-paste rewrite, tied to the fact behind it. A gap nothing supports is never a fix.
 
-Compare with the previous review in the same folder, when there is one: score moved, what was
-fixed, what's new.
+When the plan has questions, ask them in **one** message; with the answers, call the coach once
+more with them added to `KNOWN` and `PREVIOUS` set to the plan it just wrote.
 
 ## Messages
 
@@ -86,16 +89,18 @@ message as `SOURCES`, `CHANNEL`, and a `CONTEXT` that holds only what the recipi
 
 `TARGET`, `REPORT_LANG` and `OUT` as above; `OUT` is `blind-review-<text>-<lang>-<date>.md`.
 
-**Reconcile** the same way (real problem · true but not shown · misread · not a fit). A fix to a
-template goes to the user as a proposal: the templates are the user's to edit.
+**Reconcile** here, the same way (real problem · true but not shown · misread · not a fit) — the
+coach is for the profile and the CV. A fix to a template goes to the user as a proposal: the
+templates are the user's to edit.
 
 ## Output
 
-Per artifact: score and verdict (and the change since the last review). Then **one** plan for
-all artifacts, ordered by impact: what, where, who decides. The reports' paths for the detail.
+Per artifact: the blind score and verdict, and the coach's score now → after. Then the coach's
+plan as it came — the fixes by impact with the proposed text, the questions, the honest gaps — and
+the reports' and the plan's paths.
 
 ## What this skill never does
 
-- Give the reviewer anything but the four inputs
+- Give the reviewer anything but the four inputs — and never run the coach before the reviewers
 - Edit the profile or the CV — the plan goes to the user first
 - Turn a gap the facts don't support into a claim
