@@ -15,6 +15,7 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 |---|---|---|
 | [`job-intake`](skills/job-intake/SKILL.md) | Skill | Entry point for a posting link: screens, checks the pipeline for duplicates, measures fit against the rules, picks the route |
 | [`ats-apply`](skills/ats-apply/SKILL.md) | Skill | Applies through an ATS form with a [playbook per platform](skills/ats-apply/playbooks/) and the profile's answer bank |
+| [`platform-profile`](skills/platform-profile/SKILL.md) | Skill | Creates or completes a profile on a talent platform (Revelo, Uplers, Welcome to the Jungle, AI-training pools…): every section resolved from the profile, imported junk removed, the final publish click left to the session |
 | [`application-email`](skills/application-email/SKILL.md) | Skill | Applies by email: template, CV attached, sent through the profile's send command (or handed to you to send, without one) |
 | [`linkedin-outreach`](skills/linkedin-outreach/SKILL.md) | Skill | Invitation with note or DM, from the templates, within the weekly budget |
 | [`reply-drafter`](skills/reply-drafter/SKILL.md) | Skill | Drafts a reply to a recruiter in the profile's tone — sent only after approval |
@@ -33,6 +34,7 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 | [`source-validator`](agents/source-validator.md) | Agent | Sonnet. One source: climbs the ladder ATS API → feed / embedded data → HTML → the page's own calls, tests the method with curl and counts it against the page |
 | [`linkedin-reader`](agents/linkedin-reader.md) | Agent | Sonnet. Read-only LinkedIn pages for `source-discovery`: recruiter connections, every employer of a recruiter, a company's website |
 | [`form-filler`](agents/form-filler.md) | Agent | Fills and submits one ATS form from a playbook and resolved answers |
+| [`profile-filler`](agents/profile-filler.md) | Agent | Sonnet. Maps or fills one platform's profile editor section by section, saves and reads back; never deletes or publishes |
 | [`cv-tailor`](agents/cv-tailor.md) | Agent | Sonnet. Tailors the CV to one posting from the base CV's keyword report — only facts already in the master CV or the facts file; builds and re-checks the PDF |
 | [`cv-match-reviewer`](agents/cv-match-reviewer.md) | Agent | Haiku. Final check of a tailored CV: each missing or near term → add (where, which fact), ignore (context only) or honest gap |
 | [`pipeline-keeper`](agents/pipeline-keeper.md) | Agent | The only writer of the markdown pipeline (outreach, queue; applications when not in Notion): one row per action |
