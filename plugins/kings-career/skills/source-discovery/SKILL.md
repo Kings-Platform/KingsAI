@@ -62,8 +62,8 @@ records **every** employer of the recruiter (not only the current one), with rol
 whether the role was recruiting. Opens nothing but the experience pages.
 
 Before the batch, open an **anchor tab** (`tabs_context_mcp` with `createIfEmpty`) and keep it until
-the last reader returns: Chrome removes an empty tab group, and with it the readers' tabs. Watch
-the readers as the session's own rules say (done files, an idle alert). A reader that reports a
+the last reader returns: Chrome removes an empty tab group, and with it the readers' tabs. Follow the
+readers by their completion notices; when one stays silent for long, check on it rather than wait. A reader that reports a
 LinkedIn warning → stop every reader and open no LinkedIn page again that day (the web route in §5
 still runs).
 

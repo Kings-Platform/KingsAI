@@ -71,7 +71,7 @@ The imported rows must match the facts page's experience list, one row per real 
   temporary one is the second); copy its `files` into `window.__fi` and dispatch `input` and `change`;
   remove the temporary input. LinkedIn shows "Upload do currículo concluído" and selects the new file
   at the top of the list — read it back. LinkedIn keeps every upload (the list grows), so a CV named per
-  company (`GuiReis_CV_<Company>.pdf`) keeps the list readable.
+  company (`<Name>_CV_<Company>.pdf`) keeps the list readable.
 
 ## Before submit
 

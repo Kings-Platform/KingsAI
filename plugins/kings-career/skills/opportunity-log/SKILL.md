@@ -38,8 +38,8 @@ Per posting, a scratch directory `OUT` of its own.
    that needs the browser; a posting that is only a LinkedIn post (no `LINK`) needs it too. Those
    skip step 1 and go straight to step 2 — a first call without the browser would only come back
    `NEEDS_BROWSER`.
-1. **Analysts in parallel** (batches of 5–10, in the background, watched as the session's own
-   rules say): `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT`
+1. **Analysts in parallel** (batches of 5–10, in the background, followed by their completion
+   notices): `opportunity-analyst` with `NOTION`, `FACTS` (the profile's `facts.md`), `SCRIPT`
    (this skill's `scripts/fetch_posting.py`), `LINK`, `POST`, `CARD`, `DESCRIPTION_FILE`,
    `APPLICATION`, `OUT`, `OPPORTUNITIES` (the data source id from the profile), `BROWSER: no`.
 2. **Browser cases**, in parallel with step 1: each routed case and each `NEEDS_BROWSER` → the
