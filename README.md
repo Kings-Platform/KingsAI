@@ -66,6 +66,10 @@ claude plugin update kings-core@kingsai
 claude plugin update kings-core@kingsai
 ```
 
+**Auto-update:** `/plugin` → Marketplaces → kingsai → Enable auto-update (or `"autoUpdate": true`
+in the marketplace's `extraKnownMarketplaces` entry). Claude Code then checks once per session and
+says "Plugin updated · Run /reload-plugins to apply" when there is a new version.
+
 With [KingsScript](https://github.com/Kings-Platform/KingsScript), `kings ai-update` does all of it,
 and its daily checkup runs it by itself — skipping a local clone that isn't clean and on its
 default branch.
