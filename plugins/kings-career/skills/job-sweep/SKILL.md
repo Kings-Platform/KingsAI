@@ -20,7 +20,8 @@ From the sources page take:
 - **Search terms** — the words a source's search URL is filled with (`{query}`), and the
   location terms (`{location}`).
 - **Target rule** — which titles count as the target role and which to drop even when they
-  mention it. Empty → ask the user (what roles they want, what to drop: another stack, QA,
+  mention it: the sources page's target rule, or the one `rules.md` → Targeting holds (a "what to
+  record" or role-focus rule). Neither → ask the user (what roles they want, what to drop: another stack, QA,
   management…), write the answer on the sources page, then go on. Never sweep with a rule of the
   plugin's own.
 - **Frequency** and each source's **last run** — or an **activation** column (on / off per source):
