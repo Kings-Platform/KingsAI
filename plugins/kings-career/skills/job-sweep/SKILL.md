@@ -19,6 +19,10 @@ From the sources page take:
 
 - **Search terms** — the words a source's search URL is filled with (`{query}`), and the
   location terms (`{location}`).
+- **Target rule** — which titles count as the target role and which to drop even when they
+  mention it. Empty → ask the user (what roles they want, what to drop: another stack, QA,
+  management…), write the answer on the sources page, then go on. Never sweep with a rule of the
+  plugin's own.
 - **Frequency** and each source's **last run** — or an **activation** column (on / off per source):
   when the page has one, it replaces both (see step 2).
 - **Enabled catalog sources**, **disabled** ones, and the **profile-only sources** (company
@@ -55,7 +59,8 @@ not the row, does the batching — so more sources don't mean more agents. **Bro
 ```
 SOURCES:   <the rows of this group, with URL templates already filled>
 TERMS:     <search terms>
-TARGET:    <target roles + Targeting rules summarized: seniority, stack exclusions, eligibility>
+TARGET:    <target roles + the sources page's target rule + Targeting rules summarized: seniority, stack exclusions, eligibility>
+KNOWN:     <a command that answers KNOWN/NEW per link, when the profile has one>
 SINCE:     <date of the previous run, or 8 days ago>
 ```
 

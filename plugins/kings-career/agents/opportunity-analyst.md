@@ -41,7 +41,7 @@ them (the field names `CARD_FORMAT` uses — overview in the profile's language,
 contact, model, country, location, seniority, contract, currency, pay, technologies, sector,
 restriction, status) — from the text only, with the same evidence rules as a page. Unknown →
 `null`. Set `verdict` to `new` unless the text shows the role is outside the profile's target (the
-sources page's target rule) or older than the profile's freshness rule (then `skip`, with the
+sources page's target rule) or older than the sources page's freshness (then `skip`, with the
 reason in `notes`). Write the card back and validate it parses. Output:
 `STATUS: CARD_READY | SKIP`, `card: <path>`, `notes`. Sections 1–4 below don't apply.
 
