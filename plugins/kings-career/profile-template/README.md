@@ -48,7 +48,9 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
 | Sources page (job sources to sweep and how often) | `sources.md` |
-| Sources command (creates and updates sources, used by `source-check`; leave empty to edit the sources page by hand) | `none` (e.g. a script that takes a JSON list with `access`, `how`, `notes`, `create`) |
+| Sources command (creates and updates sources, used by `source-check`; `none` → the skill edits the sources page by hand) | `none` (e.g. a script that takes a JSON list with `access`, `how`, `notes`, `create`) |
+| Sources pull (refreshes a local mirror of the sources, when they live in a database) | `none` |
+| Source access names (how your sources page writes each access) | `API · Page · Browser · Browser (login)` |
 | Discovery log (folder where `source-discovery` keeps the recruiters read and the companies seen, between rounds) | `discovery/` |
 | Site notes (selectors, traps and quirks of specific job sites and company careers pages) | `sites.md` (or any notes file) |
 

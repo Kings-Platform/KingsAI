@@ -22,7 +22,7 @@ recruiters (connections) ─► every employer ─► dedupe (profiles, log, sou
 
 ## 1. Load
 
-From `CAREER_PROFILE`: the index (Sources page, Sources command, **Discovery log**), `rules.md`
+From `CAREER_PROFILE`: the index (Sources page, Sources command when there is one, **Discovery log**), `rules.md`
 (the exclusion list: companies whose people the user never contacts and that are never recorded).
 No Discovery log setting → ask the user for a folder and save it in the index before starting.
 
@@ -102,8 +102,8 @@ new companies with their website.
 
 Hand `leads.json` to `source-check` as company leads (batches of ~20 per validator, `curl` only).
 It finds each company's listing, climbs the access ladder — **the public API first**, then a feed
-or embedded data, plain HTML, the browser last — and records the new sources with the sources
-command. Then:
+or embedded data, plain HTML, the browser last — and records the new sources the way the profile
+records them (its sources command, or the sources page by hand). Then:
 
 ```bash
 python3 -I scripts/discovery_log.py verdicts "$LOG" <validator output files>

@@ -11,9 +11,18 @@ this check. The **sources page and its command are the profile's**; this skill h
 
 ## 1. Load
 
-From `CAREER_PROFILE`: the index (the **Sources page** and the **sources command** that creates and
-updates rows, with its keys and the access options), and the sources page itself. No command in the
-index → stop and say the profile can't record sources yet.
+From `CAREER_PROFILE`: the index (the **Sources page**, and the **sources command** that creates and
+updates rows, with its keys and the access options, when the profile has one), and the sources page
+itself. Two ways to record, decided here:
+
+- **Command** — the index names one: the entries below go to it as a JSON list.
+- **By hand** — no command (`none` or empty): this skill edits the sources page itself, one row per
+  source in the page's own table and columns, the method in its "how" column or in the row's notes.
+
+**Access names.** The agents return neutral access values (`api`, `page`, `browser`,
+`browser-login`). Record them with the profile's own names: the access options the index (or the
+sources page's header) lists, mapped by meaning — public API / feed, plain page, browser, logged-in
+browser. A profile that lists none takes the neutral values as they are.
 
 ## 2. Pick what to check
 
@@ -66,18 +75,19 @@ almost nothing); through a page or the browser it is recorded **off** (the profi
 activation), ready to switch on. A tech employer stays on even when it has no opening for the
 user's target today.
 
-Merge the agents' files into one list for the sources command:
+Merge the agents' files into one list — for the sources command, or the rows to write by hand:
 
 | Verdict | Entry |
 |---|---|
 | `api`, `page-ok`, `browser-only` | `access`, `how` (the method, verbatim), `notes`; a new source also `create`, `name`, `url`, `type`, `region` |
-| `login` | access `Navegador logado`; the user decides whether it stays enabled |
+| `login` | the profile's logged-in-browser access; the user decides whether it stays enabled |
 | `dead` | An existing row: status off (the profile's "down" status) with the note. A new one: not created — report it |
 | `not-tech` with a listing | Created with its tested method — on through a public API, off through a page or the browser |
 | `no-listing`, `not-tech` without a listing | Not created — reported back to the caller with what was tried |
 
-Run the command, then the profile's pull (when it keeps a mirror) so the next sweep reads the new
-access. A method the agent couldn't test (blocked by a permission, a key it wasn't allowed to use)
+Run the command, then the profile's pull when the index names one (a profile that keeps the sources
+in a database and a local mirror of it), so the next sweep reads the new access. By hand: edit the
+page, then read the rows back to check every new or changed source is there. A method the agent couldn't test (blocked by a permission, a key it wasn't allowed to use)
 stays as it was, with the reason in `notes`.
 
 ## Output
