@@ -21,6 +21,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124 Safari/537.36"
 
@@ -31,10 +32,15 @@ def get(url, *extra):
 
 
 def get_json(url, *extra):
-    try:
-        return json.loads(get(url, *extra))
-    except json.JSONDecodeError:
-        return None
+    # Boards rate-limit bursts (a sweep calls many of them in parallel) with an empty or HTML body,
+    # so a board is only reported as not answering after two retries with growing waits.
+    for wait in (0, 2, 6):
+        time.sleep(wait)
+        try:
+            return json.loads(get(url, *extra))
+        except json.JSONDecodeError:
+            continue
+    return None
 
 
 def day(value):
