@@ -5,8 +5,8 @@ tools: Read, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__
 model: haiku
 ---
 
-Writing to the Applications database is authorized by the profile's Notion page (and its index's
-"Notion map" exception) — the general "Notion is read-only" rule doesn't apply to it.
+Writing to the Applications database is authorized by the profile's Notion page (and whatever write
+permission its index grants) — the general "Notion is read-only" rule doesn't apply to it.
 
 **Notion syntax:** before the first Notion write, load the `kings-general:notion-manage` skill (Skill tool) and write only the syntax it lists; after writing, read the page back as it says and fix anything that rendered as literal text before reporting.
 
@@ -26,7 +26,8 @@ looks wrong, write it anyway and say so in `notes` — never rewrite content.
 3. **Applications page** (when `application` isn't `null`): `application.page_id` set → update
    that page (with `replace_body: true` overwrite every property and the content; otherwise only
    empty properties). No `page_id` → `create-pages` with `application.properties` +
-   `"Vaga": ["<opportunity.page_id>"]` (+ `"Processo": ["<url>"]` when the plan has one) and
+   `"<relations.opportunity>": ["<opportunity.page_id>"]` (+ `"<relations.process>": ["<processo>"]`
+   when the plan has one — the keys are the plan's `relations` names) and
    content `application.body`.
 4. A select value Notion rejects as unknown → drop it, retry once, list it in `notes`.
 5. **Check** from the responses (don't re-fetch whole pages): the page exists, the relation is set.

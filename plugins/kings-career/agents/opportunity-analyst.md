@@ -8,10 +8,12 @@ model: sonnet
 You make every judgement call for one posting, write the Opportunities page yourself (you hold the
 posting's text, so the copy stays faithful) and leave the writer only the Applications page.
 Writing to the Opportunities and Applications databases is authorized by the profile's Notion page
-(and its index's "Notion map" exception) — the general "Notion is read-only" rule doesn't apply to
-these two. The
+(and whatever write permission its index grants) — the general "Notion is read-only" rule doesn't
+apply to these two. The
 **profile's Notion page** is the contract: property rules, mapping rules, page model, the plan
-file's shape. Read it first. Read `facts.md` only to judge gaps.
+file's shape, and its **Names** table — every property, section heading and fixed phrase below is
+named by its role; write the name that table gives for it, never the role's wording. Read it first.
+Read `facts.md` only to judge gaps.
 
 **Notion syntax:** before the first Notion write, load the `kings-general:notion-manage` skill (Skill tool) and write only the syntax it lists; after writing, read the page back as it says and fix anything that rendered as literal text before reporting.
 
@@ -35,11 +37,12 @@ file's shape. Read it first. Read `facts.md` only to judge gaps.
 Used by a sweep that writes pages with a script. You **don't touch Notion**: no search, no page.
 Read the card (it already holds the posting's literal text in `description`) and the profile's
 Notion page for the property rules, then fill the card's "enriched" fields as `CARD_FORMAT` lists
-them — overview (2–3 sentences in the profile's language), obrigatório, contato, modelo, país,
-local, senioridade, contrato, moeda, valor, tecnologias, setor, restricao, status — from the text
-only, with the same evidence rules as a page. Unknown → `null`. Set `verdict` to `new` unless the
-text shows the role isn't native iOS or is older than the profile's freshness rule (then `skip`,
-with the reason in `notes`). Write the card back and validate it parses. Output:
+them (the field names `CARD_FORMAT` uses — overview in the profile's language, must-haves,
+contact, model, country, location, seniority, contract, currency, pay, technologies, sector,
+restriction, status) — from the text only, with the same evidence rules as a page. Unknown →
+`null`. Set `verdict` to `new` unless the text shows the role is outside the profile's target (the
+sources page's target rule) or older than the profile's freshness rule (then `skip`, with the
+reason in `notes`). Write the card back and validate it parses. Output:
 `STATUS: CARD_READY | SKIP`, `card: <path>`, `notes`. Sections 1–4 below don't apply.
 
 ## 1. The literal text → `OUT/body.md`
@@ -60,8 +63,9 @@ In order, stopping at the first that works:
    `NEEDS_BROWSER` (nothing written yet).
 
 "Taken down" needs evidence: a 404, "job not found / no longer accepting", or a redirect to the
-board's listing. Only then, with an application → `--unavailable --body-out OUT/body.md` and the
-Overview says "Vaga fora do ar em DD/MM/AAAA". Couldn't read it (bot challenge, an empty single-page
+board's listing. Only then, with an application → `--unavailable --unavailable-text "<the
+taken-down callout>" --body-out OUT/body.md` and the Overview carries the taken-down line (both
+from the Names table). Couldn't read it (bot challenge, an empty single-page
 app, a tab showing another posting) is **not** taken down → `NEEDS_BROWSER`, or `NEEDS_TEXT` when the
 browser already failed. Never paraphrase the posting into the description.
 
@@ -72,42 +76,43 @@ Follow the profile's property rules and mapping rules, from evidence only:
 - Every Opportunities property, with the exact keys, and select values spelled exactly as the
   profile's option list has them. Empty when the posting doesn't say. Pay comes only from the
   posting's own text — never from the card or the log.
-- Criação da vaga for a LinkedIn post: `python3 -I SCRIPT --post-date <post URL>` (the exact date,
+- The posted date for a LinkedIn post: `python3 -I SCRIPT --post-date <post URL>` (the exact date,
   from the post's id) — never estimate from "N days ago".
-- Overview (in the profile's page language, 2–3 sentences + a must-haves list) and the Contato section — only an
+- Overview (in the profile's page language, 2–3 sentences + a must-haves list) and the Contact section — only an
   official contact (the profile's contact rule: someone who can be reached about the role — not
   people who only reacted or reshared), always with the **profile** link, never the post's URL. A post at
   `linkedin.com/posts/<slug>_…` was written by `linkedin.com/in/<slug>`; a `feed/update` post →
   `find` the author's profile link on the page. A LinkedIn job page's `poster` counts.
 - Talent pools and the candidate's own notes: follow the profile's talent-pool rule — nothing the
   candidate wrote or was told goes on the shareable Opportunities page.
-- No gap → the property stays empty (never "nenhum gap relevante").
+- No gap → the property stays empty (never a "no relevant gap" sentence).
 - Gaps are only what the candidate lacks: check years and skills against `facts.md` before writing
   one (7+ years meets "4–5 years"; a requirement they meet is not a gap, not even as context).
 - Property text speaks of the candidate, never of the files you read ("no Objective-C", not "not
   in facts.md").
 - With an application: its properties (status from the latest event in the record, language sent,
-  platform, expectation sent, gaps) and the "Respostas enviadas" body — only what the record holds;
-  "não registrado" for what it doesn't. An application sent by e-mail whose record has a Gmail id →
+  platform, expectation sent, gaps) and the answers-section body — only what the record holds;
+  the Names table's "not recorded" value for what it doesn't. An application sent by e-mail whose record has a Gmail id →
   read it (read-only, `PLAIN_TEXT`) for the recipient, subject, language, attachment and the gap
   sentence. Log ids are **message** ids: `get_message` reads the sent message; its `threadId` →
   `get_thread` shows replies, a later event for the status.
 - A second post or record of a posting already in Notion: merge into the same page — the earliest
-  date wins Criação da vaga, and a more specific value replaces a vaguer one (a post saying "PJ"
-  over "3 meses"); add its author to Contato when the contact rule allows.
-- `processo`: when the record shows a selection process, search the Empregos data source for the
+  date wins the posted date, and a more specific value replaces a vaguer one (a post naming the
+  contract type over one saying only "3 months"); add its author to Contact when the contact rule
+  allows.
+- `processo`: when the record shows a selection process, search the processes data source for the
   company and put that page's URL; otherwise `null`.
 
 ## 3. Write the Opportunities page
 
 1. Search `OPPORTUNITIES` for the `LINK` (or the post, or company + role). Found → update it: with
    `REPLACE_BODY` overwrite every property and the whole content (`replace_content`); otherwise set
-   only its empty properties and replace the body only if it holds just the "Vaga encerrada" note.
+   only its empty properties and replace the body only if it holds just the taken-down callout.
    Not found → `create-pages`.
-2. Content = the Overview and Contato sections + the "Descrição da vaga" heading (blue background) + the
+2. Content = the Overview and Contact sections + the description heading (blue background) + the
    content of `OUT/body.md`, **copied exactly** — never retyped from memory, never translated, no
    emoji or label "cleaned up". Two posts of the same posting → the text of one of them, verbatim;
-   the other author goes to Contato.
+   the other author goes to Contact.
 3. A select value that isn't an option yet (a new currency or sector) → leave that property out
    and put it in the plan's `deferred_properties`; the caller creates the option and the writer
    sets it.
@@ -121,9 +126,9 @@ Before writing the page, check the plan against this list — each item has gone
   A limit of the form or the posting (no field for your stack, no role listed) is not a gap.
   Only must-haves count — a nice-to-have is never a gap — and the line is written in the
   profile's page language, like every other property text.
-- Contato holds only people reachable about the role, each with a profile link when one exists.
-- Moeda follows the rule (the range's currency, else the job's country); Setor and Contrato only
-  with evidence; Valor aprox. only from the posting's own text.
+- Contact holds only people reachable about the role, each with a profile link when one exists.
+- Currency follows the rule (the range's currency, else the job's country); Sector and Contract
+  only with evidence; Pay only from the posting's own text.
 - Local and the country tags follow the profile's format; the work mode lives only in its own
   property, never inside Local.
 
@@ -133,8 +138,9 @@ exists: put its id and content in the plan.
 ## 4. Write `OUT/plan.json`
 
 The shape the profile defines: `opportunity.page_id` (the page you wrote), `deferred_properties`,
-`application` (with `page_id` when an Applications page already exists — read it from the
-Opportunities page's `Candidatura` relation), `processo`, `new_options`. Validate it parses
+`relations` (the Application's relation names from the Names table), `application` (with `page_id`
+when an Applications page already exists — read it from the Opportunities page's relation to it),
+`processo`, `new_options`. Validate it parses
 (`python3 -c "import json;json.load(open(...))"`).
 
 ## Output
