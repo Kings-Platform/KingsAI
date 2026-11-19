@@ -49,7 +49,8 @@ custom-invite preload URL for the slug, click "Add a note", insert the filled te
 author sends without a note** — never use it.
 
 Language: from the person's headline language, or the posting's; default from the profile.
-Note length: the profile's LinkedIn tier (300 characters with Premium, 200 without) — a longer
+Note length: `rules.md` → Outreach → LinkedIn plan (300 characters with Premium, 200 without;
+empty → ask the user and write the answer there) — a longer
 note fails silently.
 
 ## 5. Send a DM
@@ -62,15 +63,15 @@ A reply to a recruiter is **not** this skill: that's `reply-drafter`, with appro
 
 ## 6. When the quota is spent: visit instead
 
-When the budget (or LinkedIn's own limit) is spent and the profile's rules say so, visit the
+When the budget (or LinkedIn's own limit) is spent and `rules.md` → Outreach says to visit, visit the
 person's profile so the visit shows in their history, and keep the invitation queued. Open
 `/in/<slug>` in a **new tab**, wait a few seconds for the title to show the name, close the tab.
 No clicks on the profile.
 
 ## 7. Withdraw old invitations
 
-When the user asks to clean up pending invitations (the profile's rules give the age, e.g. 2+
-months, and whether to visit a profile first):
+When the user asks to clean up pending invitations (`rules.md` → Outreach gives the age, e.g. 2+
+months, and whether to visit a profile first; empty → ask):
 
 1. Open `/mynetwork/invitation-manager/sent/` **once** in its own tab and load the list with real
    wheel scrolls (scripted scrolling doesn't trigger the lazy load). Collect the cards at or over

@@ -43,6 +43,17 @@ What a posting must be, or must not be, for the plugin to act on it:
 | A posting link always means | `apply + invite the author (nothing if already connected)` |
 | Mention the posting in the note or email? | `no — the note only presents you; the role goes in the email subject` |
 | Follow-up on an unanswered message | `no` / `after N days` |
+| LinkedIn plan (sets the note length) | `Premium (300 characters)` / `free (200 characters)` |
+| Invitation quota spent | `visit the person's profile and queue the invitation` / `just queue it` |
+| Withdraw pending invitations older than | `2 months` · visit the profile first: `yes` / `no` |
+
+## Applications
+
+| Rule | Value |
+|---|---|
+| Easy Apply submitted by the AI | `yes` / `no — the user clicks` |
+| Tailored CV (a copy of the master CV adjusted to each posting) | `no` / `yes: <what may change — summary, bullet order and wording, one skills line; only facts already in the CV or facts.md; the master is never changed; N pages max>` |
+| Cover letter | `always when the field exists` / `only when required` / `never` |
 
 ## Red flags — stop and show the user before sending
 

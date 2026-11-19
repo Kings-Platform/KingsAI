@@ -15,7 +15,7 @@ Flow, autonomy, requirements and setup: [wiki](https://github.com/Kings-Platform
 |---|---|---|
 | [`job-intake`](skills/job-intake/SKILL.md) | Skill | Entry point for a posting link: screens, checks the pipeline for duplicates, measures fit against the rules, picks the route |
 | [`ats-apply`](skills/ats-apply/SKILL.md) | Skill | Applies through an ATS form with a [playbook per platform](skills/ats-apply/playbooks/) and the profile's answer bank |
-| [`application-email`](skills/application-email/SKILL.md) | Skill | Applies by email: template, CV attached, sent through the profile's send command |
+| [`application-email`](skills/application-email/SKILL.md) | Skill | Applies by email: template, CV attached, sent through the profile's send command (or handed to you to send, without one) |
 | [`linkedin-outreach`](skills/linkedin-outreach/SKILL.md) | Skill | Invitation with note or DM, from the templates, within the weekly budget |
 | [`reply-drafter`](skills/reply-drafter/SKILL.md) | Skill | Drafts a reply to a recruiter in the profile's tone — sent only after approval |
 | [`inbox-triage`](skills/inbox-triage/SKILL.md) | Skill | Reads recent email, classifies it, updates the pipeline |
@@ -47,3 +47,17 @@ The contract every skill depends on. The template ships here:
 [`profile-template/`](profile-template/README.md) — copy it to where `CAREER_PROFILE` points
 and fill it. Skills **read** the profile and **never** copy its content into themselves: a rule
 lives in one place.
+
+### Getting started
+
+1. Copy [`profile-template/`](profile-template/) to where `CAREER_PROFILE` points (default
+   `~/.kings-ai/career/`). It is private: keep it out of any public repo.
+2. Fill `facts.md`, `answers.md` and the texts in `templates/` (the example files show the shape).
+3. Fill the index's **Settings**, `rules.md` and the search part of `sources.md`. Anything left
+   empty is asked the first time a skill needs it, and the answer is written back to the profile:
+   - no **send command** → `application-email` hands you the ready message to send yourself;
+   - no **sources command** → `source-check` edits `sources.md` by hand;
+   - no **target rule** → `job-sweep` asks what roles count before the first sweep.
+4. Pipeline: `markdown table` works out of the box (`pipeline.md`). For `notion`, create the
+   databases, put their ids in `notion.md` and rename its **Names** table to your property and
+   section names — the agents read every name from there.

@@ -49,7 +49,12 @@ international project → attach **both** CVs.
 ## 4. Send
 
 Run the send command from the profile index with the HTML and the CV attachment(s). The
-command prints the message id; keep it. A transient error (HTTP 5xx) → retry once after a few
+command prints the message id; keep it.
+
+**No send command in the index** (`none` or empty) → nothing is sent from here. Hand the user the
+ready message: recipient, subject, the body (the HTML file's path and the text), and the path of
+each attachment, to send from their own mail client. Record it as pending with the user
+(`pending-user: send the e-mail`); once they say it went out, record it as sent. A transient error (HTTP 5xx) → retry once after a few
 seconds; a second failure → report, don't fall back to another sender.
 
 **Never** use an email connector's `send` / `create_draft` for this: it can't carry the PDF, and

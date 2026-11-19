@@ -31,7 +31,7 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Where you live, as written in forms | `City, Country` |
 | Time zone | `UTC-3` |
 | Email account used for applications | `you@example.com` |
-| How to send an application email with an attachment | `~/path/to/send-email --to <addr> --subject <s> --body <html> --attach <pdf>` |
+| How to send an application email with an attachment (a command that sends with the PDF attached; `none` → `application-email` hands you the ready message to send yourself) | `none` (e.g. `~/path/to/send-email --to <addr> --subject <s> --body <html> --attach <pdf>`) |
 | Email reading tool (connector or client), read-only | `Gmail connector` |
 | CV files, one per language | `en: ~/Documents/CV/CV-en.pdf` · `pt: ~/Documents/CV/CV-pt.pdf` |
 | LinkedIn profile URL (public link, for the blind review) | `https://www.linkedin.com/in/<slug>/` |
