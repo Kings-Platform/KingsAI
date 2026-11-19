@@ -73,12 +73,15 @@ an empty list — an empty answer is only "no openings" when the page agrees.
 
 ## Verdicts
 
+The access column is neutral; the `source-check` skill turns it into the profile's own access
+names when it records the source.
+
 | Verdict | When | Access |
 |---|---|---|
-| `api` | Rung 1, 2 or 4 gave a structured list, tested | `API pública` |
-| `page-ok` | Rung 3: the HTML holds the whole list | `Página` |
-| `browser-only` | The list exists only in a rendered page and no call replays | `Navegador` |
-| `login` | A login or paid plan stands between you and the list | `Navegador logado` |
+| `api` | Rung 1, 2 or 4 gave a structured list, tested | `api` |
+| `page-ok` | Rung 3: the HTML holds the whole list | `page` |
+| `browser-only` | The list exists only in a rendered page and no call replays | `browser` |
+| `login` | A login or paid plan stands between you and the list | `browser-login` |
 | `dead` | Domain parked, board gone, 404 everywhere | — |
 | `no-listing` | A lead whose site shows no openings and no ATS board answers for it | — |
 | `not-tech` | A lead that doesn't hire for tech and shows no listing | — |
@@ -89,10 +92,10 @@ an empty list — an empty answer is only "no openings" when the page agrees.
 Write `OUT`:
 
 ```json
-{"name": "...", "url": "...", "verdict": "api", "access": "API pública",
+{"name": "...", "url": "...", "verdict": "api", "access": "api",
  "how": "<ready to paste: method, URL, body, which fields hold title / location / link / date, pagination, how to filter the terms>",
  "evidence": "<N from the endpoint vs N on the page>",
- "type": "<Agregador | Board de empresa | Lista curada | …, when clear>",
+ "type": "<aggregator | company board | curated list | talent network | …, when clear>",
  "region": ["<regions the openings cover>"],
  "matches_today": "<openings matching TERMS seen now, or none>",
  "notes": "<one dated line: what changed, what to watch>"}

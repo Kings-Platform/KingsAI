@@ -22,7 +22,7 @@ recruiters (connections) ─► every employer ─► dedupe (profiles, log, sou
 
 ## 1. Load
 
-From `CAREER_PROFILE`: the index (Sources page, Sources command, **Discovery log**), `rules.md`
+From `CAREER_PROFILE`: the index (Sources page, Sources command when there is one, **Discovery log**), `rules.md`
 (the exclusion list: companies whose people the user never contacts and that are never recorded).
 No Discovery log setting → ask the user for a folder and save it in the index before starting.
 
@@ -62,8 +62,8 @@ records **every** employer of the recruiter (not only the current one), with rol
 whether the role was recruiting. Opens nothing but the experience pages.
 
 Before the batch, open an **anchor tab** (`tabs_context_mcp` with `createIfEmpty`) and keep it until
-the last reader returns: Chrome removes an empty tab group, and with it the readers' tabs. Watch
-the readers as the session's own rules say (done files, an idle alert). A reader that reports a
+the last reader returns: Chrome removes an empty tab group, and with it the readers' tabs. Follow the
+readers by their completion notices; when one stays silent for long, check on it rather than wait. A reader that reports a
 LinkedIn warning → stop every reader and open no LinkedIn page again that day (the web route in §5
 still runs).
 
@@ -102,8 +102,8 @@ new companies with their website.
 
 Hand `leads.json` to `source-check` as company leads (batches of ~20 per validator, `curl` only).
 It finds each company's listing, climbs the access ladder — **the public API first**, then a feed
-or embedded data, plain HTML, the browser last — and records the new sources with the sources
-command. Then:
+or embedded data, plain HTML, the browser last — and records the new sources the way the profile
+records them (its sources command, or the sources page by hand). Then:
 
 ```bash
 python3 -I scripts/discovery_log.py verdicts "$LOG" <validator output files>

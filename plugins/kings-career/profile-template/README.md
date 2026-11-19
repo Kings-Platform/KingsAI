@@ -31,7 +31,7 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Where you live, as written in forms | `City, Country` |
 | Time zone | `UTC-3` |
 | Email account used for applications | `you@example.com` |
-| How to send an application email with an attachment | `~/path/to/send-email --to <addr> --subject <s> --body <html> --attach <pdf>` |
+| How to send an application email with an attachment (a command that sends with the PDF attached; `none` → `application-email` hands you the ready message to send yourself) | `none` (e.g. `~/path/to/send-email --to <addr> --subject <s> --body <html> --attach <pdf>`) |
 | Email reading tool (connector or client), read-only | `Gmail connector` |
 | CV files, one per language | `en: ~/Documents/CV/CV-en.pdf` · `pt: ~/Documents/CV/CV-pt.pdf` |
 | LinkedIn profile URL (public link, for the blind review) | `https://www.linkedin.com/in/<slug>/` |
@@ -48,7 +48,9 @@ Fill the right column. A skill that finds a setting empty **asks you** — it ne
 | Queue table | `pipeline.md` |
 | LinkedIn weekly invitation budget you want to respect | `80` |
 | Sources page (job sources to sweep and how often) | `sources.md` |
-| Sources command (creates and updates sources, used by `source-check`; leave empty to edit the sources page by hand) | `none` (e.g. a script that takes a JSON list with `access`, `how`, `notes`, `create`) |
+| Sources command (creates and updates sources, used by `source-check`; `none` → the skill edits the sources page by hand) | `none` (e.g. a script that takes a JSON list with `access`, `how`, `notes`, `create`) |
+| Sources pull (refreshes a local mirror of the sources, when they live in a database) | `none` |
+| Source access names (how your sources page writes each access) | `API · Page · Browser · Browser (login)` |
 | Discovery log (folder where `source-discovery` keeps the recruiters read and the companies seen, between rounds) | `discovery/` |
 | Site notes (selectors, traps and quirks of specific job sites and company careers pages) | `sites.md` (or any notes file) |
 

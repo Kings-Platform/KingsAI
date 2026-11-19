@@ -10,6 +10,8 @@ the catalog can't hold.
 | Setting | Value |
 |---|---|
 | Search terms (`{query}`) | `iOS`, `Swift`, `Senior iOS` |
+| Target rule (which titles count, which to drop even when they mention a term) | Empty → `job-sweep` asks you. e.g. `keep native iOS (Swift, UIKit, SwiftUI; "iOS and Android" native) · drop another platform only (Android-only, React Native, Flutter) and QA, support, sales, design or management titles that merely mention it` |
+| Freshness (oldest posting worth recording) | `60 days` |
 | Location terms (`{location}`) | `remote`, `LATAM`, `Brazil` |
 | Frequency (default for every source) | `weekly` (or `daily 09:00`, `every 2 days`) |
 

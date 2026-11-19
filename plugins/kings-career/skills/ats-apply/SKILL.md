@@ -57,15 +57,16 @@ profile's site notes for that specific site.
    answered" table; a new free-text question → write it from `facts.md` (summary, stories) and
    **show it to the user** before sending, unless the profile's autonomy says otherwise. A
    question with no basis in the profile → it stays pending for the user.
-4. Cover letter: the profile's PDF when there's a file field; the `cover-letter` text, from
-   where `templates/README.md` says it lives, when it's a text field; always when the field
-   exists, even if optional (profile rule).
+4. Cover letter, by `rules.md` → Applications → cover letter (`always when the field exists` /
+   `only when required` / `never`; empty → ask the user and write the answer there): the profile's
+   PDF for a file field, the `cover-letter` text (from where `templates/README.md` says it lives)
+   for a text field.
 5. Autofill platforms (Workday, SuccessFactors, Lever): tell the agent which experiences and
    dates are correct, so it can fix what the parser breaks.
 
 ## 2b. Tailored CV — when the profile asks for one
 
-Only when the profile's rules say an application sends a CV tailored to the posting, and its index
+Only when `rules.md` → Applications says an application sends a CV tailored to the posting, and its index
 names the **CV match command** and the **tailored CV build**. Save the posting's text to a file
 first (`OUT/posting.txt`).
 

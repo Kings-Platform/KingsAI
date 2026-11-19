@@ -12,7 +12,11 @@ caller decides; you report.
 
 - `SOURCES` — rows with name, access method, URL (templates already filled), login, open check
 - `TERMS` — search terms and location terms
-- `TARGET` — target roles and the targeting rules (seniority, stack exclusions, eligibility)
+- `TARGET` — target roles, the **keep rule** (which titles count as the target role, which to
+  drop even when they mention it) and the targeting rules (seniority, stack exclusions,
+  eligibility). It comes from the profile; never apply a role of your own
+- `KNOWN` (optional) — a command that answers `KNOWN` or `NEW` for each link (the caller's
+  pipeline check). Not given → every link is `NEW`; the caller dedupes
 - `SINCE` — only roles posted or updated after this date matter
 - `ATS_LIST` (API groups) — the path to `job-sweep/scripts/ats_list.py`, used by the API procedure below
 - `CARDS_DIR` and `CARD_FORMAT` (optional) — when given, you also write one JSON file per role kept
@@ -38,16 +42,15 @@ browser, no WebFetch, no judgement beyond what each step says.
      every term, never only the first.
    - Run each source's request on its own, one `curl` per call. A single script that loops over
      many sites gets blocked by the permission check, and a blocked group reads nothing.
-2. **Keep the candidates.** From `jobs`, drop a title that is clearly another platform only
-   (Android-only, React Native, Flutter, Kotlin Multiplatform, "Xamarin") — keep it when it also
-   names native iOS work (Swift, UIKit, SwiftUI, "iOS and Android" native). Drop QA, support,
-   sales, design and management titles that merely mention the platform ("iOS QA", "Mobile
-   Product Manager") unless the caller's terms ask for them.
+2. **Keep the candidates.** From `jobs`, apply `TARGET`'s keep rule to each title, literally:
+   keep what it names as the target role, drop what it names to drop (e.g. a title that is
+   another stack only, or a support or management title that merely mentions the target). A title
+   the rule doesn't decide stays.
 3. **Real link, then known links.** An aggregator (a job board that lists other companies'
    openings) gives its own link: find the posting's **ATS link** (Greenhouse, Lever, Ashby,
    Workable, Gupy, InHire, the company's careers page…) in the list's data or in the posting's
-   page, and use it as the card's link and for this check. Run the caller's known-link command on
-   every remaining link, all at once, quoting each one. `KNOWN` → count it, no card. Only `NEW`
+   page, and use it as the card's link and for this check. Run `KNOWN` (when given) on every remaining
+   link, all at once, quoting each one. `KNOWN` → count it, no card. Only `NEW`
    links go on. Two links of the same posting (the aggregator and the ATS) are one card.
 4. **Text.** For each `NEW` link run `FETCH` (`fetch_posting.py <link>`). Its `text` is the card's
    `description`, literal: the posting's own words, never an aggregator's summary. No text (an
@@ -93,8 +96,8 @@ sources:
 watch: <company> — <why> (hires the target remotely; nothing open today)
 ```
 
-When you write cards you don't judge fit beyond "native iOS and inside `SINCE`": every such role
-is a card (the profile's rule is to record every iOS role), and overview, eligibility and level
+When you write cards you don't judge fit beyond `TARGET`'s keep rule and `SINCE`: every role the
+rule keeps is a card (the caller records them all), and overview, eligibility and level
 are filled later by the caller's verifier.
 
 ## What you never do

@@ -6,15 +6,16 @@ Usage:
   fetch_posting.py --supports <posting-url>       (exit 0 = served without a browser, 2 = needs one)
   fetch_posting.py --post-date <linkedin-post-url> (the post's exact creation date, from its id)
   fetch_posting.py --wrap TEXT_FILE --title "<header>" --body-out FILE
-  fetch_posting.py --unavailable --body-out FILE
+  fetch_posting.py --unavailable [--unavailable-text "<callout text>"] --body-out FILE
 
 Prints JSON: {source, title, location, posted_at, poster, emails, text}. `text` is the posting
 body as Notion-flavored markdown (bold section titles, "- " bullets). Exit code 2 when the URL
 belongs to no supported source: the caller falls back to reading the page in a browser.
 
---body-out writes the Notion "Descrição da vaga" content, ready to paste: the text escaped, one
+--body-out writes the Notion job-description content, ready to paste: the text escaped, one
 block per line, inside a synced block (Notion connector syntax: kings-general's notion-manage skill). --wrap does the same for text read elsewhere (a browser, a post);
---unavailable writes the "posting taken down" note in its place.
+--unavailable writes the "posting taken down" callout in its place, in the profile's wording when
+--unavailable-text gives it.
 
 Supported: Greenhouse (boards, and company pages that carry the job id as ?gh_jid= or at the end of the path), Lever, Ashby,
 Gupy (job pages and the portal's /job/<base64> links), InHire, Capgemini, Phenom job pages, GitHub issues, Hacker News comments,
@@ -640,7 +641,7 @@ def approximate_date(relative):
 
 
 NOTION_RESERVED = re.compile(r"([\\$\[\]<>{}|^~`])")
-UNAVAILABLE = '<callout icon="🚫" color="gray_bg">\nVaga encerrada — o texto original não está mais disponível.\n</callout>'
+UNAVAILABLE_TEXT = "Posting closed — the original text is no longer available."
 
 
 def notion_line(line):
@@ -691,7 +692,8 @@ def main():
                 continue
         sys.exit(2)
     if "--unavailable" in sys.argv:
-        write_body(synced([UNAVAILABLE]))
+        text = option("--unavailable-text") or UNAVAILABLE_TEXT
+        write_body(synced([f'<callout icon="🚫" color="gray_bg">\n{notion_line(text)}\n</callout>']))
         return
     if "--wrap" in sys.argv:
         with open(option("--wrap")) as source:
