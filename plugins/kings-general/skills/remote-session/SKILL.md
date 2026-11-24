@@ -12,8 +12,10 @@ the three inputs and reports how to get in.
 
 ## Bringing sessions back
 
-Every session `kings ai-session` starts is recorded (tmux name, title, folder, conversation id), so
-"bring the remote sessions back" needs no input:
+Every session `kings ai-session` starts is recorded (tmux name, title, folder, conversation id) —
+in the table `KINGS_AI_SESSION_SOURCE` names when `config.env` sets one, where the user sees the list,
+pauses a session by turning it off and adds one by hand (a row without an id starts as a new
+conversation). So "bring the remote sessions back" needs no input:
 
 ```bash
 kings ai-resume --restart [name...]
@@ -27,7 +29,8 @@ kings ai-resume --restart [name...]
   the user to sign in first (`claude auth login`); never sign in for them.
 - A name the user mentions that isn't recorded → it wasn't started by `kings ai-session`. Say so;
   don't guess an id.
-- A session the user closed for good → `kings ai-resume --forget <name>`, only when they ask.
+- A session the user closed for good → `kings ai-resume --forget <name>` (turns it off in the
+  table, when there is one), only when they ask.
 
 Report one line per session: back, already running, or left running because it was busy.
 
