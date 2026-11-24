@@ -79,7 +79,7 @@ Merge the agents' files into one list — for the sources command, or the rows t
 
 | Verdict | Entry |
 |---|---|
-| `api`, `page-ok`, `browser-only` | `access`, `how` (the method, verbatim), `notes`; a new source also `create`, `name`, `url`, `type`, `region` |
+| `api`, `page-ok`, `browser-only` | `access`, `how` (the method, verbatim), `notes`; a new source also `create`, `name`, `url`, `type`, `region`, plus every other key the sources command documents (a batching category, for instance) — a key left out is a column left empty |
 | `login` | the profile's logged-in-browser access; the user decides whether it stays enabled |
 | `dead` | An existing row: status off (the profile's "down" status) with the note. A new one: not created — report it |
 | `not-tech` with a listing | Created with its tested method — on through a public API, off through a page or the browser |
