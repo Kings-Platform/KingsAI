@@ -1,6 +1,6 @@
 ---
 name: remote-session
-description: Starts a new Claude Code session that keeps running in the background (tmux) with Remote Control on, so the user can drive it from claude.ai or the phone — or reopens an existing conversation that way. Use when the user says "create a new session", "open another remote session", "start a session called X", "spin up a session for <subject>", "resume that session remotely". Runs `kings ai-session`.
+description: Starts a new Claude Code session that keeps running in the background (tmux) with Remote Control on, so the user can drive it from claude.ai or the phone — or reopens an existing conversation that way. Use when the user says "create a new session", "open another remote session", "start a session called X", "spin up a session for <subject>", "resume that session remotely" — and brings back the ones that dropped: "resume the remotes", "bring my remote sessions back", "the remote sessions are offline", "retoma os remotes", "volta as sessões remotas". Runs `kings ai-session` / `kings ai-resume`.
 ---
 
 # Remote session
@@ -9,6 +9,27 @@ The command does the work — tmux, `claude --remote-control`, the duplicate che
 confirmation that it stayed up. Its options are in
 [KingsScript](https://github.com/Kings-Platform/KingsScript) (`kings help`). This skill resolves
 the three inputs and reports how to get in.
+
+## Bringing sessions back
+
+Every session `kings ai-session` starts is recorded (tmux name, title, folder, conversation id), so
+"bring the remote sessions back" needs no input:
+
+```bash
+kings ai-resume --restart [name...]
+```
+
+- No names → all recorded sessions; names match the tmux name or the title.
+- A session that is gone is started again on its conversation. One still running but idle is
+  restarted — that's the case after a sign-in expires: the process stays up with Remote Control
+  off. A busy one is left alone and reported; say which.
+- `claude auth status` says `loggedIn: false` → the restart won't reconnect anything. Stop and ask
+  the user to sign in first (`claude auth login`); never sign in for them.
+- A name the user mentions that isn't recorded → it wasn't started by `kings ai-session`. Say so;
+  don't guess an id.
+- A session the user closed for good → `kings ai-resume --forget <name>`, only when they ask.
+
+Report one line per session: back, already running, or left running because it was busy.
 
 ## 1. Resolve
 
@@ -39,6 +60,7 @@ session titled `<name>` in claude.ai / the mobile app.
 
 ## What this skill never does
 
-- Kill or replace a running session
+- Kill or replace a running session — the only restart is `kings ai-resume --restart`, which skips
+  busy sessions, and only when the user asked to bring the remote sessions back
 - Start a session in a folder the user didn't name or isn't already working in
 - Create a session to do work the user asked for here — it only opens the session
