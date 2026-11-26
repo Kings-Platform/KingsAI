@@ -39,7 +39,7 @@ browser, no WebFetch, no judgement beyond what each step says.
      filter the titles by the terms as whole words; then step 2.
    - `"error": "the board didn't answer"` → the source line is `down (<error>)`; next source.
    - A list with pages (`page`, `offset`, "load more", a sitemap) is read to its **last** page for
-     every term, never only the first.
+     every term, never only the first — see **Pagination** below.
    - Run each source's request on its own, one `curl` per call. A single script that loops over
      many sites gets blocked by the permission check, and a blocked group reads nothing.
 2. **Keep the candidates.** From `jobs`, apply `TARGET`'s keep rule to each title, literally:
@@ -64,24 +64,37 @@ browser, no WebFetch, no judgement beyond what each step says.
    company = the employer named in the posting (the source's company for a company board; never
    the aggregator's name); role = the title as written; link = the ATS link from step 3;
    date = the date from step 5. Never overwrite a file that already exists.
-7. **Source line.** `ok, <total> read, <n> matched, <n> cards` — or `nothing new` / `down (<why>)`.
+7. **Source line.** `ok, <pages read>/<total> pages, <total> read, <n> matched, <n> cards` — or `partial (<read>/<total> pages: <why>)` / `nothing new` / `down (<why>)`.
 
 ## Steps, per source (any other access)
 
 1. **Read the list** the cheapest way that works: the API or `curl` first, `WebFetch` next, the
    browser last. **Your own tab.** Create it with `tabs_create_mcp` and pass only that `tabId` to every call; never use a tab `tabs_context_mcp` lists — with `createIfEmpty` it hands the same blank tab to every agent that asks, and parallel agents then read each other's pages. (No tab group yet → call `tabs_context_mcp` with `createIfEmpty` once to make one, leave the tab it returns alone, then `tabs_create_mcp`.) Before extracting, check the tab's `location.href` is the page you opened; close only your tab at the end. Logged-in platforms: the browser, reading only. A page that only loads more as it is scrolled (a social feed, a results pane that lazy-loads) is read with real wheel scrolls (`computer` → `scroll`) — scripted scrolling doesn't trigger the load; `computer` also opens a "see more" or a post's menu to copy its link, and nothing else. A link copied that way lands on the clipboard: read it with `pbpaste` right after the click (and resolve a short link with `curl -sL` → `<link rel="canonical">`), so a post whose layout hides its permalink is still carded with it.
 2. **Keep the candidates**: title matches a term, posted/updated after `SINCE` when the source
-   gives a date. **Read the whole list, every page.** A listing with pages, a "load more", a
-   `?page=N` / `offset` parameter or a sitemap is read to its last page (until a page comes back
-   empty or repeats the previous one), for every term. The first page alone is not a sweep: a
-   source with 150 openings read 20 at a time is 8 requests, not 1. Note in the source line how
-   many pages and openings were read.
+   gives a date. **Read the whole list, every page** — see **Pagination** below. The first page
+   alone is not a sweep: a source with 150 openings read 20 at a time is 8 requests, not 1.
 3. **Confirm open** for each candidate with the method in the row (ATS API, page status).
    Closed, 404, "no longer accepting" → drop, count it.
 4. **Read the role** (description or API content): location and eligibility, seniority, stack,
    pay. A tag that contradicts the text loses to the text.
 5. **Apply `TARGET`** — exclude by the rules; when the text is ambiguous (eligibility not stated,
    stack mix, level between two), keep it as **for the user**, with the doubt in one line.
+
+## Pagination
+
+The source's method says how its pages work (`Paginação:` / `Pagination:` in its text). Follow it;
+when it is silent, find out from the first response.
+
+- **Total known** (a `total`, a page count, a last-page link in the first response) → fetch pages
+  2..N **in parallel** from the shell, unless the method caps it:
+  `seq 2 N | xargs -P 8 -I{} curl -s -m 25 -A "<browser UA>" "<url with page={}>" -o <dir>/p{}.json`.
+  Then count what came back: every page but the last holds a full page.
+- **Total unknown** → page serially until a page comes back empty or repeats the previous one.
+- **Rate limits.** A 429, a 403 after good pages, or a body like `error code: 1015` (Cloudflare) is
+  not an empty page: wait ~20 s, retry that page once, and read the rest serially. Never take a
+  blocked page as the end of the list.
+- **Browser** sources: one page at a time, in your own tab.
+- A source read short of its last page is `partial`, never `ok`.
 
 ## Output
 
@@ -92,7 +105,7 @@ cards:
     link: <ATS/posting URL, not the aggregator's> | status: new-candidate | for-the-user (<doubt>)
 discarded: <reason> × <n>  (closed, US-only, other country, junior, stack, duplicate)
 sources:
-  <name>: ok, <n> read | nothing new | down (<error>) | needs login | access changed (<what>)
+  <name>: ok, <pages read>/<total> pages, <n> read | partial (<read>/<total> pages: <why>) | nothing new | down (<error>) | needs login | access changed (<what>)
 watch: <company> — <why> (hires the target remotely; nothing open today)
 ```
 
