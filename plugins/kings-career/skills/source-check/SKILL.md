@@ -85,6 +85,9 @@ Merge the agents' files into one list — for the sources command, or the rows t
 | `not-tech` with a listing | Created with its tested method — on through a public API, off through a page or the browser |
 | `no-listing`, `not-tech` without a listing | Not created — reported back to the caller with what was tried |
 
+A `how` without its pagination sentence (no pages, with the proof; or the parameter, total, stop
+condition and parallel cap) is not recorded: send the source back to the validator for it.
+
 Run the command, then the profile's pull when the index names one (a profile that keeps the sources
 in a database and a local mirror of it), so the next sweep reads the new access. By hand: edit the
 page, then read the rows back to check every new or changed source is there. A method the agent couldn't test (blocked by a permission, a key it wasn't allowed to use)

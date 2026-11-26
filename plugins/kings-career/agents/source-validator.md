@@ -71,6 +71,20 @@ URL, and the caller sends it back later as a single `SOURCE`, so a batch never h
 Python's `urllib` may fail on certificates here: use `curl`. A wrong slug often answers 200 with
 an empty list — an empty answer is only "no openings" when the page agrees.
 
+## Pagination — always
+
+Every method states how its list pages, tested, never guessed:
+
+- **No pages** → `Paginação: nenhuma` (in `LANG`) with the proof: the page holds every opening the
+  site counts, or a second page returns the same list.
+- **Pages** → the parameter (`page`, `offset`, `skip`, a cursor, a sitemap index), the page size,
+  where the total lives (a field, a last-page link, a count on another page), the stop condition,
+  and whether pages 2..N can be fetched in parallel. Fetch page 2 and the last page and count them;
+  then fetch a burst of ~40 pages in parallel and say whether the site rate-limits it (429, 403,
+  `error code: 1015`) — if it does, the method says "serial" or the safe parallel cap.
+
+A method without its pagination sentence is incomplete: the caller won't record it.
+
 ## Verdicts
 
 The access column is neutral; the `source-check` skill turns it into the profile's own access
@@ -93,7 +107,7 @@ Write `OUT`:
 
 ```json
 {"name": "...", "url": "...", "verdict": "api", "access": "api",
- "how": "<ready to paste: method, URL, body, which fields hold title / location / link / date, pagination, how to filter the terms>",
+ "how": "<ready to paste: method, URL, body, which fields hold title / location / link / date, the pagination sentence, how to filter the terms>",
  "evidence": "<N from the endpoint vs N on the page>",
  "type": "<aggregator | company board | curated list | talent network | …, when clear>",
  "region": ["<regions the openings cover>"],
