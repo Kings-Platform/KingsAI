@@ -95,6 +95,11 @@ when it is silent, find out from the first response.
   blocked page as the end of the list.
 - **Browser** sources: one page at a time, in your own tab.
 - A source read short of its last page is `partial`, never `ok`.
+- **Finish inside your turn.** Your final message is your hand-back: the caller reads your cards
+  then, and in a scheduled run nothing wakes you again. A long crawl (a rate-limited API, hundreds
+  of pages) runs in the foreground in slices under the shell's timeout, or in the background with a
+  foreground wait loop that returns before the timeout and is repeated until the crawl ends. Never
+  end with "I'll continue when it finishes" while a command you started is still running.
 
 ## Output
 

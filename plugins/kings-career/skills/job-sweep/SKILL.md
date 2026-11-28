@@ -68,6 +68,12 @@ SINCE:     <date of the previous run, or 8 days ago>
 Sources that need the user's logged-in browser (talent platforms, paid lists) go in a group of
 their own, so a login problem doesn't stall the rest.
 
+**A sweeper is in when its cards are.** A sweeper that returns while its work is still running ("the
+crawl is still going, I'll continue when it ends") has not handed anything back: send it a message
+to wait for its command and finish, and wait for that second hand-back. Never end the turn waiting on
+a sweeper that already returned — in a scheduled run nothing wakes the session again, and the run
+ends with its cards unread.
+
 When every sweeper is in, the sources a sweeper **without** the browser couldn't read (a JS-only
 page, empty HTML, a 403 or a bot challenge) go to one more browser sweeper **in the same run**, so
 today's roles aren't lost; `source-check` then finds a cheaper access for the next run.
